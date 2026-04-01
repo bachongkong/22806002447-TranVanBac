@@ -1,7 +1,8 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate, authorize } from '../../middleware/index.js'
+import { asyncHandler, authenticate, authorize, upload } from '../../middleware/index.js'
 import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
+import userController from './user.controller.js'
 
 const router = Router()
 
@@ -22,5 +23,7 @@ router.put('/change-password', asyncHandler(async (req, res) => {
   // TODO: change password
   ApiResponse.success(res, { message: 'Change password — chưa implement' })
 }))
+
+router.put('/profile/avatar', upload.single('avatar'), asyncHandler(userController.uploadAvatar))
 
 export default router
