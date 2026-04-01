@@ -1,20 +1,16 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate, authorize } from '../../middleware/index.js'
+import { asyncHandler, authenticate, authorize, validate } from '../../middleware/index.js'
 import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
+import jobController from './job.controller.js'
+import { searchJobSchema } from './job.validation.js'
 
 const router = Router()
 
 // Public
-router.get('/', asyncHandler(async (req, res) => {
-  // TODO: list published jobs (public, with search/filter/sort)
-  ApiResponse.success(res, { message: 'List jobs — chưa implement' })
-}))
-
-router.get('/search', asyncHandler(async (req, res) => {
-  // TODO: search jobs
-  ApiResponse.success(res, { message: 'Search jobs — chưa implement' })
-}))
+// Gộp chung API list và search vào thư mục root (vì logic tương đồng)
+router.get('/', validate(searchJobSchema), asyncHandler(jobController.searchJobs))
+router.get('/search', validate(searchJobSchema), asyncHandler(jobController.searchJobs))
 
 router.get('/:id', asyncHandler(async (req, res) => {
   // TODO: get job detail (public)
