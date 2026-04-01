@@ -67,13 +67,17 @@ const authController = {
   },
 
   forgotPassword: async (req, res) => {
-    // TODO: implement forgot password
-    ApiResponse.success(res, { message: 'Forgot password — chưa implement' })
+    const { email } = req.body
+    const result = await authService.forgotPassword(email)
+    
+    ApiResponse.success(res, { message: result.message })
   },
 
   resetPassword: async (req, res) => {
-    // TODO: implement reset password
-    ApiResponse.success(res, { message: 'Reset password — chưa implement' })
+    const { token, password } = req.body
+    const result = await authService.resetPassword(token, password)
+
+    ApiResponse.success(res, { message: result.message })
   },
 
   verifyEmail: async (req, res) => {

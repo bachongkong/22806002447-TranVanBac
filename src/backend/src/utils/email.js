@@ -93,3 +93,39 @@ export const sendVerificationEmail = async ({ email, fullName, verificationUrl }
 
   return sendEmail({ to: email, subject, html })
 }
+
+/**
+ * Gửi email đặt lại mật khẩu
+ * @param {{ email, fullName, resetUrl }} params
+ */
+export const sendResetPasswordEmail = async ({ email, fullName, resetUrl }) => {
+  const subject = 'SmartHire — Yêu cầu đặt lại mật khẩu'
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #2563eb;">Xin chào ${fullName},</h2>
+      <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản <strong>SmartHire</strong> của bạn.</p>
+      <p>Vui lòng nhấn nút bên dưới để tiến hành đặt lại mật khẩu mới:</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${resetUrl}"
+           style="background-color: #2563eb; color: white; padding: 12px 32px;
+                  text-decoration: none; border-radius: 6px; font-weight: bold;
+                  display: inline-block;">
+          Đặt lại mật khẩu
+        </a>
+      </div>
+      <p style="color: #6b7280; font-size: 14px;">
+        Hoặc copy đường link sau vào trình duyệt:<br/>
+        <a href="${resetUrl}" style="color: #2563eb; word-break: break-all;">${resetUrl}</a>
+      </p>
+      <p style="color: #6b7280; font-size: 14px;">
+        Link này sẽ hết hạn sau <strong>1 giờ</strong>.
+      </p>
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+      <p style="color: #9ca3af; font-size: 12px;">
+        Nếu bạn không yêu cầu đổi mật khẩu, vui lòng bỏ qua email này. Mật khẩu của bạn vẫn an toàn.
+      </p>
+    </div>
+  `
+
+  return sendEmail({ to: email, subject, html })
+}
