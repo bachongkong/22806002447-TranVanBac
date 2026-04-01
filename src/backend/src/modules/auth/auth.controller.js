@@ -24,18 +24,46 @@ const authController = {
   },
 
   login: async (req, res) => {
-    // TODO: implement login
-    ApiResponse.success(res, { message: 'Login — chưa implement' })
+    const { user, accessToken, refreshToken } = await authService.login(req.body)
+
+    res.cookie('refreshToken', refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS)
+
+    ApiResponse.success(res, {
+      message: 'Đăng nhập thành công',
+      data: { user, accessToken },
+    })
   },
 
   logout: async (req, res) => {
-    // TODO: implement logout
-    ApiResponse.success(res, { message: 'Logout — chưa implement' })
+    const token = req.cookies?.refreshToken
+
+    await authService.logout(token)
+
+    // Xóa cookie phía client
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    })
+
+    ApiResponse.success(res, {
+      message: 'Đăng xuất thành công',
+      data: null,
+    })
   },
 
   refreshToken: async (req, res) => {
-    // TODO: implement refresh token
-    ApiResponse.success(res, { message: 'Refresh token — chưa implement' })
+    const token = req.cookies?.refreshToken
+
+    const { accessToken, refreshToken } = await authService.refreshToken(token)
+
+    // Gửi refresh token mới vào cookie (rotation)
+    res.cookie('refreshToken', refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS)
+
+    ApiResponse.success(res, {
+      message: 'Token được làm mới thành công',
+      data: { accessToken },
+    })
   },
 
   forgotPassword: async (req, res) => {
@@ -68,8 +96,12 @@ const authController = {
   },
 
   getMe: async (req, res) => {
-    // TODO: implement get current user
-    ApiResponse.success(res, { message: 'Get me — chưa implement' })
+    const result = await authService.getMe(req.user.userId)
+
+    ApiResponse.success(res, {
+      message: 'Lấy thông tin thành công',
+      data: result,
+    })
   },
 }
 
