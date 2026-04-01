@@ -129,3 +129,56 @@ export const sendResetPasswordEmail = async ({ email, fullName, resetUrl }) => {
 
   return sendEmail({ to: email, subject, html })
 }
+
+/**
+ * Gửi email mời phỏng vấn
+ */
+export const sendInterviewInviteEmail = async ({ email, candidateName, jobTitle, companyName, scheduledAt, type, location, meetingLink }) => {
+  const subject = `[${companyName}] Thư mời phỏng vấn - ${jobTitle}`
+  const modeText = type === 'online' ? 'Trực tuyến (Online)' : 'Trực tiếp (Offline)'
+  const addressHtml = type === 'online' 
+    ? `<strong>Link tham gia:</strong> <a href="${meetingLink}" style="color: #2563eb;">${meetingLink}</a>`
+    : `<strong>Địa điểm:</strong> ${location}`
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #2563eb;">Kính gửi ${candidateName},</h2>
+      <p>Cảm ơn bạn đã quan tâm và ứng tuyển vị trí <strong>${jobTitle}</strong> tại <strong>${companyName}</strong>.</p>
+      <p>Chúng tôi rất ấn tượng với hồ sơ của bạn và mong muốn hiểu rõ hơn về bạn thông qua buổi phỏng vấn sắp tới.</p>
+      
+      <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <h3 style="margin-top: 0; color: #1f2937;">Thông tin buổi phỏng vấn:</h3>
+        <p><strong>Thời gian:</strong> ${new Date(scheduledAt).toLocaleString('vi-VN')}</p>
+        <p><strong>Hình thức:</strong> ${modeText}</p>
+        <p>${addressHtml}</p>
+      </div>
+
+      <p>Vui lòng xác nhận khả năng tham dự bằng cách phản hồi lại email này. Nếu có bất kỳ thay đổi nào, hãy báo cho chúng tôi càng sớm càng tốt.</p>
+      <p>Trân trọng,<br/><strong>Bộ phận Nhân sự - ${companyName}</strong></p>
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+      <p style="color: #9ca3af; font-size: 12px;">Được gửi tự động từ hệ thống SmartHire.</p>
+    </div>
+  `
+
+  return sendEmail({ to: email, subject, html })
+}
+
+/**
+ * Gửi email báo hủy phỏng vấn
+ */
+export const sendInterviewCancelEmail = async ({ email, candidateName, jobTitle, companyName, scheduledAt }) => {
+  const subject = `[${companyName}] Thông báo hủy lịch phỏng vấn - ${jobTitle}`
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #ef4444;">Kính gửi ${candidateName},</h2>
+      <p>Chúng tôi rất tiếc phải thông báo rằng buổi phỏng vấn cho vị trí <strong>${jobTitle}</strong> tại <strong>${companyName}</strong> dự kiến vào lúc <strong>${new Date(scheduledAt).toLocaleString('vi-VN')}</strong> đã bị hủy.</p>
+      <p>Mong bạn thông cảm cho sự bất tiện này. Chúng tôi sẽ liên hệ lại nếu có lịch thay thế hoặc cơ hội khác phù hợp hơn trong tương lai.</p>
+      <p>Chúc bạn nhiều sức khỏe và thành công,</p>
+      <p>Trân trọng,<br/><strong>Bộ phận Nhân sự - ${companyName}</strong></p>
+      <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+      <p style="color: #9ca3af; font-size: 12px;">Được gửi tự động từ hệ thống SmartHire.</p>
+    </div>
+  `
+
+  return sendEmail({ to: email, subject, html })
+}
