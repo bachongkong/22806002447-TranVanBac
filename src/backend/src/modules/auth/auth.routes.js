@@ -1,11 +1,12 @@
 import { Router } from 'express'
 import authController from './auth.controller.js'
-import { validate, asyncHandler, authenticate } from '../../middleware/index.js'
+import { validate, asyncHandler, authenticate, registerLimiter } from '../../middleware/index.js'
 import { registerSchema, loginSchema, forgotPasswordSchema, resetPasswordSchema } from './auth.validation.js'
 
 const router = Router()
 
-router.post('/register', validate(registerSchema), asyncHandler(authController.register))
+// Rate limit đặt trước validate — chặn spam trước khi xử lý Joi
+router.post('/register', registerLimiter, validate(registerSchema), asyncHandler(authController.register))
 router.post('/login', validate(loginSchema), asyncHandler(authController.login))
 router.post('/logout', asyncHandler(authController.logout))
 router.post('/refresh-token', asyncHandler(authController.refreshToken))
