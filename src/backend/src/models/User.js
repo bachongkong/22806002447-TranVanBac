@@ -70,6 +70,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
+    emailVerificationToken: {
+      type: String,
+      select: false,
+    },
+    emailVerificationExpires: {
+      type: Date,
+      select: false,
+    },
   },
   {
     timestamps: true,

@@ -49,8 +49,22 @@ const authController = {
   },
 
   verifyEmail: async (req, res) => {
-    // TODO: implement verify email
-    ApiResponse.success(res, { message: 'Verify email — chưa implement' })
+    const { token } = req.query
+    const result = await authService.verifyEmail(token)
+
+    ApiResponse.success(res, {
+      message: 'Xác thực email thành công',
+      data: result,
+    })
+  },
+
+  resendVerification: async (req, res) => {
+    const { email } = req.body
+    const result = await authService.resendVerification(email)
+
+    ApiResponse.success(res, {
+      message: result.message,
+    })
   },
 
   getMe: async (req, res) => {

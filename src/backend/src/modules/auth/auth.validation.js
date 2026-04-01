@@ -63,3 +63,31 @@ export const resetPasswordSchema = {
     password: Joi.string().min(6).max(128).required(),
   }),
 }
+
+export const verifyEmailSchema = {
+  query: Joi.object({
+    token: Joi.string()
+      .hex()
+      .length(64)
+      .required()
+      .messages({
+        'string.hex': 'Token không hợp lệ',
+        'string.length': 'Token không hợp lệ',
+        'any.required': 'Token là bắt buộc',
+      }),
+  }),
+}
+
+export const resendVerificationSchema = {
+  body: Joi.object({
+    email: Joi.string()
+      .email({ tlds: { allow: false } })
+      .lowercase()
+      .trim()
+      .required()
+      .messages({
+        'string.email': 'Email không hợp lệ',
+        'any.required': 'Email là bắt buộc',
+      }),
+  }),
+}

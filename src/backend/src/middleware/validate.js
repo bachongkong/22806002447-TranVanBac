@@ -27,7 +27,13 @@ const validate = (schema) => {
         const messages = error.details.map((d) => d.message)
         errors.push(...messages)
       } else {
-        req[source] = value // gán lại giá trị đã strip unknown fields
+        // Express định nghĩa req.query là getter, nên cần dùng defineProperty để ghi đè
+        Object.defineProperty(req, source, {
+          value: value,
+          writable: true,
+          enumerable: true,
+          configurable: true,
+        })
       }
     }
 
