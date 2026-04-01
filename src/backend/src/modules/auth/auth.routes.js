@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import authController from './auth.controller.js'
-import { validate, asyncHandler, authenticate, registerLimiter, loginLimiter } from '../../middleware/index.js'
+import { validate, asyncHandler, authenticate, registerLimiter, loginLimiter, forgotPasswordLimiter } from '../../middleware/index.js'
 import {
   registerSchema,
   loginSchema,
@@ -17,7 +17,7 @@ router.post('/register', registerLimiter, validate(registerSchema), asyncHandler
 router.post('/login', loginLimiter, validate(loginSchema), asyncHandler(authController.login))
 router.post('/logout', asyncHandler(authController.logout))
 router.post('/refresh-token', asyncHandler(authController.refreshToken))
-router.post('/forgot-password', validate(forgotPasswordSchema), asyncHandler(authController.forgotPassword))
+router.post('/forgot-password', forgotPasswordLimiter, validate(forgotPasswordSchema), asyncHandler(authController.forgotPassword))
 router.post('/reset-password', validate(resetPasswordSchema), asyncHandler(authController.resetPassword))
 
 // Email verification

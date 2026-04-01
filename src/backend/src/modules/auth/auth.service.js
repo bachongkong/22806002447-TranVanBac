@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import User from '../../models/User.js'
 import '../../models/Company.js' // ensure Company model is registered for populate
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../../utils/jwt.js'
-import { sendVerificationEmail } from '../../utils/email.js'
+import { sendVerificationEmail, sendResetPasswordEmail } from '../../utils/email.js'
 import { ApiError } from '../../common/index.js'
 import { USER_STATUS } from '../../common/constants.js'
 import { env } from '../../config/index.js'
@@ -292,6 +292,77 @@ const authService = {
     }
 
     return { user }
+  },
+
+  /**
+   * Yêu cầu đặt lại mật khẩu
+   * @param {string} email
+   */
+  forgotPassword: async (email) => {
+    const user = await User.findOne({ email })
+    
+    // Luôn trả về thành công chung chung để tránh dò rỉ email (User enumeration)
+    if (!user) {
+      return { message: 'Nếu email hợp lệ, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu.' }
+    }
+
+    // Kiểm tra nếu tài khoản bị khoá không nên gửi
+    if (user.status === USER_STATUS.BLOCKED) {
+      return { message: 'Nếu email hợp lệ, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu.' }
+    }
+
+    // Tạo reset token
+    const resetToken = crypto.randomBytes(32).toString('hex')
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+    const resetExpires = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+
+    user.resetPasswordToken = hashedToken
+    user.resetPasswordExpires = resetExpires
+    await user.save()
+
+    // Gửi email
+    const resetUrl = `${env.CLIENT_URL}/reset-password?token=${resetToken}`
+    
+    sendResetPasswordEmail({
+      email: user.email,
+      fullName: user.profile.fullName,
+      resetUrl,
+    }).catch((err) => {
+      console.error('[AUTH] Failed to send reset password email:', err.message)
+    })
+
+    return { message: 'Nếu email hợp lệ, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu trong hộp thư.' }
+  },
+
+  /**
+   * Đặt lại hệ thống bằng mật khẩu mới
+   * @param {string} token 
+   * @param {string} newPassword 
+   */
+  resetPassword: async (token, newPassword) => {
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
+
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: new Date() },
+    }).select('+resetPasswordToken +resetPasswordExpires')
+
+    if (!user) {
+      throw ApiError.badRequest('Token không hợp lệ hoặc đã hết hạn')
+    }
+
+    // Update lại mật khẩu mới
+    user.passwordHash = newPassword
+    // Clear the reset tokens
+    user.resetPasswordToken = undefined
+    user.resetPasswordExpires = undefined
+
+    // Option: Có thể logout hết mọi session cũ ở đây bằng cách clear cả refreshToken
+    user.refreshToken = undefined
+
+    await user.save()
+
+    return { message: 'Đặt lại mật khẩu thành công. Vui lòng đăng nhập bằng mật khẩu mới.' }
   },
 }
 
