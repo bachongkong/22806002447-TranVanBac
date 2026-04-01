@@ -16,6 +16,7 @@ const interviewSchema = new mongoose.Schema(
     location: { type: String, default: '' },
     notes: { type: String, default: '' },
     result: { type: String, default: '' },
+    score: { type: Number, min: 0, max: 100, default: null },
   },
   { timestamps: true }
 )

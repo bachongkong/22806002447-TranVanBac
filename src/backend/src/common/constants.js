@@ -48,3 +48,9 @@ export const CV_SOURCE_TYPES = {
   UPLOAD: 'upload',
   BUILDER: 'builder',
 }
+
+export const INTERVIEW_RESULTS = {
+  PASS: 'pass',
+  FAIL: 'fail',
+  CONSIDER: 'consider',
+}
