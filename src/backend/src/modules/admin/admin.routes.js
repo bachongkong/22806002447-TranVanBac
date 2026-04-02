@@ -1,20 +1,18 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate, authorize } from '../../middleware/index.js'
+import { asyncHandler, authenticate, authorize, validate } from '../../middleware/index.js'
 import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
+import adminController from './admin.controller.js'
+import { getUsersSchema, toggleBlockUserSchema } from './admin.validation.js'
 
 const router = Router()
 router.use(authenticate)
 router.use(authorize(ROLES.ADMIN))
 
 // Users
-router.get('/users', asyncHandler(async (req, res) => {
-  ApiResponse.success(res, { message: 'Admin list users — chưa implement' })
-}))
+router.get('/users', validate(getUsersSchema), asyncHandler(adminController.getUsers))
 
-router.patch('/users/:id/toggle-block', asyncHandler(async (req, res) => {
-  ApiResponse.success(res, { message: 'Toggle block — chưa implement' })
-}))
+router.patch('/users/:id/toggle-block', validate(toggleBlockUserSchema), asyncHandler(adminController.toggleBlockUser))
 
 // Companies moderation
 router.get('/companies/pending', asyncHandler(async (req, res) => {
