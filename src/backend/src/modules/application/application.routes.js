@@ -3,7 +3,7 @@ import { asyncHandler, authenticate, authorize, validate, checkIdempotency } fro
 import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
 import applicationController from './application.controller.js'
-import { applyJobSchema } from './application.validation.js'
+import { applyJobSchema, withdrawSchema, updateStatusSchema } from './application.validation.js'
 
 const router = Router()
 router.use(authenticate)
@@ -22,10 +22,11 @@ router.get('/my-applications', authorize(ROLES.CANDIDATE), asyncHandler(async (r
   ApiResponse.success(res, { message: 'My applications — chưa implement' })
 }))
 
-router.patch('/:id/withdraw', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: withdraw application
-  ApiResponse.success(res, { message: 'Withdraw — chưa implement' })
-}))
+router.patch('/:id/withdraw', 
+  authorize(ROLES.CANDIDATE), 
+  validate(withdrawSchema), 
+  asyncHandler(applicationController.withdrawApplication)
+)
 
 // HR
 router.get('/:id', authorize(ROLES.HR, ROLES.CANDIDATE), asyncHandler(async (req, res) => {
@@ -33,9 +34,10 @@ router.get('/:id', authorize(ROLES.HR, ROLES.CANDIDATE), asyncHandler(async (req
   ApiResponse.success(res, { message: 'Get application — chưa implement' })
 }))
 
-router.patch('/:id/status', authorize(ROLES.HR), asyncHandler(async (req, res) => {
-  // TODO: update application status
-  ApiResponse.success(res, { message: 'Update status — chưa implement' })
-}))
+router.patch('/:id/status', 
+  authorize(ROLES.HR), 
+  validate(updateStatusSchema), 
+  asyncHandler(applicationController.updateStatus)
+)
 
 export default router
