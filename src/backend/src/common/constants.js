@@ -49,6 +49,12 @@ export const CV_SOURCE_TYPES = {
   BUILDER: 'builder',
 }
 
+export const INTERVIEW_RESULTS = {
+  PASS: 'pass',
+  FAIL: 'fail',
+  CONSIDER: 'consider',
+}
+
 export const INTERVIEW_STATUS = {
   SCHEDULED: 'scheduled',
   COMPLETED: 'completed',
