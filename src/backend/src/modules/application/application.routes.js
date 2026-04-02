@@ -1,18 +1,21 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate, authorize, validate } from '../../middleware/index.js'
+import { asyncHandler, authenticate, authorize, validate, checkIdempotency } from '../../middleware/index.js'
 import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
 import applicationController from './application.controller.js'
-import { withdrawSchema, updateStatusSchema } from './application.validation.js'
+import { applyJobSchema, withdrawSchema, updateStatusSchema } from './application.validation.js'
 
 const router = Router()
 router.use(authenticate)
 
 // Candidate
-router.post('/', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: apply job
-  ApiResponse.created(res, { message: 'Apply — chưa implement' })
-}))
+// Áp dụng Idempotency middleware để chống duplicate/spam submit cho Apply route.
+router.post('/', 
+  authorize(ROLES.CANDIDATE), 
+  validate(applyJobSchema), 
+  checkIdempotency, 
+  asyncHandler(applicationController.applyJob)
+)
 
 router.get('/my-applications', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
   // TODO: get my applications
