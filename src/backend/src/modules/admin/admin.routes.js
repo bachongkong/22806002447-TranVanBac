@@ -4,6 +4,9 @@ import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
 import adminController from './admin.controller.js'
 import { getUsersSchema, toggleBlockUserSchema } from './admin.validation.js'
+import multer from 'multer'
+
+const upload = multer({ storage: multer.memoryStorage() })
 
 const router = Router()
 router.use(authenticate)
@@ -44,5 +47,8 @@ router.patch('/jobs/:id/reject', asyncHandler(async (req, res) => {
 router.get('/dashboard', asyncHandler(async (req, res) => {
   ApiResponse.success(res, { message: 'Admin dashboard — chưa implement' })
 }))
+
+// Master Data Import
+router.post('/master-data/import', upload.single('file'), asyncHandler(adminController.importMasterData))
 
 export default router

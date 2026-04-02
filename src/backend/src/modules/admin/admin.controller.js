@@ -1,6 +1,8 @@
 import { ApiResponse, ApiError } from '../../common/index.js'
 import User from '../../models/User.js'
+import { MasterData } from '../../models/index.js'
 import { USER_STATUS } from '../../common/constants.js'
+import { parse } from 'csv-parse/sync'
 
 const getUsers = async (req, res) => {
   const { page, limit, role, status, keyword, sort } = req.query
@@ -75,7 +77,48 @@ const toggleBlockUser = async (req, res) => {
   })
 }
 
+const importMasterData = async (req, res) => {
+  if (!req.file) throw new ApiError(400, 'Vui lòng upload file CSV');
+  
+  try {
+    const rawString = req.file.buffer.toString('utf-8');
+    const records = parse(rawString, {
+      columns: true,
+      skip_empty_lines: true,
+      trim: true,
+    });
+
+    const documents = records.map(r => ({
+      type: r.type,
+      value: r.value,
+      label: r.label,
+      isActive: r.isActive !== 'false' && r.isActive !== '0'
+    }));
+
+    if (documents.length === 0) {
+      throw new ApiError(400, 'File CSV trống hoặc không chứa data hợp lệ');
+    }
+
+    try {
+      await MasterData.insertMany(documents, { ordered: false });
+    } catch(e) {
+       // Code 11000 is for unique violation across indices. It bypasses successfully allowing partial updates.
+       if (e.code !== 11000) {
+          throw e;
+       }
+    }
+
+    ApiResponse.success(res, {
+      message: `Quá trình phân tích CSV và import hệ thống thành công!`,
+      processedCount: documents.length
+    });
+  } catch (err) {
+    throw new ApiError(400, 'Lỗi xử lý file CSV: ' + err.message);
+  }
+}
+
 export default {
   getUsers,
   toggleBlockUser,
+  importMasterData,
 }
