@@ -1,36 +1,75 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate, authorize } from '../../middleware/index.js'
-import { ApiResponse } from '../../common/index.js'
+import companyController from './company.controller.js'
+import {
+  asyncHandler,
+  authenticate,
+  authorize,
+  validate,
+  upload,
+} from '../../middleware/index.js'
 import { ROLES } from '../../common/constants.js'
+import {
+  createCompanySchema,
+  updateCompanySchema,
+  companyIdParamSchema,
+  listCompaniesSchema,
+} from './company.validation.js'
 
 const router = Router()
 
-router.get('/', asyncHandler(async (req, res) => {
-  // TODO: list companies (public)
-  ApiResponse.success(res, { message: 'List companies — chưa implement' })
-}))
+// ============================================
+// Public Routes
+// ============================================
 
-router.get('/:id', asyncHandler(async (req, res) => {
-  // TODO: get company by id (public)
-  ApiResponse.success(res, { message: 'Get company — chưa implement' })
-}))
+router.get(
+  '/',
+  validate(listCompaniesSchema),
+  asyncHandler(companyController.listCompanies)
+)
 
-// Routes cần auth
-router.use(authenticate)
+// ============================================
+// Authenticated Routes (HR only)
+// ============================================
 
-router.post('/', authorize(ROLES.HR), asyncHandler(async (req, res) => {
-  // TODO: create company (HR only)
-  ApiResponse.created(res, { message: 'Create company — chưa implement' })
-}))
+// ⚠️ /my-company phải đặt TRƯỚC /:id để Express không parse "my-company" thành :id param
+router.get(
+  '/my-company',
+  authenticate,
+  authorize(ROLES.HR),
+  asyncHandler(companyController.getMyCompany)
+)
 
-router.put('/:id', authorize(ROLES.HR), asyncHandler(async (req, res) => {
-  // TODO: update company (HR only, own company)
-  ApiResponse.success(res, { message: 'Update company — chưa implement' })
-}))
+// ── Public: lấy company theo ID ──
+router.get(
+  '/:id',
+  validate(companyIdParamSchema),
+  asyncHandler(companyController.getCompanyById)
+)
 
-router.get('/my-company', authorize(ROLES.HR), asyncHandler(async (req, res) => {
-  // TODO: get HR's own company
-  ApiResponse.success(res, { message: 'Get my company — chưa implement' })
-}))
+// ── Authenticated: CRUD ──
+router.post(
+  '/',
+  authenticate,
+  authorize(ROLES.HR),
+  validate(createCompanySchema),
+  asyncHandler(companyController.createCompany)
+)
+
+router.put(
+  '/:id',
+  authenticate,
+  authorize(ROLES.HR),
+  validate(updateCompanySchema),
+  asyncHandler(companyController.updateCompany)
+)
+
+router.patch(
+  '/:id/logo',
+  authenticate,
+  authorize(ROLES.HR),
+  validate(companyIdParamSchema),
+  upload.single('logo'),
+  asyncHandler(companyController.uploadLogo)
+)
 
 export default router
