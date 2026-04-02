@@ -15,6 +15,7 @@ import CandidateDashboard from '@pages/candidate/CandidateDashboard'
 
 // --- HR Pages ---
 import HRDashboard from '@pages/hr/HRDashboard'
+import CompanyProfilePage from '@pages/hr/CompanyProfilePage'
 
 // --- Admin Pages ---
 import AdminDashboard from '@pages/admin/AdminDashboard'
@@ -53,6 +54,7 @@ export default function AppRouter() {
         }
       >
         <Route path="/hr/dashboard" element={<HRDashboard />} />
+        <Route path="/hr/company" element={<CompanyProfilePage />} />
         {/* Thêm HR routes ở đây */}
       </Route>
 
