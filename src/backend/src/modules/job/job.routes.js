@@ -1,49 +1,29 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate, authorize } from '../../middleware/index.js'
-import { ApiResponse } from '../../common/index.js'
+import jobController from './job.controller.js'
+import { asyncHandler, authenticate, authorize, validate } from '../../middleware/index.js'
+import {
+  createJobSchema,
+  updateJobSchema,
+  updateStatusSchema,
+  getJobByIdSchema,
+  listMyJobsSchema,
+} from './job.validation.js'
 import { ROLES } from '../../common/constants.js'
 
 const router = Router()
 
-// Public
-router.get('/', asyncHandler(async (req, res) => {
-  // TODO: list published jobs (public, with search/filter/sort)
-  ApiResponse.success(res, { message: 'List jobs — chưa implement' })
-}))
+// ============================================
+// Authenticated Routes (đặt TRƯỚC /:id để tránh conflict)
+// ============================================
+router.get('/my-jobs', authenticate, authorize(ROLES.HR), validate(listMyJobsSchema), asyncHandler(jobController.getMyJobs))
+router.post('/', authenticate, authorize(ROLES.HR), validate(createJobSchema), asyncHandler(jobController.create))
+router.put('/:id', authenticate, authorize(ROLES.HR), validate(updateJobSchema), asyncHandler(jobController.update))
+router.patch('/:id/status', authenticate, authorize(ROLES.HR), validate(updateStatusSchema), asyncHandler(jobController.updateStatus))
+router.delete('/:id', authenticate, authorize(ROLES.HR), asyncHandler(jobController.remove))
 
-router.get('/search', asyncHandler(async (req, res) => {
-  // TODO: search jobs
-  ApiResponse.success(res, { message: 'Search jobs — chưa implement' })
-}))
-
-router.get('/:id', asyncHandler(async (req, res) => {
-  // TODO: get job detail (public)
-  ApiResponse.success(res, { message: 'Get job — chưa implement' })
-}))
-
-// Authenticated
-router.use(authenticate)
-
-// Candidate
-router.get('/favorites', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: get favorite jobs
-  ApiResponse.success(res, { message: 'Get favorites — chưa implement' })
-}))
-
-router.post('/:id/favorite', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: toggle favorite
-  ApiResponse.success(res, { message: 'Toggle favorite — chưa implement' })
-}))
-
-// HR
-router.post('/', authorize(ROLES.HR), asyncHandler(async (req, res) => {
-  // TODO: create job
-  ApiResponse.created(res, { message: 'Create job — chưa implement' })
-}))
-
-router.put('/:id', authorize(ROLES.HR), asyncHandler(async (req, res) => {
-  // TODO: update job
-  ApiResponse.success(res, { message: 'Update job — chưa implement' })
-}))
+// ============================================
+// Public Routes
+// ============================================
+router.get('/:id', validate(getJobByIdSchema), asyncHandler(jobController.getById))
 
 export default router
