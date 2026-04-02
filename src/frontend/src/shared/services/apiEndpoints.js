@@ -89,6 +89,7 @@ const API = {
     PENDING_COMPANIES: '/admin/companies/pending',
     APPROVE_COMPANY: (id) => `/admin/companies/${id}/approve`,
     REJECT_COMPANY: (id) => `/admin/companies/${id}/reject`,
+    LOCK_COMPANY: (id) => `/admin/companies/${id}/lock`,
     PENDING_JOBS: '/admin/jobs/pending',
     APPROVE_JOB: (id) => `/admin/jobs/${id}/approve`,
     REJECT_JOB: (id) => `/admin/jobs/${id}/reject`,

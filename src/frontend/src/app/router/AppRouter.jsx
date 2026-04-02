@@ -18,6 +18,7 @@ import HRDashboard from '@pages/hr/HRDashboard'
 
 // --- Admin Pages ---
 import AdminDashboard from '@pages/admin/AdminDashboard'
+import ManageCompaniesPage from '@pages/admin/ManageCompaniesPage'
 
 export default function AppRouter() {
   return (
@@ -65,6 +66,7 @@ export default function AppRouter() {
         }
       >
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/companies" element={<ManageCompaniesPage />} />
         {/* Thêm admin routes ở đây */}
       </Route>
 
