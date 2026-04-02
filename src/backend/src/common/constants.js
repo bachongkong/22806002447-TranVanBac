@@ -48,3 +48,9 @@ export const CV_SOURCE_TYPES = {
   UPLOAD: 'upload',
   BUILDER: 'builder',
 }
+
+export const INTERVIEW_STATUS = {
+  SCHEDULED: 'scheduled',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+}
