@@ -1,6 +1,20 @@
 import Joi from 'joi'
 import { JOB_STATUS } from '../../common/constants.js'
 
+export const searchJobSchema = {
+  query: Joi.object({
+    keyword: Joi.string().trim().min(2).max(100).optional(),
+    location: Joi.string().trim().max(100).optional(),
+    employmentType: Joi.string().trim().max(50).optional(),
+    experienceLevel: Joi.string().trim().max(50).optional(),
+    salaryMin: Joi.number().min(0).optional(),
+    cursor: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
+      'string.pattern.base': 'Cursor must be a valid MongoDB ObjectId',
+    }),
+    limit: Joi.number().integer().min(1).max(50).default(10),
+  }),
+}
+
 // ============================================
 // Job Validation Schemas
 // ============================================
@@ -31,7 +45,7 @@ export const createJobSchema = {
  */
 export const updateJobSchema = {
   params: Joi.object({
-    id: Joi.string().required(),
+    id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
   }),
   body: Joi.object({
     title: Joi.string().trim().min(3).max(200).optional(),
@@ -55,7 +69,7 @@ export const updateJobSchema = {
  */
 export const updateStatusSchema = {
   params: Joi.object({
-    id: Joi.string().required(),
+    id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
   }),
   body: Joi.object({
     status: Joi.string()
@@ -72,7 +86,7 @@ export const updateStatusSchema = {
  */
 export const getJobByIdSchema = {
   params: Joi.object({
-    id: Joi.string().required(),
+    id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
   }),
 }
 
