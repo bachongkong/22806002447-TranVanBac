@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { INTERVIEW_TYPES } from '../common/constants.js'
+import { INTERVIEW_TYPES, INTERVIEW_STATUS } from '../common/constants.js'
 
 const interviewSchema = new mongoose.Schema(
   {
@@ -17,6 +17,11 @@ const interviewSchema = new mongoose.Schema(
     notes: { type: String, default: '' },
     result: { type: String, default: '' },
     score: { type: Number, min: 0, max: 100, default: null },
+    status: {
+      type: String,
+      enum: Object.values(INTERVIEW_STATUS),
+      default: INTERVIEW_STATUS.SCHEDULED,
+    },
   },
   { timestamps: true }
 )

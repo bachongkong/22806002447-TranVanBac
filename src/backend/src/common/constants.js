@@ -54,3 +54,9 @@ export const INTERVIEW_RESULTS = {
   FAIL: 'fail',
   CONSIDER: 'consider',
 }
+
+export const INTERVIEW_STATUS = {
+  SCHEDULED: 'scheduled',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+}
