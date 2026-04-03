@@ -8,6 +8,7 @@ import {
   moderateCompanySchema,
   listPendingCompaniesSchema,
 } from './admin.validation.js'
+import { getUsersSchema, toggleBlockUserSchema, getAuditLogsSchema } from './admin.validation.js'
 
 const router = Router()
 router.use(authenticate)
@@ -44,5 +45,8 @@ router.patch('/jobs/:id/reject', asyncHandler(async (req, res) => {
 router.get('/dashboard', asyncHandler(async (req, res) => {
   ApiResponse.success(res, { message: 'Admin dashboard — chưa implement' })
 }))
+
+// System Audit Logs
+router.get('/audit-logs', validate(getAuditLogsSchema), asyncHandler(adminController.getAuditLogs))
 
 export default router

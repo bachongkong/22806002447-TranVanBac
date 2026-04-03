@@ -13,6 +13,8 @@ import {
   updateCompanySchema,
   companyIdParamSchema,
   listCompaniesSchema,
+  addHrMemberSchema,
+  removeHrMemberSchema,
 } from './company.validation.js'
 
 const router = Router()
@@ -70,6 +72,31 @@ router.patch(
   validate(companyIdParamSchema),
   upload.single('logo'),
   asyncHandler(companyController.uploadLogo)
+)
+
+// ── HR Member Management ──
+router.get(
+  '/:id/members',
+  authenticate,
+  authorize(ROLES.HR),
+  validate(companyIdParamSchema),
+  asyncHandler(companyController.listHrMembers)
+)
+
+router.post(
+  '/:id/members',
+  authenticate,
+  authorize(ROLES.HR),
+  validate(addHrMemberSchema),
+  asyncHandler(companyController.addHrMember)
+)
+
+router.delete(
+  '/:id/members/:memberId',
+  authenticate,
+  authorize(ROLES.HR),
+  validate(removeHrMemberSchema),
+  asyncHandler(companyController.removeHrMember)
 )
 
 export default router

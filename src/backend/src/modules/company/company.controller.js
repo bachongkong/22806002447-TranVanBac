@@ -77,6 +77,46 @@ const companyController = {
       data: company,
     })
   },
+
+  // ── HR Member Management ──
+
+  listHrMembers: async (req, res) => {
+    const result = await companyService.listHrMembers(
+      req.params.id,
+      req.user.userId
+    )
+
+    ApiResponse.success(res, {
+      message: 'Lấy danh sách thành viên thành công',
+      data: result,
+    })
+  },
+
+  addHrMember: async (req, res) => {
+    const company = await companyService.addHrMember(
+      req.params.id,
+      req.user.userId,
+      req.body.email
+    )
+
+    ApiResponse.success(res, {
+      message: 'Thêm thành viên thành công',
+      data: company,
+    })
+  },
+
+  removeHrMember: async (req, res) => {
+    const company = await companyService.removeHrMember(
+      req.params.id,
+      req.user.userId,
+      req.params.memberId
+    )
+
+    ApiResponse.success(res, {
+      message: 'Xóa thành viên thành công',
+      data: company,
+    })
+  },
 }
 
 export default companyController

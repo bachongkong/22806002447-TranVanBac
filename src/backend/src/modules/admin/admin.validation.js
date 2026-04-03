@@ -41,4 +41,16 @@ export const listPendingCompaniesSchema = {
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(50).default(10),
   }),
+export const getAuditLogsSchema = {
+  query: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(50).default(10),
+    action: Joi.string().trim().max(100).optional(),
+    userId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional().messages({
+      'string.pattern.base': 'User ID must be a valid MongoDB ObjectId',
+    }),
+    startDate: Joi.date().iso().optional(),
+    endDate: Joi.date().iso().min(Joi.ref('startDate')).optional(),
+    sort: Joi.string().valid('createdAt', '-createdAt').default('-createdAt')
+  })
 }
