@@ -1,13 +1,19 @@
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '@shared/hooks'
-import { LoginForm } from '@features/auth'
+import { LoginForm, useLogin } from '@features/auth'
 
 export default function LoginPage() {
   useDocumentTitle('Đăng nhập')
+  
+  const { mutateAsync: loginAsync } = useLogin()
 
-  const handleLoginSubmit = (data) => {
-    console.log('Login Submit Data:', data)
-    // TODO: Connect to backend auth api
+  const handleLoginSubmit = async (data) => {
+    try {
+      await loginAsync(data)
+    } catch (error) {
+      // Error is already handled by toast in the hook
+      console.error('Login failed:', error)
+    }
   }
 
   return (

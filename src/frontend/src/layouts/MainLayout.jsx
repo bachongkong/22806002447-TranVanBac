@@ -1,22 +1,56 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, Link } from 'react-router-dom'
+import useAuthStore from '@app/store/authStore'
+import { useLogout } from '@features/auth'
 import './MainLayout.css'
 
 /**
  * MainLayout — Layout cho trang public (Landing, Login, Register)
  */
 export default function MainLayout() {
+  const { isAuthenticated, user } = useAuthStore()
+  const { mutate: logout, isPending: isLoggingOut } = useLogout()
+
+  const handleLogout = (e) => {
+    e.preventDefault()
+    logout()
+  }
+
+  const getDashboardLink = () => {
+    switch (user?.role) {
+      case 'candidate': return '/candidate/dashboard'
+      case 'hr': return '/hr/dashboard'
+      case 'admin': return '/admin/dashboard'
+      default: return '/'
+    }
+  }
+
   return (
     <div className="main-layout">
       <header className="main-header">
         <div className="main-header__container">
-          <a href="/" className="main-header__logo">
+          <Link to="/" className="main-header__logo">
             <span className="logo-icon">💼</span>
             <span className="logo-text">SmartHire</span>
-          </a>
+          </Link>
           <nav className="main-header__nav">
-            <a href="/jobs">Việc làm</a>
-            <a href="/login" className="btn btn--outline">Đăng nhập</a>
-            <a href="/register" className="btn btn--primary">Đăng ký</a>
+            <Link to="/jobs">Việc làm</Link>
+            {isAuthenticated ? (
+              <>
+                <Link to={getDashboardLink()}>Dashboard</Link>
+                <button 
+                  onClick={handleLogout} 
+                  className="btn btn--outline" 
+                  disabled={isLoggingOut}
+                >
+                  {isLoggingOut ? 'Đang xử lý...' : 'Đăng xuất'}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="btn btn--outline">Đăng nhập</Link>
+                <Link to="/register" className="btn btn--primary">Đăng ký</Link>
+              </>
+            )}
           </nav>
         </div>
       </header>

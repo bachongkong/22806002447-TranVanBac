@@ -1,7 +1,8 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { Outlet, NavLink } from 'react-router-dom'
 import { HiOutlineChartBarSquare, HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineBriefcase, HiOutlineTag, HiOutlineShieldCheck, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
 import useAuthStore from '@app/store/authStore'
 import useUIStore from '@app/store/uiStore'
+import { useLogout } from '@features/auth'
 import './DashboardLayout.css'
 
 const adminMenu = [
@@ -17,13 +18,12 @@ const adminMenu = [
  * AdminLayout — Sidebar layout cho admin panel
  */
 export default function AdminLayout() {
-  const { user, logout } = useAuthStore()
+  const { user } = useAuthStore()
   const { sidebarOpen, toggleSidebar } = useUIStore()
-  const navigate = useNavigate()
+  const { mutate: logoutAPI, isPending: isLoggingOut } = useLogout()
 
   const handleLogout = () => {
-    logout()
-    navigate('/login')
+    if (!isLoggingOut) logoutAPI()
   }
 
   return (

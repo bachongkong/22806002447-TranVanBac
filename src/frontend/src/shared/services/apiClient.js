@@ -37,12 +37,14 @@ apiClient.interceptors.response.use(
           withCredentials: true,
         })
 
+        const newAccessToken = data.data.accessToken
+
         useAuthStore.getState().setCredentials({
           user: useAuthStore.getState().user,
-          accessToken: data.accessToken,
+          accessToken: newAccessToken,
         })
 
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
         return apiClient(originalRequest)
       } catch (refreshError) {
         useAuthStore.getState().logout()

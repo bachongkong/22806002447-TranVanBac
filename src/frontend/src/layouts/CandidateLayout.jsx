@@ -1,7 +1,8 @@
-import { Outlet, NavLink, useNavigate } from 'react-router-dom'
+import { Outlet, NavLink } from 'react-router-dom'
 import { HiOutlineBriefcase, HiOutlineDocumentText, HiOutlineHeart, HiOutlineBell, HiOutlineChatBubbleLeftRight, HiOutlineUser, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
 import useAuthStore from '@app/store/authStore'
 import useUIStore from '@app/store/uiStore'
+import { useLogout } from '@features/auth'
 import './DashboardLayout.css'
 
 const candidateMenu = [
@@ -18,13 +19,12 @@ const candidateMenu = [
  * CandidateLayout — Sidebar layout cho candidate workspace
  */
 export default function CandidateLayout() {
-  const { user, logout } = useAuthStore()
+  const { user } = useAuthStore()
   const { sidebarOpen, toggleSidebar } = useUIStore()
-  const navigate = useNavigate()
+  const { mutate: logoutAPI, isPending: isLoggingOut } = useLogout()
 
   const handleLogout = () => {
-    logout()
-    navigate('/login')
+    if (!isLoggingOut) logoutAPI()
   }
 
   return (
