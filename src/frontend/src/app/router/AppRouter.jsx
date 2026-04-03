@@ -12,6 +12,7 @@ import JobDetailPage from '@pages/JobDetailPage'
 
 // --- Candidate Pages ---
 import CandidateDashboard from '@pages/candidate/CandidateDashboard'
+import CvManagerPage from '@pages/candidate/CvManagerPage'
 
 // --- HR Pages ---
 import HRDashboard from '@pages/hr/HRDashboard'
@@ -43,6 +44,7 @@ export default function AppRouter() {
         }
       >
         <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+        <Route path="/candidate/cv" element={<CvManagerPage />} />
         {/* Thêm candidate routes ở đây */}
       </Route>
 
