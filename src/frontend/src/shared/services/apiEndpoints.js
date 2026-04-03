@@ -29,6 +29,8 @@ const API = {
     BY_ID: (id) => `/companies/${id}`,
     MY_COMPANY: '/companies/my-company',
     MEMBERS: (id) => `/companies/${id}/members`,
+    REMOVE_MEMBER: (id, memberId) => `/companies/${id}/members/${memberId}`,
+    UPLOAD_LOGO: (id) => `/companies/${id}/logo`,
   },
 
   // --- Jobs ---
@@ -89,6 +91,7 @@ const API = {
     PENDING_COMPANIES: '/admin/companies/pending',
     APPROVE_COMPANY: (id) => `/admin/companies/${id}/approve`,
     REJECT_COMPANY: (id) => `/admin/companies/${id}/reject`,
+    LOCK_COMPANY: (id) => `/admin/companies/${id}/lock`,
     PENDING_JOBS: '/admin/jobs/pending',
     APPROVE_JOB: (id) => `/admin/jobs/${id}/approve`,
     REJECT_JOB: (id) => `/admin/jobs/${id}/reject`,

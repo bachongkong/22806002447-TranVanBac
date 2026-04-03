@@ -89,3 +89,49 @@ export const listCompaniesSchema = {
     industry: Joi.string().trim().max(100).allow(''),
   }),
 }
+
+// ============================================
+// HR Member Schemas
+// ============================================
+
+export const addHrMemberSchema = {
+  params: Joi.object({
+    id: Joi.string()
+      .pattern(/^[0-9a-fA-F]{24}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'ID không hợp lệ',
+        'any.required': 'ID là bắt buộc',
+      }),
+  }),
+  body: Joi.object({
+    email: Joi.string()
+      .email({ tlds: { allow: false } })
+      .lowercase()
+      .trim()
+      .required()
+      .messages({
+        'string.email': 'Email không hợp lệ',
+        'any.required': 'Email là bắt buộc',
+      }),
+  }),
+}
+
+export const removeHrMemberSchema = {
+  params: Joi.object({
+    id: Joi.string()
+      .pattern(/^[0-9a-fA-F]{24}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Company ID không hợp lệ',
+        'any.required': 'Company ID là bắt buộc',
+      }),
+    memberId: Joi.string()
+      .pattern(/^[0-9a-fA-F]{24}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Member ID không hợp lệ',
+        'any.required': 'Member ID là bắt buộc',
+      }),
+  }),
+}
