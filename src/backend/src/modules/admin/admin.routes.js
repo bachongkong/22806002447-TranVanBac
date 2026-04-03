@@ -1,8 +1,13 @@
 import { Router } from 'express'
 import { asyncHandler, authenticate, authorize, validate } from '../../middleware/index.js'
-import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
 import adminController from './admin.controller.js'
+import {
+  getUsersSchema,
+  toggleBlockUserSchema,
+  moderateCompanySchema,
+  listPendingCompaniesSchema,
+} from './admin.validation.js'
 import { getUsersSchema, toggleBlockUserSchema, getAuditLogsSchema } from './admin.validation.js'
 
 const router = Router()
@@ -15,17 +20,13 @@ router.get('/users', validate(getUsersSchema), asyncHandler(adminController.getU
 router.patch('/users/:id/toggle-block', validate(toggleBlockUserSchema), asyncHandler(adminController.toggleBlockUser))
 
 // Companies moderation
-router.get('/companies/pending', asyncHandler(async (req, res) => {
-  ApiResponse.success(res, { message: 'Pending companies — chưa implement' })
-}))
+router.get('/companies/pending', validate(listPendingCompaniesSchema), asyncHandler(adminController.getPendingCompanies))
 
-router.patch('/companies/:id/approve', asyncHandler(async (req, res) => {
-  ApiResponse.success(res, { message: 'Approve company — chưa implement' })
-}))
+router.patch('/companies/:id/approve', validate(moderateCompanySchema), asyncHandler(adminController.approveCompany))
 
-router.patch('/companies/:id/reject', asyncHandler(async (req, res) => {
-  ApiResponse.success(res, { message: 'Reject company — chưa implement' })
-}))
+router.patch('/companies/:id/reject', validate(moderateCompanySchema), asyncHandler(adminController.rejectCompany))
+
+router.patch('/companies/:id/lock', validate(moderateCompanySchema), asyncHandler(adminController.lockCompany))
 
 // Jobs moderation
 router.get('/jobs/pending', asyncHandler(async (req, res) => {

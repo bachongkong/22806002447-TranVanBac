@@ -20,6 +20,27 @@ export const toggleBlockUserSchema = {
   })
 }
 
+// ============================================
+// Company Moderation Schemas
+// ============================================
+
+export const moderateCompanySchema = {
+  params: Joi.object({
+    id: Joi.string()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Company ID không hợp lệ',
+        'any.required': 'Company ID là bắt buộc',
+      }),
+  }),
+}
+
+export const listPendingCompaniesSchema = {
+  query: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(50).default(10),
+  }),
 export const getAuditLogsSchema = {
   query: Joi.object({
     page: Joi.number().integer().min(1).default(1),
