@@ -12,6 +12,7 @@ const authService = {
   forgotPassword: (data) => apiClient.post(API.AUTH.FORGOT_PASSWORD, data),
   resetPassword: (data) => apiClient.post(API.AUTH.RESET_PASSWORD, data),
   verifyEmail: (token) => apiClient.get(`${API.AUTH.VERIFY_EMAIL}?token=${token}`),
+  resendVerification: (data) => apiClient.post(API.AUTH.RESEND_VERIFICATION, data),
   getMe: () => apiClient.get(API.AUTH.ME),
 }
 
