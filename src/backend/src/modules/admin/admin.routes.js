@@ -3,7 +3,7 @@ import { asyncHandler, authenticate, authorize, validate } from '../../middlewar
 import { ApiResponse } from '../../common/index.js'
 import { ROLES } from '../../common/constants.js'
 import adminController from './admin.controller.js'
-import { getUsersSchema, toggleBlockUserSchema } from './admin.validation.js'
+import { getUsersSchema, toggleBlockUserSchema, getAuditLogsSchema } from './admin.validation.js'
 
 const router = Router()
 router.use(authenticate)
@@ -44,5 +44,8 @@ router.patch('/jobs/:id/reject', asyncHandler(async (req, res) => {
 router.get('/dashboard', asyncHandler(async (req, res) => {
   ApiResponse.success(res, { message: 'Admin dashboard — chưa implement' })
 }))
+
+// System Audit Logs
+router.get('/audit-logs', validate(getAuditLogsSchema), asyncHandler(adminController.getAuditLogs))
 
 export default router
