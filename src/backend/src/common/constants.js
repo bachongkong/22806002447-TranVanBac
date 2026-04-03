@@ -17,6 +17,7 @@ export const COMPANY_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
   REJECTED: 'rejected',
+  LOCKED: 'locked',
 }
 
 export const JOB_STATUS = {
