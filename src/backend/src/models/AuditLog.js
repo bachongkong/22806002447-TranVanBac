@@ -39,6 +39,7 @@ const auditLogSchema = new mongoose.Schema(
       default: 'success',
     },
   },
+  { timestamps: true }
   {
     timestamps: true,
   }
