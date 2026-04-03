@@ -29,6 +29,8 @@ const API = {
     BY_ID: (id) => `/companies/${id}`,
     MY_COMPANY: '/companies/my-company',
     MEMBERS: (id) => `/companies/${id}/members`,
+    REMOVE_MEMBER: (id, memberId) => `/companies/${id}/members/${memberId}`,
+    UPLOAD_LOGO: (id) => `/companies/${id}/logo`,
   },
 
   // --- Jobs ---
