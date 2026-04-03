@@ -17,6 +17,7 @@ const JobDetailPage = lazy(() => import('@pages/JobDetailPage'))
 // --- Candidate Pages ---
 const CandidateDashboard = lazy(() => import('@pages/candidate/CandidateDashboard'))
 const CvManagerPage = lazy(() => import('@pages/candidate/CvManagerPage'))
+const MyProfilePage = lazy(() => import('@pages/candidate/MyProfilePage'))
 
 // --- HR Pages ---
 const HRDashboard = lazy(() => import('@pages/hr/HRDashboard'))
@@ -53,6 +54,7 @@ export default function AppRouter() {
         >
           <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
           <Route path="/candidate/cv" element={<CvManagerPage />} />
+          <Route path="/candidate/profile" element={<MyProfilePage />} />
           {/* Thêm candidate routes ở đây */}
         </Route>
 

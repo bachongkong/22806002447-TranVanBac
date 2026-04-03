@@ -21,6 +21,7 @@ const API = {
     BASE: '/users',
     BY_ID: (id) => `/users/${id}`,
     PROFILE: '/users/profile',
+    UPLOAD_AVATAR: '/users/profile/avatar',
     CHANGE_PASSWORD: '/users/change-password',
   },
 
