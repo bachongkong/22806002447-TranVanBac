@@ -4,7 +4,7 @@ import sharp from 'sharp'
 import Company from '../../models/Company.js'
 import User from '../../models/User.js'
 import { ApiError } from '../../common/index.js'
-import { COMPANY_STATUS } from '../../common/constants.js'
+import { COMPANY_STATUS, ROLES } from '../../common/constants.js'
 
 // ============================================
 // Helpers
@@ -208,6 +208,130 @@ const companyService = {
     await company.save()
 
     return company
+  },
+
+  // ============================================
+  // HR Member Management
+  // ============================================
+
+  /**
+   * Danh sách HR members của company
+   * @param {string} companyId
+   * @param {string} userId - HR đang đăng nhập (phải thuộc company)
+   * @returns {Array} members
+   */
+  listHrMembers: async (companyId, userId) => {
+    const company = await Company.findById(companyId)
+      .populate('hrMembers', 'email profile.fullName profile.avatar profile.phone')
+      .populate('createdBy', 'email profile.fullName')
+
+    if (!company) {
+      throw ApiError.notFound('Không tìm thấy công ty')
+    }
+
+    assertHrBelongsToCompany(company, userId)
+
+    return {
+      members: company.hrMembers,
+      createdBy: company.createdBy,
+    }
+  },
+
+  /**
+   * Thêm HR member vào company
+   * @param {string} companyId
+   * @param {string} userId - HR đang thực hiện (phải thuộc company)
+   * @param {string} email - Email của HR cần thêm
+   * @returns {Object} company đã cập nhật
+   */
+  addHrMember: async (companyId, userId, email) => {
+    const company = await Company.findById(companyId)
+    if (!company) {
+      throw ApiError.notFound('Không tìm thấy công ty')
+    }
+
+    assertHrBelongsToCompany(company, userId)
+
+    // Tìm user theo email
+    const targetUser = await User.findOne({ email })
+    if (!targetUser) {
+      throw ApiError.notFound(`Không tìm thấy tài khoản với email: ${email}`)
+    }
+
+    // Kiểm tra role phải là HR
+    if (targetUser.role !== ROLES.HR) {
+      throw ApiError.badRequest('Chỉ có thể thêm tài khoản có role HR vào công ty')
+    }
+
+    // Kiểm tra đã thuộc company này chưa
+    const alreadyMember = company.hrMembers.some(
+      (memberId) => memberId.toString() === targetUser._id.toString()
+    )
+    if (alreadyMember) {
+      throw ApiError.conflict('Thành viên này đã thuộc công ty')
+    }
+
+    // Kiểm tra đã thuộc company khác chưa
+    if (targetUser.companyId && targetUser.companyId.toString() !== companyId) {
+      throw ApiError.conflict('Thành viên này đã thuộc công ty khác')
+    }
+
+    // Thêm vào hrMembers và set companyId
+    company.hrMembers.push(targetUser._id)
+    await company.save()
+
+    targetUser.companyId = company._id
+    await targetUser.save()
+
+    // Trả về company đã populate
+    const updated = await Company.findById(companyId)
+      .populate('hrMembers', 'email profile.fullName profile.avatar')
+      .populate('createdBy', 'email profile.fullName')
+
+    return updated
+  },
+
+  /**
+   * Xóa HR member khỏi company
+   * @param {string} companyId
+   * @param {string} userId - HR đang thực hiện
+   * @param {string} memberId - ID user cần xóa
+   * @returns {Object} company đã cập nhật
+   */
+  removeHrMember: async (companyId, userId, memberId) => {
+    const company = await Company.findById(companyId)
+    if (!company) {
+      throw ApiError.notFound('Không tìm thấy công ty')
+    }
+
+    assertHrBelongsToCompany(company, userId)
+
+    // Không cho xóa người tạo company
+    if (company.createdBy.toString() === memberId) {
+      throw ApiError.badRequest('Không thể xóa người tạo công ty khỏi danh sách thành viên')
+    }
+
+    // Kiểm tra member có thuộc company không
+    const memberIndex = company.hrMembers.findIndex(
+      (id) => id.toString() === memberId
+    )
+    if (memberIndex === -1) {
+      throw ApiError.notFound('Thành viên không thuộc công ty này')
+    }
+
+    // Xóa khỏi hrMembers
+    company.hrMembers.splice(memberIndex, 1)
+    await company.save()
+
+    // Xóa companyId của user
+    await User.findByIdAndUpdate(memberId, { $unset: { companyId: 1 } })
+
+    // Trả về company đã populate
+    const updated = await Company.findById(companyId)
+      .populate('hrMembers', 'email profile.fullName profile.avatar')
+      .populate('createdBy', 'email profile.fullName')
+
+    return updated
   },
 }
 

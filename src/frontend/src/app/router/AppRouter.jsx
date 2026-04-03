@@ -12,12 +12,15 @@ import JobDetailPage from '@pages/JobDetailPage'
 
 // --- Candidate Pages ---
 import CandidateDashboard from '@pages/candidate/CandidateDashboard'
+import CvManagerPage from '@pages/candidate/CvManagerPage'
 
 // --- HR Pages ---
 import HRDashboard from '@pages/hr/HRDashboard'
+import CompanyProfilePage from '@pages/hr/CompanyProfilePage'
 
 // --- Admin Pages ---
 import AdminDashboard from '@pages/admin/AdminDashboard'
+import ManageCompaniesPage from '@pages/admin/ManageCompaniesPage'
 
 export default function AppRouter() {
   return (
@@ -41,6 +44,7 @@ export default function AppRouter() {
         }
       >
         <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+        <Route path="/candidate/cv" element={<CvManagerPage />} />
         {/* Thêm candidate routes ở đây */}
       </Route>
 
@@ -53,6 +57,7 @@ export default function AppRouter() {
         }
       >
         <Route path="/hr/dashboard" element={<HRDashboard />} />
+        <Route path="/hr/company" element={<CompanyProfilePage />} />
         {/* Thêm HR routes ở đây */}
       </Route>
 
@@ -65,6 +70,7 @@ export default function AppRouter() {
         }
       >
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/companies" element={<ManageCompaniesPage />} />
         {/* Thêm admin routes ở đây */}
       </Route>
 
