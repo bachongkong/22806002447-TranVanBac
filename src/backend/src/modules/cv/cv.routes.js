@@ -1,44 +1,62 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate, authorize } from '../../middleware/index.js'
-import { ApiResponse } from '../../common/index.js'
+import { asyncHandler, authenticate, authorize, upload } from '../../middleware/index.js'
 import { ROLES } from '../../common/constants.js'
+import cvController from './cv.controller.js'
 
 const router = Router()
+
+// Bắt buộc đăng nhập để gọi bất kỳ api nào liên quan đến CV
 router.use(authenticate)
 
-router.get('/', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: get my CVs
-  ApiResponse.success(res, { message: 'List CVs — chưa implement' })
-}))
+// TODO: Lấy danh sách CV
+router.get(
+  '/', 
+  authorize(ROLES.CANDIDATE), 
+  asyncHandler(cvController.listMyCvs)
+)
 
-router.post('/upload', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: upload CV file
-  ApiResponse.created(res, { message: 'Upload CV — chưa implement' })
-}))
+// TODO: Tạo CV cơ bản qua DB / Builder
+router.post(
+  '/', 
+  authorize(ROLES.CANDIDATE), 
+  asyncHandler(cvController.createCv)
+)
 
-router.post('/', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: create CV (builder)
-  ApiResponse.created(res, { message: 'Create CV — chưa implement' })
-}))
+// TODO: Cập nhật nội dung CV
+router.put(
+  '/:id', 
+  authorize(ROLES.CANDIDATE), 
+  asyncHandler(cvController.updateCv)
+)
 
-router.put('/:id', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: update CV
-  ApiResponse.success(res, { message: 'Update CV — chưa implement' })
-}))
+// TODO: Xóa CV
+router.delete(
+  '/:id', 
+  authorize(ROLES.CANDIDATE), 
+  asyncHandler(cvController.deleteCv)
+)
 
-router.delete('/:id', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: delete CV
-  ApiResponse.success(res, { message: 'Delete CV — chưa implement' })
-}))
+// TODO: Set CV mặc định
+router.patch(
+  '/:id/default', 
+  authorize(ROLES.CANDIDATE), 
+  asyncHandler(cvController.setDefaultCv)
+)
 
-router.patch('/:id/default', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: set default CV
-  ApiResponse.success(res, { message: 'Set default — chưa implement' })
-}))
+// TODO: Đang dùng tạm để test logic parse, thực tế có thể gộp với postUpload
+router.post(
+  '/upload', 
+  authorize(ROLES.CANDIDATE), 
+  upload.single('file'), 
+  asyncHandler(cvController.uploadCv)
+)
 
-router.post('/:id/parse', authorize(ROLES.CANDIDATE), asyncHandler(async (req, res) => {
-  // TODO: OCR parse CV
-  ApiResponse.success(res, { message: 'Parse OCR — chưa implement' })
-}))
+// ✅ Parse / OCR extracting text
+router.post(
+  '/:id/parse', 
+  authorize(ROLES.CANDIDATE), 
+  upload.single('file'), 
+  asyncHandler(cvController.parseOcr)
+)
 
 export default router
