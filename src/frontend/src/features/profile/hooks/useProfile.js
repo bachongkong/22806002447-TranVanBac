@@ -22,7 +22,7 @@ export function useUpdateProfile() {
     onSuccess: (data) => {
       queryClient.setQueryData(PROFILE_QUERY_KEY, data)
       // Cap nhat displayName/avatar trong auth store
-      updateUser({ fullName: data.fullName, avatar: data.avatar })
+      updateUser({ fullName: data.profile?.fullName, avatar: data.profile?.avatar })
       toast.success('Cap nhat thong tin thanh cong!')
     },
     onError: (error) => {
@@ -50,7 +50,16 @@ export function useUploadAvatar() {
   return useMutation({
     mutationFn: profileService.uploadAvatar,
     onSuccess: (data) => {
-      queryClient.setQueryData(PROFILE_QUERY_KEY, data)
+      queryClient.setQueryData(PROFILE_QUERY_KEY, (old) => {
+        if (!old) return old
+        return {
+          ...old,
+          profile: {
+            ...old.profile,
+            avatar: data.avatar,
+          },
+        }
+      })
       updateUser({ avatar: data.avatar })
       toast.success('Cap nhat avatar thanh cong!')
     },

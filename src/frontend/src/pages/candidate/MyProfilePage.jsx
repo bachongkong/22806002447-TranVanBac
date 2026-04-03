@@ -8,6 +8,7 @@ import {
   BasicInfoForm,
   CandidateInfoForm,
   ChangePasswordForm,
+  ProfileCompletionProgress,
 } from '@features/profile'
 import { LoadingSpinner } from '@shared/components'
 import './MyProfilePage.css'
@@ -55,20 +56,22 @@ export default function MyProfilePage() {
       </div>
 
       <div className="profile-container">
+        <ProfileCompletionProgress profile={profile?.profile} />
+
         <AvatarUpload
-          currentAvatar={profile.avatar}
+          currentAvatar={profile?.profile?.avatar}
           onUpload={handleAvatarUpload}
           isUploading={isUploading}
         />
 
         <BasicInfoForm
-          initialData={profile}
+          initialData={profile?.profile}
           onSubmit={handleBasicInfoSubmit}
           isPending={isUpdating}
         />
 
         <CandidateInfoForm
-          initialData={profile}
+          initialData={profile?.profile}
           onSubmit={handleCandidateInfoSubmit}
           isPending={isUpdating}
         />
