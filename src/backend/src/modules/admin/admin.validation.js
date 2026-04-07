@@ -16,6 +16,15 @@ export const getUsersSchema = {
   }),
 }
 
+export const exportUsersSchema = {
+  query: Joi.object({
+    role: Joi.string().valid(...Object.values(ROLES)).optional(),
+    status: Joi.string().valid(...Object.values(USER_STATUS)).optional(),
+    keyword: Joi.string().trim().min(2).max(100).optional(),
+    sort: Joi.string().valid('createdAt', '-createdAt', 'email', '-email').default('-createdAt')
+  })
+}
+
 export const toggleBlockUserSchema = {
   params: Joi.object({
     id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
