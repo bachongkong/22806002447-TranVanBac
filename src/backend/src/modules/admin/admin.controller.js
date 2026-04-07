@@ -2,17 +2,14 @@ import { Readable } from 'stream'
 import csvParser from 'csv-parser'
 import { ApiResponse, ApiError } from '../../common/index.js'
 import User from '../../models/User.js'
+import Company from '../../models/Company.js'
 import { Job, MasterData, AuditLog } from '../../models/index.js'
-import { USER_STATUS, JOB_STATUS } from '../../common/constants.js'
+import { USER_STATUS, JOB_STATUS, COMPANY_STATUS } from '../../common/constants.js'
 import { writeAuditLog } from '../../utils/auditLogger.js'
 
 // ============================================
 // BE-ADM-01: User Moderation
 // ============================================
-import Company from '../../models/Company.js'
-import { USER_STATUS, COMPANY_STATUS } from '../../common/constants.js'
-import { AuditLog } from '../../models/index.js'
-import { USER_STATUS } from '../../common/constants.js'
 
 const getUsers = async (req, res) => {
   const { page, limit, role, status, keyword, sort } = req.query
@@ -278,54 +275,13 @@ const lockCompany = async (req, res) => {
 export default {
   getUsers,
   toggleBlockUser,
-  getPendingCompanies,
-  approveCompany,
-  rejectCompany,
-  lockCompany,
-const getAuditLogs = async (req, res) => {
-  const { page, limit, action, userId, startDate, endDate, sort } = req.query
-
-  const query = {}
-
-  if (action) query.action = action
-  if (userId) query.userId = userId
-
-  if (startDate || endDate) {
-    query.createdAt = {}
-    if (startDate) query.createdAt.$gte = new Date(startDate)
-    if (endDate) query.createdAt.$lte = new Date(endDate)
-  }
-
-  const skip = (page - 1) * limit
-
-  const [logs, total] = await Promise.all([
-    AuditLog.find(query)
-      .populate('userId', 'email profile.fullName role')
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean(),
-    AuditLog.countDocuments(query),
-  ])
-
-  ApiResponse.success(res, {
-    data: logs,
-    pagination: {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-    },
-  })
-}
-
-export default {
-  getUsers,
-  toggleBlockUser,
   getJobsPending,
   approveJob,
   rejectJob,
   getAuditLogs,
   importMasterData,
-  getAuditLogs,
+  getPendingCompanies,
+  approveCompany,
+  rejectCompany,
+  lockCompany,
 }
