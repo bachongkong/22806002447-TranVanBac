@@ -1,5 +1,6 @@
-import { Readable } from 'stream'
+import { Readable, Transform } from 'stream'
 import csvParser from 'csv-parser'
+import { stringify } from 'csv-stringify'
 import { ApiResponse, ApiError } from '../../common/index.js'
 import User from '../../models/User.js'
 import Company from '../../models/Company.js'
@@ -272,6 +273,65 @@ const lockCompany = async (req, res) => {
   await updateCompanyStatus(req, res, COMPANY_STATUS.LOCKED, 'Đã khóa công ty')
 }
 
+const exportUsers = async (req, res) => {
+  const { role, status, keyword, sort } = req.query
+
+  const query = {}
+  if (role) query.role = role
+  if (status) query.status = status
+  if (keyword) {
+    query.$or = [
+      { email: { $regex: keyword, $options: 'i' } },
+      { 'profile.fullName': { $regex: keyword, $options: 'i' } },
+    ]
+  }
+
+  res.setHeader('Content-Type', 'text/csv')
+  res.setHeader('Content-Disposition', 'attachment; filename="users-export.csv"')
+
+  writeAuditLog({
+    action: 'EXPORT_USERS',
+    req,
+    resourceType: 'User',
+    details: { query }
+  })
+
+  const stringifier = stringify({
+    header: true,
+    columns: [
+      { key: 'id', header: 'ID' },
+      { key: 'email', header: 'Email' },
+      { key: 'fullName', header: 'Full Name' },
+      { key: 'role', header: 'Role' },
+      { key: 'status', header: 'Status' },
+      { key: 'createdAt', header: 'Created At' }
+    ]
+  })
+
+  const cursor = User.find(query).sort(sort).lean().cursor()
+
+  const transformer = new Transform({
+    objectMode: true,
+    transform(doc, encoding, callback) {
+      callback(null, {
+        id: String(doc._id),
+        email: doc.email,
+        fullName: doc.profile?.fullName || '',
+        role: doc.role,
+        status: doc.status,
+        createdAt: doc.createdAt ? new Date(doc.createdAt).toISOString() : ''
+      })
+    }
+  })
+
+  cursor.on('error', err => {
+    console.error('Cursor export error:', err)
+    if (!res.headersSent) res.status(500).end('Internal Server Error')
+  })
+
+  cursor.pipe(transformer).pipe(stringifier).pipe(res)
+}
+
 export default {
   getUsers,
   toggleBlockUser,
@@ -284,4 +344,5 @@ export default {
   approveCompany,
   rejectCompany,
   lockCompany,
+  exportUsers,
 }
