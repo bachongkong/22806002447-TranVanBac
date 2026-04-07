@@ -10,6 +10,7 @@ import {
   moderateCompanySchema,
   listPendingCompaniesSchema,
   getAuditLogsSchema,
+  exportUsersSchema
 } from './admin.validation.js'
 import multer from 'multer'
 
@@ -23,6 +24,7 @@ router.use(authorize(ROLES.ADMIN))
 // User Moderation
 // ============================================
 router.get('/users', validate(getUsersSchema), asyncHandler(adminController.getUsers))
+router.get('/users/export', validate(exportUsersSchema), asyncHandler(adminController.exportUsers))
 router.patch('/users/:id/toggle-block', validate(toggleBlockUserSchema), asyncHandler(adminController.toggleBlockUser))
 
 // ============================================
@@ -51,10 +53,8 @@ router.get('/audit-logs', validate(getAuditLogsSchema), asyncHandler(adminContro
 router.post('/master-data/import', upload.single('file'), asyncHandler(adminController.importMasterData))
 
 // ============================================
-// Dashboard (TODO)
+// Dashboard
 // ============================================
-router.get('/dashboard', asyncHandler(async (req, res) => {
-  ApiResponse.success(res, { message: 'Admin dashboard — chưa implement' })
-}))
+router.get('/dashboard', asyncHandler(adminController.getDashboardStats))
 
 export default router

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { OnlineCvBuilder } from '@features/cvs/components'
+import { OnlineCvBuilder, UploadCvOcr } from '@features/cvs/components'
 import './CvManagerPage.css'
 
 export default function CvManagerPage() {
@@ -31,14 +31,8 @@ export default function CvManagerPage() {
 
       <div className="cv-content">
         {activeTab === 'upload' && (
-          <div className="placeholder-card">
-            <h3>Module Tải file</h3>
-            <p>
-              Tải lên file PDF hoặc word CV của bạn, hệ thống AI sẽ tự động phân tích và tạo hồ sơ trực tuyến trong vòng vài giây.
-            </p>
-          </div>
+          <UploadCvOcr />
         )}
-
         {activeTab === 'builder' && (
           <OnlineCvBuilder />
         )}
