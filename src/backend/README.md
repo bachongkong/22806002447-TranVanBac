@@ -58,6 +58,85 @@ src/
 ├── utils/          # Helpers (tuong tac jwt, format text...)
 ├── seeds/          # Data seed initial (Admin roles, Jobs basic)
 └── server.js       # Express App entry point
+tests/
+├── unit/
+│   ├── config/
+│   ├── middleware/
+│   │   ├── auth.middleware.test.js
+│   │   ├── rbac.middleware.test.js
+│   │   └── validate.middleware.test.js
+│   ├── utils/
+│   │   ├── jwt.util.test.js
+│   │   └── text.util.test.js
+│   ├── modules/
+│   │   ├── auth/
+│   │   │   ├── register.service.test.js
+│   │   │   ├── login.service.test.js
+│   │   │   ├── verify-email.service.test.js
+│   │   │   ├── reset-password.service.test.js
+│   │   │   └── logout.service.test.js
+│   │   ├── profile/
+│   │   │   ├── profile.service.test.js
+│   │   │   └── upload-avatar.service.test.js
+│   │   ├── company/
+│   │   │   ├── manage-company.service.test.js
+│   │   │   ├── hr-members.service.test.js
+│   │   │   └── moderate-company.service.test.js
+│   │   ├── cv/
+│   │   │   ├── cv.service.test.js
+│   │   │   ├── cv-default.service.test.js
+│   │   │   └── cv-parsing-orchestrator.test.js
+│   │   ├── job/
+│   │   │   ├── job-post.service.test.js
+│   │   │   ├── job-search.service.test.js
+│   │   │   └── job-detail.service.test.js
+│   │   ├── application/
+│   │   │   ├── apply-job.service.test.js
+│   │   │   ├── idempotency.service.test.js
+│   │   │   └── application-status-history.service.test.js
+│   │   ├── interview/
+│   │   │   ├── interview-schedule.service.test.js
+│   │   │   └── interview-feedback.service.test.js
+│   │   ├── realtime/
+│   │   │   ├── notification.service.test.js
+│   │   │   ├── chat-history.service.test.js
+│   │   │   ├── chat-message.service.test.js
+│   │   │   └── socket-auth.helper.test.js
+│   │   ├── saved-job/
+│   │   │   └── toggle-saved-job.service.test.js
+│   │   ├── admin/
+│   │   │   ├── moderate-users.service.test.js
+│   │   │   ├── audit-log.service.test.js
+│   │   │   ├── import-master-data.service.test.js
+│   │   │   └── export-large-data.service.test.js
+│   │   └── report/
+│   │       ├── dashboard-aggregate.service.test.js
+│   │       └── report-filter-builder.test.js
+│   └── helpers/
+│       ├── factories/
+│       │   ├── user.factory.js
+│       │   ├── company.factory.js
+│       │   ├── job.factory.js
+│       │   └── application.factory.js
+│       ├── mocks/
+│       │   ├── req-res-next.mock.js
+│       │   ├── jwt.mock.js
+│       │   ├── bcrypt.mock.js
+│       │   ├── mail-service.mock.js
+│       │   ├── queue.mock.js
+│       │   └── socket.mock.js
+│       ├── setup/
+│       │   ├── jest.setup.js
+│       │   └── env.setup.js
+│       └── builders/
+│           ├── token.builder.js
+│           └── payload.builder.js
+├── integration/
+│   ├── auth/
+│   ├── job/
+│   ├── application/
+│   └── health/
+└── coverage/
 ```
 
 ## Documentation
