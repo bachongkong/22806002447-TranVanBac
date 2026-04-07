@@ -32,9 +32,16 @@ app.use('/api', apiRoutes)
 app.use(errorHandler)
 
 // --- Socket.io ---
-const io = setupSocket(httpServer)
-// Gắn io vào app để modules khác dùng: req.app.get('io')
+// setupSocket trả về { io, chatNamespace, notificationNamespace }
+const { io, chatNamespace, notificationNamespace } = setupSocket(httpServer)
+
+// Gắn vào app để controllers emit event qua đúng namespace:
+//   req.app.get('io')                    — root io instance
+//   req.app.get('chatNamespace')         — namespace /chat
+//   req.app.get('notificationNamespace') — namespace /notifications
 app.set('io', io)
+app.set('chatNamespace', chatNamespace)
+app.set('notificationNamespace', notificationNamespace)
 
 // ============================================
 // Start Server

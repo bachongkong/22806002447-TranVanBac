@@ -34,6 +34,7 @@ recruitment-platform/
 │       │   ├── routes/    # Central router
 │       │   ├── sockets/   # Socket.io setup
 │       │   └── utils/     # JWT helpers
+│       └── tests/         # Backend unit & integration tests
 │       └── docs/          # Backend development docs
 │
 └── docs/                  # Project-level docs

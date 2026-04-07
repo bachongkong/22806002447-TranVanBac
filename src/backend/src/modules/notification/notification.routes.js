@@ -1,28 +1,29 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate } from '../../middleware/index.js'
-import { ApiResponse } from '../../common/index.js'
+import notificationController from './notification.controller.js'
+import { asyncHandler, authenticate, validate } from '../../middleware/index.js'
+import { listNotificationsSchema, markReadSchema } from './notification.validation.js'
+
+// ============================================
+// Notification Routes — /api/notifications
+// ============================================
+// Tất cả endpoints đều yêu cầu authenticate (mọi role)
+// ============================================
 
 const router = Router()
 router.use(authenticate)
 
-router.get('/', asyncHandler(async (req, res) => {
-  // TODO: list notifications
-  ApiResponse.success(res, { message: 'List notifications — chưa implement' })
-}))
+// GET    /notifications           — Danh sách notifications (paginated)
+router.get('/', validate(listNotificationsSchema), asyncHandler(notificationController.list))
 
-router.patch('/:id/read', asyncHandler(async (req, res) => {
-  // TODO: mark read
-  ApiResponse.success(res, { message: 'Mark read — chưa implement' })
-}))
+// GET    /notifications/unread-count — Số notification chưa đọc
+// Lưu ý: Đặt TRƯỚC /:id/read để Express không match nhầm "unread-count" thành :id
+router.get('/unread-count', asyncHandler(notificationController.unreadCount))
 
-router.patch('/read-all', asyncHandler(async (req, res) => {
-  // TODO: mark all read
-  ApiResponse.success(res, { message: 'Mark all read — chưa implement' })
-}))
+// PATCH  /notifications/read-all  — Đánh dấu tất cả đã đọc
+// Lưu ý: Đặt TRƯỚC /:id/read để Express không match nhầm "read-all" thành :id
+router.patch('/read-all', asyncHandler(notificationController.markAllRead))
 
-router.get('/unread-count', asyncHandler(async (req, res) => {
-  // TODO: unread count
-  ApiResponse.success(res, { message: 'Unread count — chưa implement', data: { count: 0 } })
-}))
+// PATCH  /notifications/:id/read  — Đánh dấu 1 notification đã đọc
+router.patch('/:id/read', validate(markReadSchema), asyncHandler(notificationController.markRead))
 
 export default router
