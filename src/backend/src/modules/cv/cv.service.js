@@ -10,10 +10,16 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const cvService = {
+  /**
+   * Truy xuất danh sách CV của ứng viên
+   */
   listMyCvs: async (candidateId) => {
     return CV.find({ candidateId }).sort({ isDefault: -1, createdAt: -1 })
   },
 
+  /**
+   * Đặt CV làm mặc định
+   */
   setDefaultCv: async (candidateId, cvId) => {
     const cv = await CV.findOne({ _id: cvId, candidateId })
     if (!cv) {
@@ -30,6 +36,9 @@ const cvService = {
     return cv
   },
 
+  /**
+   * Tạo CV Online (từ dữ liệu JSON truyền lên)
+   */
   createOnlineCv: async (candidateId, data) => {
     const existingCount = await CV.countDocuments({ candidateId })
 
@@ -43,6 +52,9 @@ const cvService = {
     return cv
   },
 
+  /**
+   * Cập nhật thông tin CV Online
+   */
   updateOnlineCv: async (candidateId, cvId, data) => {
     const cv = await CV.findOne({ _id: cvId, candidateId })
     if (!cv) {
@@ -60,6 +72,9 @@ const cvService = {
     return cv
   },
 
+  /**
+   * Xử lý file CV người dùng upload cứng
+   */
   uploadCv: async (candidateId, fileBuffer, originalName, title) => {
     const existingCount = await CV.countDocuments({ candidateId })
 
@@ -83,6 +98,9 @@ const cvService = {
     return cv
   },
 
+  /**
+   * Xoá CV (Xoá data và xoá file nếu có)
+   */
   deleteCv: async (candidateId, cvId) => {
     const cv = await CV.findOne({ _id: cvId, candidateId })
     if (!cv) {
@@ -94,7 +112,9 @@ const cvService = {
         const basename = cv.fileUrl.split('/').pop()
         const fullPath = path.join(process.cwd(), 'public', 'uploads', 'cvs', basename)
         await fs.unlink(fullPath)
-      } catch (err) { }
+      } catch (err) {
+        // Bỏ qua nếu file đã biến mất
+      }
     }
 
     const wasDefault = cv.isDefault
@@ -109,6 +129,9 @@ const cvService = {
     }
   },
 
+  /**
+   * Gọi Worker Thread để parse CV tránh blocking Event Loop
+   */
   parseCVText: (fileBuffer, mimeType) => {
     return new Promise((resolve, reject) => {
       if (mimeType !== 'application/pdf') {
@@ -116,12 +139,14 @@ const cvService = {
       }
 
       const workerPath = path.resolve(__dirname, '../../workers/ocr.worker.js')
-      
       const worker = new Worker(workerPath)
 
       worker.on('message', (message) => {
-        if (message.success) resolve(message.text)
-        else reject(ApiError.internal(`OCR Parsing failed: ${message.error}`))
+        if (message.success) {
+          resolve(message.text)
+        } else {
+          reject(ApiError.internal(`OCR Parsing failed: ${message.error}`))
+        }
         worker.terminate()
       })
 
@@ -131,12 +156,14 @@ const cvService = {
       })
 
       worker.on('exit', (code) => {
-        if (code !== 0) reject(ApiError.internal(`Worker stopped with exit code ${code}`))
+        if (code !== 0) {
+          reject(ApiError.internal(`Worker stopped with exit code ${code}`))
+        }
       })
 
       worker.postMessage({ buffer: fileBuffer })
     })
-  }
+  },
 }
 
 export default cvService
