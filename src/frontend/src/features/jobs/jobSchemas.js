@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const jobSchema = z.object({
+const jobSchema = z.object({
   title: z
     .string()
     .min(5, 'Tiêu đề công việc phải có ít nhất 5 ký tự.')
@@ -33,3 +33,4 @@ export const jobSchema = z.object({
       }
     ),
 });
+export default jobSchema;
