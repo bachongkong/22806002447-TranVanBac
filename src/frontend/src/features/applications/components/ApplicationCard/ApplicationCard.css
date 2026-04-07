@@ -116,7 +116,8 @@
 .app-card__footer {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
 
 .app-card__time {
@@ -125,4 +126,32 @@
   gap: 0.25rem;
   font-size: 0.7rem;
   color: var(--color-text-dim);
+  margin-left: auto;
+}
+
+/* --- Schedule Button --- */
+.app-card__schedule-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-primary-light);
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.app-card__schedule-btn:hover {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.app-card__schedule-btn:active {
+  transform: translateY(0);
 }

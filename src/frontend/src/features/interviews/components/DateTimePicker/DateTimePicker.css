@@ -1,0 +1,301 @@
+/* ============================================
+   DateTimePicker — Code Split Component
+   ============================================ */
+
+.datetime-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.datetime-picker__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.datetime-picker__label--required::after {
+  content: ' *';
+  color: var(--color-danger);
+}
+
+/* ---- Trigger Button ---- */
+.datetime-picker__trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+}
+
+.datetime-picker__trigger:hover {
+  border-color: var(--color-primary);
+  background: var(--color-surface-2);
+}
+
+.datetime-picker__trigger:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.datetime-picker__trigger-icon {
+  font-size: 1.1rem;
+  color: var(--color-primary-light);
+  flex-shrink: 0;
+}
+
+.datetime-picker__trigger-text {
+  flex: 1;
+}
+
+.datetime-picker__trigger-text--placeholder {
+  color: var(--color-text-dim);
+}
+
+/* ---- Dropdown Panel ---- */
+.datetime-picker__dropdown {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.05);
+  padding: 1.25rem;
+  animation: dtpSlideIn 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+@keyframes dtpSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Sections ---- */
+.datetime-picker__sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 480px) {
+  .datetime-picker__sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+.datetime-picker__section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-dim);
+  margin-bottom: 0.75rem;
+}
+
+/* ---- Calendar ---- */
+.dtp-calendar {
+  width: 100%;
+}
+
+.dtp-calendar__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.dtp-calendar__nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 0.9rem;
+}
+
+.dtp-calendar__nav-btn:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.dtp-calendar__month-year {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dtp-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.dtp-calendar__weekday {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-dim);
+  padding: 0.25rem 0;
+  text-transform: uppercase;
+}
+
+.dtp-calendar__day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dtp-calendar__day:hover:not(:disabled) {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.dtp-calendar__day--today {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary-light);
+}
+
+.dtp-calendar__day--selected {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.dtp-calendar__day--other-month {
+  opacity: 0.25;
+}
+
+.dtp-calendar__day:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+/* ---- Time Selector ---- */
+.dtp-time {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dtp-time__inputs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dtp-time__input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.dtp-time__input-label {
+  font-size: 0.65rem;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dtp-time__input {
+  width: 60px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: 'Inter', monospace;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  transition: all 0.2s;
+}
+
+.dtp-time__input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.dtp-time__separator {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-dim);
+  padding-top: 1rem;
+}
+
+/* Quick time buttons */
+.dtp-time__quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.dtp-time__quick-btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dtp-time__quick-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary-light);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.dtp-time__quick-btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+/* ---- Footer ---- */
+.datetime-picker__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---- Error ---- */
+.datetime-picker__error {
+  color: var(--color-danger);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}

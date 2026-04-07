@@ -39,6 +39,9 @@ export default defineConfig({
           if (id.includes('node_modules/recharts')) {
             return 'vendor-charts';
           }
+          if (id.includes('node_modules/dayjs')) {
+            return 'vendor-dayjs';
+          }
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
             return 'vendor-react';
           }
