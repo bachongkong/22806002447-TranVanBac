@@ -40,9 +40,6 @@ const auditLogSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
-  {
-    timestamps: true,
-  }
 )
 
 auditLogSchema.index({ userId: 1, createdAt: -1 })

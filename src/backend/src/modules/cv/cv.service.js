@@ -3,12 +3,15 @@ import CV from '../../models/CV.js'
 import { CV_SOURCE_TYPES } from '../../common/constants.js'
 import fs from 'fs/promises'
 import path from 'path'
+import { Worker } from 'worker_threads'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const cvService = {
   /**
    * Truy xuất danh sách CV của ứng viên
-   * @param {string} candidateId
-   * @returns {Promise<Array>} Danh sách CV
    */
   listMyCvs: async (candidateId) => {
     return CV.find({ candidateId }).sort({ isDefault: -1, createdAt: -1 })
@@ -16,8 +19,6 @@ const cvService = {
 
   /**
    * Đặt CV làm mặc định
-   * @param {string} candidateId
-   * @param {string} cvId
    */
   setDefaultCv: async (candidateId, cvId) => {
     const cv = await CV.findOne({ _id: cvId, candidateId })
@@ -25,7 +26,6 @@ const cvService = {
       throw ApiError.notFound('Không tìm thấy CV')
     }
 
-    // Set tất cả CV khác thành false
     await CV.updateMany(
       { candidateId, _id: { $ne: cvId } },
       { $set: { isDefault: false } }
@@ -45,7 +45,7 @@ const cvService = {
     const cv = await CV.create({
       candidateId,
       title: data.title,
-      isDefault: existingCount === 0, // Mặc định nếu là CV đầu tiên
+      isDefault: existingCount === 0,
       sourceType: CV_SOURCE_TYPES.BUILDER,
       parsedData: data.parsedData,
     })
@@ -78,19 +78,15 @@ const cvService = {
   uploadCv: async (candidateId, fileBuffer, originalName, title) => {
     const existingCount = await CV.countDocuments({ candidateId })
 
-    // Tạo thư mục public/uploads/cvs nếu chưa tồn tại
     const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'cvs')
     await fs.mkdir(uploadDir, { recursive: true })
 
-    // Xóa dấu tiếng việt, kí tự lạ
     const safeName = originalName.replace(/[^a-zA-Z0-9_\-\.]/g, '') || 'cv.pdf'
     const fileName = `cv-${candidateId}-${Date.now()}-${safeName}`
     const filePath = path.join(uploadDir, fileName)
 
-    // Lưu file
     await fs.writeFile(filePath, fileBuffer)
 
-    // Tạo record DB
     const cv = await CV.create({
       candidateId,
       title: title || originalName,
@@ -111,7 +107,6 @@ const cvService = {
       throw ApiError.notFound('Không tìm thấy CV')
     }
 
-    // Nếu CV là file upload tĩnh, xoá file
     if (cv.sourceType === CV_SOURCE_TYPES.UPLOAD && cv.fileUrl) {
       try {
         const basename = cv.fileUrl.split('/').pop()
@@ -125,7 +120,6 @@ const cvService = {
     const wasDefault = cv.isDefault
     await CV.deleteOne({ _id: cv._id })
 
-    // Gán cờ default về một CV khác nếu xoá mất cái default
     if (wasDefault) {
       const anotherCv = await CV.findOne({ candidateId })
       if (anotherCv) {
@@ -133,32 +127,18 @@ const cvService = {
         await anotherCv.save()
       }
     }
-  }
-import { Worker } from 'worker_threads'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { ApiError } from '../../common/index.js'
+  },
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const cvService = {
   /**
    * Gọi Worker Thread để parse CV tránh blocking Event Loop
-   * @param {Buffer} fileBuffer
-   * @param {string} mimeType
-   * @returns {Promise<string>} parsedText
    */
   parseCVText: (fileBuffer, mimeType) => {
     return new Promise((resolve, reject) => {
-      // Tạm thời BE-CV-01 định dạng tập trung PDF qua pdf-parse
-      // Bạn có thể mở rộng logic switch mimeType (Word, Image) ở Worker sau
       if (mimeType !== 'application/pdf') {
         return reject(ApiError.badRequest('Hệ thống hiện tại chỉ hỗ trợ trích xuất văn bản từ file PDF.'))
       }
 
       const workerPath = path.resolve(__dirname, '../../workers/ocr.worker.js')
-      
       const worker = new Worker(workerPath)
 
       worker.on('message', (message) => {
@@ -167,7 +147,6 @@ const cvService = {
         } else {
           reject(ApiError.internal(`OCR Parsing failed: ${message.error}`))
         }
-        // Terminate worker sau khi hoàn thành
         worker.terminate()
       })
 
@@ -182,12 +161,9 @@ const cvService = {
         }
       })
 
-      // Gửi buffer sang worker
       worker.postMessage({ buffer: fileBuffer })
     })
-  }
-
-  // TODO: Add other CV methods (create, update, read, delete) later
+  },
 }
 
 export default cvService

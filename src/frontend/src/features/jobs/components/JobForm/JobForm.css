@@ -1,0 +1,397 @@
+/* ============================================
+   JobForm — Multi-step Wizard Styles
+   ============================================ */
+
+/* --- Form Container --- */
+.job-form {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.job-form__card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* --- Stepper --- */
+.job-stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  padding: 1.5rem 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.job-stepper__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  flex: 1;
+}
+
+.job-stepper__line {
+  position: absolute;
+  top: 16px;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--color-border);
+  z-index: 0;
+  transition: background 0.3s;
+}
+
+.job-stepper__line--active {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+}
+
+.job-stepper__circle {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 2px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-dim);
+  cursor: default;
+  transition: all 0.3s;
+  font-family: var(--font-family);
+}
+
+.job-stepper__circle--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+
+.job-stepper__circle--completed {
+  border-color: var(--color-success);
+  background: var(--color-success);
+  color: #fff;
+  cursor: pointer;
+}
+
+.job-stepper__circle--completed:hover {
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+}
+
+.job-stepper__check {
+  font-size: 1rem;
+  stroke-width: 3;
+}
+
+.job-stepper__label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-dim);
+  text-align: center;
+  transition: color 0.3s;
+  white-space: nowrap;
+}
+
+.job-stepper__label--active {
+  color: var(--color-primary-light);
+}
+
+.job-stepper__label--completed {
+  color: var(--color-success);
+}
+
+/* --- Form Fields --- */
+.job-form__group {
+  margin-bottom: 1.25rem;
+}
+
+.job-form__label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: 0.4rem;
+}
+
+.job-form__label--required::after {
+  content: ' *';
+  color: var(--color-danger);
+}
+
+.job-form__input,
+.job-form__select,
+.job-form__textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-family: var(--font-family);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.job-form__input:focus,
+.job-form__select:focus,
+.job-form__textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.job-form__input::placeholder,
+.job-form__textarea::placeholder {
+  color: var(--color-text-dim);
+}
+
+.job-form__input--error,
+.job-form__select--error,
+.job-form__textarea--error {
+  border-color: var(--color-danger);
+}
+
+.job-form__input--error:focus,
+.job-form__select--error:focus,
+.job-form__textarea--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.job-form__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+.job-form__textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.job-form__error {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--color-danger);
+  margin-top: 0.3rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.job-form__hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
+  margin-top: 0.25rem;
+}
+
+/* --- Row layout (side-by-side fields) --- */
+.job-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* --- Actions bar --- */
+.job-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- Button variants --- */
+.btn--success {
+  background: linear-gradient(135deg, var(--color-primary), #818cf8);
+  color: #fff;
+  font-weight: 500;
+}
+
+.btn--success:hover {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn--danger-outline {
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+.btn--danger-outline:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- Step 3 Preview --- */
+.job-preview {
+  animation: fadeIn 0.3s ease;
+}
+
+.job-preview__header {
+  margin-bottom: 1.5rem;
+}
+
+.job-preview__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 0.75rem;
+}
+
+.job-preview__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.job-preview__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.job-preview__chip-icon {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.job-preview__section {
+  margin-bottom: 1.5rem;
+}
+
+.job-preview__section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.job-preview__text {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.job-preview__text--empty {
+  color: var(--color-text-dim);
+  font-style: italic;
+}
+
+.job-preview__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+/* --- Read-only warning (non-draft edit) --- */
+.job-readonly-warning {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  padding: 3rem 2rem;
+  max-width: 500px;
+  margin: 2rem auto;
+}
+
+.job-readonly-warning__icon {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.job-readonly-warning__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.job-readonly-warning__message {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .job-form__card {
+    padding: 1.25rem;
+  }
+
+  .job-form__row {
+    grid-template-columns: 1fr;
+  }
+
+  .job-form__actions {
+    flex-direction: column;
+  }
+
+  .job-form__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .job-stepper {
+    padding: 1rem 0.5rem;
+  }
+
+  .job-stepper__label {
+    font-size: 0.7rem;
+  }
+
+  .job-stepper__circle {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+  }
+}
