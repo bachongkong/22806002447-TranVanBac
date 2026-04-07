@@ -51,10 +51,8 @@ router.get('/audit-logs', validate(getAuditLogsSchema), asyncHandler(adminContro
 router.post('/master-data/import', upload.single('file'), asyncHandler(adminController.importMasterData))
 
 // ============================================
-// Dashboard (TODO)
+// Dashboard
 // ============================================
-router.get('/dashboard', asyncHandler(async (req, res) => {
-  ApiResponse.success(res, { message: 'Admin dashboard — chưa implement' })
-}))
+router.get('/dashboard', asyncHandler(adminController.getDashboardStats))
 
 export default router
