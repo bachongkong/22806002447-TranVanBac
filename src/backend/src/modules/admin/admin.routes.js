@@ -10,6 +10,7 @@ import {
   moderateCompanySchema,
   listPendingCompaniesSchema,
   getAuditLogsSchema,
+  exportUsersSchema
 } from './admin.validation.js'
 import multer from 'multer'
 
@@ -23,6 +24,7 @@ router.use(authorize(ROLES.ADMIN))
 // User Moderation
 // ============================================
 router.get('/users', validate(getUsersSchema), asyncHandler(adminController.getUsers))
+router.get('/users/export', validate(exportUsersSchema), asyncHandler(adminController.exportUsers))
 router.patch('/users/:id/toggle-block', validate(toggleBlockUserSchema), asyncHandler(adminController.toggleBlockUser))
 
 // ============================================
