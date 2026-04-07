@@ -319,6 +319,8 @@ const getDashboardStats = async (req, res) => {
       jobs: recentEntities[1]
     }
   });
+};
+
 const exportUsers = async (req, res) => {
   const { role, status, keyword, sort } = req.query
 
