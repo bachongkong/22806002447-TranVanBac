@@ -1,0 +1,95 @@
+.job-vlist__count {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.job-vlist__count strong {
+  color: var(--color-text);
+}
+
+/* Scroll container */
+.job-vlist__scroll {
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-surface-2) transparent;
+}
+
+.job-vlist__scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.job-vlist__scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.job-vlist__scroll::-webkit-scrollbar-thumb {
+  background: var(--color-surface-2);
+  border-radius: 3px;
+}
+
+.job-vlist__spacer {
+  position: relative;
+}
+
+.job-vlist__items {
+  will-change: transform;
+}
+
+.job-vlist__sentinel {
+  height: 1px;
+}
+
+/* Loading states */
+.job-vlist__status,
+.job-vlist__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.job-vlist__empty h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.job-vlist__empty p {
+  font-size: 0.9rem;
+}
+
+.job-vlist__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: vlistSpin 0.7s linear infinite;
+}
+
+.job-vlist__spinner--sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+@keyframes vlistSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.job-vlist__loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
