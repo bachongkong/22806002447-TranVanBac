@@ -22,6 +22,10 @@ const MyProfilePage = lazy(() => import('@pages/candidate/MyProfilePage'))
 // --- HR Pages ---
 const HRDashboard = lazy(() => import('@pages/hr/HRDashboard'))
 const CompanyProfilePage = lazy(() => import('@pages/hr/CompanyProfilePage'))
+const MyJobsPage = lazy(() => import('@pages/hr/MyJobsPage'))
+const CreateJobPage = lazy(() => import('@pages/hr/CreateJobPage'))
+const EditJobPage = lazy(() => import('@pages/hr/EditJobPage'))
+const KanbanBoardPage = lazy(() => import('@pages/hr/KanbanBoardPage'))
 
 // --- Admin Pages ---
 const AdminDashboard = lazy(() => import('@pages/admin/AdminDashboard'))
@@ -69,7 +73,10 @@ export default function AppRouter() {
         >
           <Route path="/hr/dashboard" element={<HRDashboard />} />
           <Route path="/hr/company" element={<CompanyProfilePage />} />
-          {/* Thêm HR routes ở đây */}
+          <Route path="/hr/jobs" element={<MyJobsPage />} />
+          <Route path="/hr/jobs/create" element={<CreateJobPage />} />
+          <Route path="/hr/jobs/:id/edit" element={<EditJobPage />} />
+          <Route path="/hr/jobs/:jobId/applications" element={<KanbanBoardPage />} />
         </Route>
 
         {/* ===== ADMIN ROUTES ===== */}

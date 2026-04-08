@@ -39,6 +39,8 @@ const API = {
   JOBS: {
     BASE: '/jobs',
     BY_ID: (id) => `/jobs/${id}`,
+    MY_JOBS: '/jobs/my-jobs',
+    UPDATE_STATUS: (id) => `/jobs/${id}/status`,
     BY_COMPANY: (companyId) => `/companies/${companyId}/jobs`,
     SEARCH: '/jobs/search',
     FAVORITES: '/jobs/favorites',
@@ -58,7 +60,7 @@ const API = {
   APPLICATIONS: {
     BASE: '/applications',
     BY_ID: (id) => `/applications/${id}`,
-    BY_JOB: (jobId) => `/jobs/${jobId}/applications`,
+    BY_JOB: (jobId) => `/applications/by-job/${jobId}`,
     MY_APPLICATIONS: '/applications/my-applications',
     UPDATE_STATUS: (id) => `/applications/${id}/status`,
     WITHDRAW: (id) => `/applications/${id}/withdraw`,

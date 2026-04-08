@@ -1,7 +1,7 @@
 import { apiClient, API } from '@shared/services'
 
 const applicationService = {
-  apply: (data) => apiClient.post(API.APPLICATIONS.BASE, data),
+  apply: (data, config) => apiClient.post(API.APPLICATIONS.BASE, data, config),
   getMyApplications: (params) => apiClient.get(API.APPLICATIONS.MY_APPLICATIONS, { params }),
   getById: (id) => apiClient.get(API.APPLICATIONS.BY_ID(id)),
   getByJob: (jobId, params) => apiClient.get(API.APPLICATIONS.BY_JOB(jobId), { params }),

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { profileService } from './profileService'
+import { profileService } from '../services/profileService'
 import toast from 'react-hot-toast'
 import useAuthStore from '@app/store/authStore'
 

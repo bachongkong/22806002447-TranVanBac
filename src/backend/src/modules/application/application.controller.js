@@ -126,6 +126,42 @@ const applicationController = {
       data: application,
     })
   },
+
+  /**
+   * GET /applications/by-job/:jobId — HR xem danh sách ứng viên theo job
+   */
+  getApplicationsByJob: async (req, res) => {
+    const { jobId } = req.params
+    const hrId = req.user.userId
+
+    // 1. Phân quyền: HR chỉ xem đơn thuộc công ty mình
+    const hr = await User.findById(hrId).select('companyId').lean()
+    if (!hr || !hr.companyId) {
+      throw ApiError.forbidden('Bạn không thuộc công ty nào')
+    }
+
+    // 2. Kiểm tra job thuộc công ty HR
+    const job = await Job.findById(jobId).select('companyId title').lean()
+    if (!job) {
+      throw ApiError.notFound('Không tìm thấy tin tuyển dụng')
+    }
+    if (job.companyId.toString() !== hr.companyId.toString()) {
+      throw ApiError.forbidden('Bạn không có quyền xem ứng viên của tin tuyển dụng này')
+    }
+
+    // 3. Lấy applications
+    const applications = await Application.find({ jobId })
+      .populate('candidateId', 'email profile.fullName profile.avatar profile.phone')
+      .populate('cvId', 'title sourceType fileUrl')
+      .sort({ appliedAt: -1 })
+      .lean()
+
+    ApiResponse.success(res, {
+      message: 'Lấy danh sách ứng viên thành công',
+      data: applications,
+      meta: { jobTitle: job.title, total: applications.length },
+    })
+  },
 }
 
 export default applicationController

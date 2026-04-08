@@ -1,23 +1,36 @@
 import { Router } from 'express'
-import { asyncHandler, authenticate } from '../../middleware/index.js'
-import { ApiResponse } from '../../common/index.js'
+import { asyncHandler, authenticate, validate } from '../../middleware/index.js'
+import chatController from './chat.controller.js'
+import {
+  getConversationsSchema,
+  getMessagesSchema,
+  sendMessageSchema,
+} from './chat.validation.js'
 
 const router = Router()
+
+// Tất cả các route chat đều yêu cầu đăng nhập
 router.use(authenticate)
 
-router.get('/conversations', asyncHandler(async (req, res) => {
-  // TODO: list conversations
-  ApiResponse.success(res, { message: 'List conversations — chưa implement' })
-}))
+// Lấy danh sách conversation
+router.get(
+  '/conversations',
+  validate(getConversationsSchema),
+  asyncHandler(chatController.getConversations)
+)
 
-router.get('/conversations/:id/messages', asyncHandler(async (req, res) => {
-  // TODO: get messages
-  ApiResponse.success(res, { message: 'Get messages — chưa implement' })
-}))
+// Lấy lịch sử tin nhắn của 1 conversation (Cursor-based)
+router.get(
+  '/conversations/:id/messages',
+  validate(getMessagesSchema),
+  asyncHandler(chatController.getMessages)
+)
 
-router.post('/conversations/:id/messages', asyncHandler(async (req, res) => {
-  // TODO: send message
-  ApiResponse.created(res, { message: 'Send message — chưa implement' })
-}))
+// Gửi tin nhắn
+router.post(
+  '/conversations/:id/messages',
+  validate(sendMessageSchema),
+  asyncHandler(chatController.sendMessage)
+)
 
 export default router
