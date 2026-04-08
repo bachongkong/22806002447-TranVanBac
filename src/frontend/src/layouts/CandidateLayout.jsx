@@ -1,5 +1,6 @@
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { HiOutlineBriefcase, HiOutlineDocumentText, HiOutlineHeart, HiOutlineBell, HiOutlineChatBubbleLeftRight, HiOutlineUser, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
+import { NotificationBell } from '@shared/components'
 import useAuthStore from '@app/store/authStore'
 import useUIStore from '@app/store/uiStore'
 import { useLogout } from '@features/auth'
@@ -22,6 +23,7 @@ export default function CandidateLayout() {
   const { user } = useAuthStore()
   const { sidebarOpen, toggleSidebar } = useUIStore()
   const { mutate: logoutAPI, isPending: isLoggingOut } = useLogout()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     if (!isLoggingOut) logoutAPI()
@@ -69,7 +71,12 @@ export default function CandidateLayout() {
       </aside>
 
       <main className="dashboard-main">
-        <Outlet />
+        <header className="dashboard-header-top">
+          <NotificationBell onClick={() => navigate('/candidate/notifications')} />
+        </header>
+        <div style={{ flex: 1 }}>
+          <Outlet />
+        </div>
       </main>
     </div>
   )
