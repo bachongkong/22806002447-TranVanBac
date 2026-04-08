@@ -103,3 +103,29 @@ export const listMyJobsSchema = {
     sort: Joi.string().valid('createdAt', '-createdAt', 'title', '-title').default('-createdAt'),
   }),
 }
+
+// ============================================
+// Saved / Favorite Schemas
+// ============================================
+
+/**
+ * POST /jobs/:id/favorite — Toggle lưu job
+ */
+export const toggleFavoriteSchema = {
+  params: Joi.object({
+    id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required().messages({
+      'string.pattern.base': 'Job ID không hợp lệ',
+    }),
+  }),
+}
+
+/**
+ * GET /jobs/favorites — Danh sách jobs đã lưu
+ */
+export const listFavoritesSchema = {
+  query: Joi.object({
+    page: Joi.number().integer().min(1).default(1),
+    limit: Joi.number().integer().min(1).max(50).default(10),
+  }),
+}
+

@@ -1,6 +1,6 @@
 import { ApiResponse, ApiError } from '../../common/index.js'
 import { JOB_STATUS, COMPANY_STATUS } from '../../common/constants.js'
-import { Job, Company, User } from '../../models/index.js'
+import { Job, Company, User, SavedJob } from '../../models/index.js'
 
 // ============================================
 // Allowed status transitions cho HR
@@ -32,11 +32,9 @@ const jobController = {
 
     // 2. Build filters
     if (keyword) {
-      // Dùng MongoDB text index cho kết quả keyword
       query.$text = { $search: keyword }
     }
     if (location) {
-      // Regex case-insensitive để tìm địa điểm có tính tương đối
       query.location = { $regex: location, $options: 'i' }
     }
     if (employmentType) {
@@ -46,23 +44,18 @@ const jobController = {
       query.experienceLevel = experienceLevel
     }
     if (salaryMin !== undefined) {
-      // Logic requirement: job's max salary must be >= candidate's minimum expected salary
-      // Or simply job's salary range intersects with expected min
       query.$or = [
         { 'salaryRange.min': { $gte: Number(salaryMin) } },
         { 'salaryRange.max': { $gte: Number(salaryMin) } },
       ]
     }
 
-    // 3. Apply Cursor Pagination
-    // Vì ta sort theo descending (_id: -1) (Mới nhất lên đầu)
-    // Next page sẽ có _id NHỎ HƠN cursor hiện tại.
+    // 3. Cursor pagination (sort _id desc — mới nhất lên đầu)
     if (cursor) {
       query._id = { $lt: cursor }
     }
 
-    // 4. Thực thi Query
-    // Khuyến nghị: Fetch limit + 1 records để biết liệu có trang tiếp theo (hasNextPage) hay không
+    // 4. Fetch limit + 1 để xác định hasNextPage
     const fetchLimit = Number(limit) + 1
 
     const jobs = await Job.find(query)
@@ -71,28 +64,22 @@ const jobController = {
       .limit(fetchLimit)
       .lean()
 
-    // 5. Tính toán Pagination state
+    // 5. Pagination state
     const hasNextPage = jobs.length === fetchLimit
-    // Xóa record phụ trội đã fetch mồi
     const data = hasNextPage ? jobs.slice(0, -1) : jobs
-
     const nextCursor = data.length > 0 ? data[data.length - 1]._id : null
 
     ApiResponse.success(res, {
       message: 'Lấy danh sách việc làm thành công',
       data,
-      meta: {
-        nextCursor,
-        hasNextPage,
-        limit: Number(limit),
-      },
+      meta: { nextCursor, hasNextPage, limit: Number(limit) },
     })
   },
+
   /**
    * POST /jobs — HR tạo job mới (status = draft)
    */
   create: async (req, res) => {
-    // Lấy user để có companyId (JWT chỉ chứa userId, role, email)
     const user = await User.findById(req.user.userId).select('companyId')
     if (!user?.companyId) {
       throw ApiError.badRequest('Bạn chưa thuộc công ty nào. Hãy tạo hoặc được thêm vào công ty trước.')
@@ -137,19 +124,16 @@ const jobController = {
       throw ApiError.notFound('Không tìm thấy tin tuyển dụng')
     }
 
-    // Chỉ HR tạo job mới được sửa
     if (job.createdByHR.toString() !== req.user.userId) {
       throw ApiError.forbidden('Bạn chỉ có thể chỉnh sửa tin tuyển dụng do mình tạo')
     }
 
-    // Chỉ cho phép sửa khi draft
     if (job.status !== JOB_STATUS.DRAFT) {
       throw ApiError.badRequest(
         `Chỉ có thể chỉnh sửa tin ở trạng thái "${JOB_STATUS.DRAFT}". Trạng thái hiện tại: "${job.status}"`
       )
     }
 
-    // Cập nhật fields
     Object.assign(job, req.body)
     await job.save()
 
@@ -169,12 +153,10 @@ const jobController = {
       throw ApiError.notFound('Không tìm thấy tin tuyển dụng')
     }
 
-    // Chỉ HR tạo job mới được xóa
     if (job.createdByHR.toString() !== req.user.userId) {
       throw ApiError.forbidden('Bạn chỉ có thể xóa tin tuyển dụng do mình tạo')
     }
 
-    // Chỉ cho phép xóa khi draft
     if (job.status !== JOB_STATUS.DRAFT) {
       throw ApiError.badRequest('Chỉ có thể xóa tin ở trạng thái draft')
     }
@@ -186,8 +168,6 @@ const jobController = {
 
   /**
    * PATCH /jobs/:id/status — HR chuyển trạng thái
-   * draft -> pending (submit for review): cần company đã approved
-   * published -> closed (HR đóng tin)
    */
   updateStatus: async (req, res) => {
     const { status: newStatus } = req.body
@@ -197,12 +177,10 @@ const jobController = {
       throw ApiError.notFound('Không tìm thấy tin tuyển dụng')
     }
 
-    // Chỉ HR tạo job mới được đổi status
     if (job.createdByHR.toString() !== req.user.userId) {
       throw ApiError.forbidden('Bạn chỉ có thể thay đổi trạng thái tin tuyển dụng do mình tạo')
     }
 
-    // Kiểm tra transition hợp lệ
     const allowedTransitions = HR_STATUS_TRANSITIONS[job.status]
     if (!allowedTransitions || !allowedTransitions.includes(newStatus)) {
       throw ApiError.badRequest(
@@ -211,7 +189,7 @@ const jobController = {
       )
     }
 
-    // Business Logic: Khóa không cho publish nếu Cty chưa Approved
+    // Không cho publish nếu công ty chưa approved
     if (newStatus === JOB_STATUS.PUBLISHED) {
       const company = await Company.findById(job.companyId).select('status').lean()
       if (!company) {
@@ -219,8 +197,8 @@ const jobController = {
       }
       if (company.status !== COMPANY_STATUS.APPROVED) {
         throw ApiError.badRequest(
-          'Công ty chưa được phê duyệt. Không thể chuyển trạng thái tin tuyển dụng sang "Published". ' +
-          'Vui lòng chờ Admin phê duyệt công ty trước khi public tin.'
+          'Công ty chưa được phê duyệt. Không thể publish tin. ' +
+          'Vui lòng chờ Admin phê duyệt công ty trước.'
         )
       }
     }
@@ -235,13 +213,12 @@ const jobController = {
   },
 
   /**
-   * GET /jobs/my-jobs — HR xem danh sách jobs của mình (tất cả status)
+   * GET /jobs/my-jobs — HR xem danh sách jobs của mình
    */
   getMyJobs: async (req, res) => {
     const { page = 1, limit = 10, status, sort = '-createdAt' } = req.query
     const skip = (page - 1) * limit
 
-    // Build query
     const query = { createdByHR: req.user.userId }
     if (status) query.status = status
 
@@ -258,6 +235,80 @@ const jobController = {
     ApiResponse.paginated(res, { data: jobs, page, limit, total })
   },
 
+  // ============================================
+  // Saved / Favorite Jobs (Candidate)
+  // ============================================
+
+  /**
+   * POST /jobs/:id/favorite — Toggle lưu / bỏ lưu job
+   *
+   * Nếu chưa lưu → tạo SavedJob → isSaved: true
+   * Nếu đã lưu   → xóa SavedJob → isSaved: false
+   */
+  toggleFavorite: async (req, res) => {
+    const { id: jobId } = req.params
+    const candidateId = req.user.userId
+
+    // Kiểm tra job tồn tại
+    const jobExists = await Job.exists({ _id: jobId })
+    if (!jobExists) {
+      throw ApiError.notFound('Không tìm thấy tin tuyển dụng')
+    }
+
+    // Thử xóa — nếu xóa được nghĩa là đang saved → unsave
+    const deleted = await SavedJob.findOneAndDelete({ candidateId, jobId })
+
+    if (deleted) {
+      return ApiResponse.success(res, {
+        message: 'Đã bỏ lưu tin tuyển dụng',
+        data: { jobId, isSaved: false },
+      })
+    }
+
+    // Chưa lưu → tạo mới
+    await SavedJob.create({ candidateId, jobId })
+
+    ApiResponse.success(res, {
+      message: 'Đã lưu tin tuyển dụng',
+      data: { jobId, isSaved: true },
+    })
+  },
+
+  /**
+   * GET /jobs/favorites — Danh sách jobs đã lưu (offset pagination)
+   */
+  getFavorites: async (req, res) => {
+    const { page = 1, limit = 10 } = req.query
+    const candidateId = req.user.userId
+    const skip = (page - 1) * limit
+
+    const filter = { candidateId }
+
+    const [savedJobs, total] = await Promise.all([
+      SavedJob.find(filter)
+        .populate({
+          path: 'jobId',
+          select: 'title location employmentType experienceLevel salaryRange skills status createdAt',
+          populate: { path: 'companyId', select: 'name logo location' },
+        })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .lean(),
+      SavedJob.countDocuments(filter),
+    ])
+
+    // Lọc bỏ saved jobs mà job đã bị xóa (jobId = null sau populate)
+    const data = savedJobs
+      .filter((s) => s.jobId !== null)
+      .map((s) => ({
+        _id: s._id,
+        savedAt: s.createdAt,
+        job: s.jobId,
+      }))
+
+    ApiResponse.paginated(res, { data, page, limit, total })
+  },
 }
 
 export default jobController
