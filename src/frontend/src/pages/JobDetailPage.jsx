@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
   FiArrowLeft, FiMapPin, FiBriefcase, FiClock, FiDollarSign,
@@ -9,6 +10,7 @@ import { useDocumentTitle } from '@shared/hooks'
 import { useJob } from '@features/jobs/hooks/useJobs'
 import { formatSalary, timeAgo } from '@shared/utils'
 import useAuthStore from '@app/store/authStore'
+import ApplyJobModal from '@features/applications/components/ApplyJobModal/ApplyJobModal'
 import toast from 'react-hot-toast'
 import './JobDetailPage.css'
 
@@ -62,6 +64,9 @@ export default function JobDetailPage() {
   const { data, isLoading, isError, error } = useJob(id)
   const auth = useAuthStore()
 
+  // --- Apply Modal state ---
+  const [showApplyModal, setShowApplyModal] = useState(false)
+
   const job = data?.data
   const company = job?.companyId || {}
 
@@ -69,11 +74,13 @@ export default function JobDetailPage() {
 
   // --- Handle Apply ---
   const handleApply = () => {
+    if (!auth?.isAuthenticated) {
     if (!auth?.user) {
       toast('Vui lòng đăng nhập để ứng tuyển', { icon: '🔒' })
       navigate('/login', { state: { from: `/jobs/${id}` } })
       return
     }
+    setShowApplyModal(true)
     toast.success('Tính năng ứng tuyển sắp ra mắt! 🚀')
   }
 
@@ -288,6 +295,14 @@ export default function JobDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* ===== Apply Modal ===== */}
+      <ApplyJobModal
+        isOpen={showApplyModal}
+        onClose={() => setShowApplyModal(false)}
+        jobId={id}
+        jobTitle={job.title}
+      />
     </div>
   )
 }
