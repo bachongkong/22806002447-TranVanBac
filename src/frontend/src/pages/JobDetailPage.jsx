@@ -75,7 +75,6 @@ export default function JobDetailPage() {
   // --- Handle Apply ---
   const handleApply = () => {
     if (!auth?.isAuthenticated) {
-    if (!auth?.user) {
       toast('Vui lòng đăng nhập để ứng tuyển', { icon: '🔒' })
       navigate('/login', { state: { from: `/jobs/${id}` } })
       return
