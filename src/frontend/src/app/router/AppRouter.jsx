@@ -26,6 +26,7 @@ const CompanyProfilePage = lazy(() => import('@pages/hr/CompanyProfilePage'))
 // --- Admin Pages ---
 const AdminDashboard = lazy(() => import('@pages/admin/AdminDashboard'))
 const ManageCompaniesPage = lazy(() => import('@pages/admin/ManageCompaniesPage'))
+const SystemSettingsPage = lazy(() => import('@pages/admin/SystemSettingsPage'))
 
 export default function AppRouter() {
   return (
@@ -81,6 +82,7 @@ export default function AppRouter() {
         >
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/companies" element={<ManageCompaniesPage />} />
+          <Route path="/admin/settings" element={<SystemSettingsPage />} />
           {/* Thêm admin routes ở đây */}
         </Route>
 
