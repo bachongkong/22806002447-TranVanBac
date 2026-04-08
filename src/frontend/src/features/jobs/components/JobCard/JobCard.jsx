@@ -1,15 +1,41 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FiMapPin, FiBriefcase, FiClock, FiDollarSign } from 'react-icons/fi'
+import { FiMapPin, FiBriefcase, FiClock, FiDollarSign, FiHeart } from 'react-icons/fi'
+import { FaHeart } from 'react-icons/fa'
 import { formatSalary, timeAgo } from '@shared/utils'
+import { useAuthStore } from '@app/store'
+import { useToggleFavoriteJob } from '@features/jobs'
 import './JobCard.css'
 
 export default function JobCard({ job, style }) {
   const navigate = useNavigate()
+  const isCandidate = useAuthStore(state => state.isCandidate())
+  const [isSavedLocal, setIsSavedLocal] = useState(!!job.isSaved)
+  const [isAnim, setIsAnim] = useState(false)
+  const { mutate } = useToggleFavoriteJob()
+
 
   const company = job.companyId || {}
 
   const handleClick = () => {
     navigate(`/jobs/${job._id}`)
+  }
+
+  const handleSave = (e) => {
+    e.stopPropagation()
+    if (!isCandidate) return
+
+    const prev = isSavedLocal
+    setIsSavedLocal(!prev)
+    
+    if (!prev) {
+      setIsAnim(true)
+      setTimeout(() => setIsAnim(false), 300)
+    }
+
+    mutate(job._id, {
+      onError: () => setIsSavedLocal(prev)
+    })
   }
 
   return (
@@ -65,13 +91,23 @@ export default function JobCard({ job, style }) {
           )}
         </div>
 
-        {/* Right section: salary + time */}
         <div className="job-card__aside">
           <div className="job-card__salary">
             <FiDollarSign size={14} />
             {formatSalary(job.salaryRange?.min, job.salaryRange?.max)}
           </div>
-          <span className="job-card__time">{timeAgo(job.createdAt)}</span>
+          <div className="job-card__bottom-right">
+            <span className="job-card__time">{timeAgo(job.createdAt)}</span>
+            {isCandidate && (
+              <button 
+                className={`job-card__save-btn ${isSavedLocal ? 'is-saved' : ''} ${isAnim ? 'animate-pop' : ''}`}
+                onClick={handleSave}
+                title={isSavedLocal ? "Bỏ lưu tin này" : "Lưu tin này"}
+              >
+                {isSavedLocal ? <FaHeart size={18} /> : <FiHeart size={18} />}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
