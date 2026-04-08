@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, lazy, Suspense } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   DndContext,
@@ -27,6 +27,12 @@ import {
 import ApplicationCard from '@features/applications/components/ApplicationCard/ApplicationCard'
 import './KanbanBoardPage.css'
 
+// 🔥 CODE SPLITTING: ScheduleInterviewModal is lazy loaded
+// Only downloads when HR clicks "Lên lịch PV" on a card
+const ScheduleInterviewModal = lazy(() =>
+  import('@features/interviews/components/ScheduleInterviewModal/ScheduleInterviewModal')
+)
+
 // ============================================
 // Cấu hình cột Kanban
 // ============================================
@@ -44,7 +50,7 @@ const KANBAN_COLUMNS = [
 // ============================================
 // KanbanColumn (Droppable)
 // ============================================
-function KanbanColumn({ column, applications }) {
+function KanbanColumn({ column, applications, onScheduleInterview }) {
   const { setNodeRef, isOver } = useDroppable({ id: column.id })
   const Icon = column.icon
 
@@ -68,7 +74,11 @@ function KanbanColumn({ column, applications }) {
             <div className="kanban-column__empty">Chưa có ứng viên</div>
           ) : (
             applications.map((app) => (
-              <ApplicationCard key={app._id} application={app} />
+              <ApplicationCard
+                key={app._id}
+                application={app}
+                onScheduleInterview={onScheduleInterview}
+              />
             ))
           )}
         </SortableContext>
@@ -86,6 +96,8 @@ export default function KanbanBoardPage() {
   const updateStatus = useUpdateApplicationStatus(jobId)
 
   const [activeApp, setActiveApp] = useState(null)
+  // State cho Schedule Interview Modal
+  const [scheduleTarget, setScheduleTarget] = useState(null)
 
   useDocumentTitle(data?.meta?.jobTitle ? `Ứng viên — ${data.meta.jobTitle}` : 'Kanban Board')
 
@@ -161,6 +173,11 @@ export default function KanbanBoardPage() {
 
   const handleDragCancel = useCallback(() => {
     setActiveApp(null)
+  }, [])
+
+  // --- Schedule Interview handler ---
+  const handleScheduleInterview = useCallback((application) => {
+    setScheduleTarget(application)
   }, [])
 
   // --- Loading ---
@@ -244,6 +261,7 @@ export default function KanbanBoardPage() {
               key={col.id}
               column={col}
               applications={groupedApps[col.id] || []}
+              onScheduleInterview={handleScheduleInterview}
             />
           ))}
         </div>
@@ -255,6 +273,17 @@ export default function KanbanBoardPage() {
           ) : null}
         </DragOverlay>
       </DndContext>
+
+      {/* 🔥 Schedule Interview Modal — Lazy loaded */}
+      {scheduleTarget && (
+        <Suspense fallback={null}>
+          <ScheduleInterviewModal
+            application={scheduleTarget}
+            jobId={jobId}
+            onClose={() => setScheduleTarget(null)}
+          />
+        </Suspense>
+      )}
     </div>
   )
 }
