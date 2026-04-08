@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { HiOutlinePlus, HiOutlinePencilSquare, HiOutlineTrash, HiOutlineBriefcase } from 'react-icons/hi2'
+import { HiOutlinePlus, HiOutlinePencilSquare, HiOutlineTrash, HiOutlineBriefcase, HiOutlineUserGroup } from 'react-icons/hi2'
 
 import { useDocumentTitle } from '@shared/hooks'
 import { LoadingSpinner } from '@shared/components'
@@ -172,6 +172,17 @@ export default function MyJobsPage() {
                   <td>{job.expiresAt ? formatDate(job.expiresAt) : '—'}</td>
                   <td>
                     <div className="jobs-table__actions">
+                      {/* Ứng viên — published jobs */}
+                      {job.status === JOB_STATUS.PUBLISHED && (
+                        <Link
+                          to={`/hr/jobs/${job._id}/applications`}
+                          className="action-btn"
+                          title="Xem ứng viên"
+                        >
+                          <HiOutlineUserGroup className="action-btn__icon" />
+                        </Link>
+                      )}
+
                       {/* Edit — only draft */}
                       {job.status === JOB_STATUS.DRAFT && (
                         <button

@@ -60,7 +60,7 @@ const API = {
   APPLICATIONS: {
     BASE: '/applications',
     BY_ID: (id) => `/applications/${id}`,
-    BY_JOB: (jobId) => `/jobs/${jobId}/applications`,
+    BY_JOB: (jobId) => `/applications/by-job/${jobId}`,
     MY_APPLICATIONS: '/applications/my-applications',
     UPDATE_STATUS: (id) => `/applications/${id}/status`,
     WITHDRAW: (id) => `/applications/${id}/withdraw`,

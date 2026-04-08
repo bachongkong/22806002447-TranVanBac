@@ -40,4 +40,10 @@ router.patch('/:id/status',
   asyncHandler(applicationController.updateStatus)
 )
 
+// HR — lấy danh sách ứng viên theo job
+router.get('/by-job/:jobId',
+  authorize(ROLES.HR),
+  asyncHandler(applicationController.getApplicationsByJob)
+)
+
 export default router
