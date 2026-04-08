@@ -104,3 +104,21 @@ export function useUpdateJobStatus() {
     },
   })
 }
+
+/**
+ * Toggle lưu việc làm (Candidate)
+ * Sử dụng optimistic update pattern
+ */
+export function useToggleFavoriteJob() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id) => jobService.toggleFavorite(id),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites'] })
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi lưu tin tuyển dụng')
+    },
+  })
+}
