@@ -4,6 +4,7 @@ import { NotificationBell } from '@shared/components'
 import useAuthStore from '@app/store/authStore'
 import useUIStore from '@app/store/uiStore'
 import { useLogout } from '@features/auth'
+import { ChatBadge, ChatWindow } from '@features/chat'
 import './DashboardLayout.css'
 
 const candidateMenu = [
@@ -74,8 +75,10 @@ export default function CandidateLayout() {
         <header className="dashboard-header-top">
           <NotificationBell onClick={() => navigate('/candidate/notifications')} />
         </header>
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, position: 'relative' }}>
           <Outlet />
+          <ChatBadge />
+          <ChatWindow />
         </div>
       </main>
     </div>

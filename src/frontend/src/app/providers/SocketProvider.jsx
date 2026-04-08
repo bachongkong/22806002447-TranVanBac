@@ -1,4 +1,5 @@
 import useNotificationSocket from '@features/notifications/hooks/useNotificationSocket'
+import useChatSocket from '@features/chat/hooks/useChatSocket'
 
 /**
  * SocketProvider
@@ -11,8 +12,8 @@ export default function SocketProvider({ children }) {
   // Lắng nghe kết nối socket cho notifications (auto connect/disconnect theo auth)
   useNotificationSocket()
 
-  // Các socket hooks khác sau này nếu có (e.g. useChatSocket)
-  // ...
+  // Lắng nghe socket nền cho tính năng Chat
+  useChatSocket()
 
   return <>{children}</>
 }
