@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '@shared/hooks'
 import { LoginForm, useLogin } from '@features/auth'
+import { AuthLayout } from '@shared/components/layout/AuthLayout'
 
 export default function LoginPage() {
-  useDocumentTitle('Đăng nhập')
+  useDocumentTitle('Đăng nhập - Recruitment Platform')
   
   const { mutateAsync: loginAsync } = useLogin()
 
@@ -17,18 +18,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="page--auth-container">
-      <div className="page--auth-content">
-        <LoginForm onSubmit={handleLoginSubmit} />
-        <div className="auth-footer-links">
-          <p>
-            <Link to="/forgot-password">Quên mật khẩu?</Link>
-          </p>
-          <p>
-            Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
-          </p>
-        </div>
-      </div>
-    </div>
+    <AuthLayout heading="Chào mừng trở lại!" subheading="Đăng nhập để quản lý công việc và tài khoản của bạn.">
+      <LoginForm onSubmit={handleLoginSubmit} />
+    </AuthLayout>
   )
 }
+

@@ -14,6 +14,10 @@ const VerifyEmailPage = lazy(() => import('@pages/VerifyEmailPage'))
 const VerifyEmailPendingPage = lazy(() => import('@pages/VerifyEmailPendingPage'))
 const JobListPage = lazy(() => import('@pages/JobListPage'))
 const JobDetailPage = lazy(() => import('@pages/JobDetailPage'))
+const FaqsPage = lazy(() => import('@pages/FaqsPage'))
+const AboutPage = lazy(() => import('@pages/AboutPage'))
+const PrivacyPolicyPage = lazy(() => import('@pages/policies/PrivacyPolicyPage'))
+const TermsPage = lazy(() => import('@pages/policies/TermsPage'))
 
 // --- Candidate Pages ---
 const CandidateDashboard = lazy(() => import('@pages/candidate/CandidateDashboard'))
@@ -37,17 +41,26 @@ export default function AppRouter() {
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>
+        {/* ===== AUTH ROUTES (Full Screen) ===== */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/verify-email-pending" element={<VerifyEmailPendingPage />} />
+
+        {/* ===== PUBLIC ROUTES ===== */}
         {/* ===== PUBLIC ROUTES ===== */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/verify-email-pending" element={<VerifyEmailPendingPage />} />
           <Route path="/jobs" element={<JobListPage />} />
           <Route path="/jobs/:id" element={<JobDetailPage />} />
+          
+          <Route path="/faqs" element={<FaqsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          
           <Route path="/unauthorized" element={<Unauthorized />} />
         </Route>
 

@@ -1,123 +1,72 @@
-# SMARTHIRE DESIGN SYSTEM (REFACTORED - PRO VERSION)
+# SmartHire Design System (Frontend Tailwind)
 
-## 1. Design Philosophy
+> **Cập nhật:** Hệ thống hiện tại đã chuyển sang sử dụng **TailwindCSS v4** và **Framer-Motion** để thống nhất với bản thiết kế gốc từ `smarthire-app`. Vui lòng KHÔNG tự viết CSS chay unless cần thiết, hãy sử dụng Utility classes.
 
-Clean -- Structured -- Data-first -- Trustworthy
+---
+### 🎯 Nguyên Tắc Chung
 
--   Remove: Memphis, heavy glass, floating, spring animations
--   Focus: clarity, usability, enterprise SaaS feel
+1. **Mỗi animation phải có mục đích** — Dẫn dắt mắt người dùng hoặc truyền tải thông tin
+2. **Subtle > Flashy** — Premium = tinh tế, không phô trương
+3. **Performance first** — Ưu tiên `transform` và `opacity` (GPU-accelerated)
+4. **Consistent timing** — Sử dụng chuỗi easing chuẩn thiết kế
+5. **Thiết kế sáng tạo** - Các màn hình phải WOW và chuẩn UX 2026
 
-------------------------------------------------------------------------
+---
 
-## 2. Color System (Light Mode Only)
+## 1. Color Tokens (Tailwind)
 
-### Background
+Hệ thống đã map sẵn các biến màu vào Tailwind. Bạn chỉ cần gõ class theo tiền tố, VD: `text-primary`, `bg-card`, `border-border`.
 
--   background: #FFFFFF
--   surface: #F8FAFC
--   surface-elevated: #FFFFFF
--   border: #E5E7EB
--   hover: #F1F5F9
+| Token CSS | Tên Màu Tailwind | Usage |
+|:---|:---|:---|
+| `--background` | `bg-background` | Nền của cả trang web |
+| `--foreground` | `text-foreground` | Chữ chính trên nền trang web |
+| `--primary` | `bg-primary`, `text-primary` | Màu đen nhám hoặc phần tử nổi bật nhất |
+| `--accent` | `bg-accent`, `text-accent` | Nhấn màu xanh lá (Green #22C55E) |
+| `--muted-foreground` | `text-muted-foreground` | Phụ đề, text nhạt màu |
+| `--card` | `bg-card` | Nền của thẻ Component (Trắng/Đen tùy mode) |
+| `--border` | `border-border` | Màu viền chung mờ |
 
-### Brand
+**Accent Đặc biệt:**
+Hệ thống chuộng Gradient Green to Yellow, sử dụng utility class:
+`bg-gradient-to-r from-green-500 to-emerald-500`
 
--   primary: #3B5BFF
--   hover: #2F4AE0
--   active: #2539B8
+---
 
-### Semantic
+## 2. Shared Components Khuyên Dùng
 
--   success: #16A34A
--   warning: #D97706
--   error: #DC2626
+Chúng ta sẽ xây dựng các Component tái sử dụng trong `src/shared/components/`. Khi code UI mới, hãy Import các component này ra thay vì tự code lại bằng thẻ HTML:
 
-Principle: Color is for meaning, not decoration
+- `<Button />`: Mặc định có bo góc `rounded-lg`, hiệu ứng hover nảy và gradient.
+- `<ParticleBackground />`: Đặt ở sau cùng Z-index để tạo các hạt mờ chuyển động.
+- `<ThemeToggle />`: Nút thay đổi Light/Dark mode.
 
-------------------------------------------------------------------------
+---
 
-## 3. Typography
+## 3. Dark / Light Mode
 
-Font: Inter (only)
+Chúng ta dùng **Class-based Dark Mode** của Tailwind.
+- The root `<body />` sẽ được gắn class `.dark` khi hiển thị chế độ tối.
+- Khi code, hãy code chế độ sáng trước, sau đó chèn thêm prefix `dark:` cho bản tối.
 
--   Heading: 600
--   Subheading: 500
--   Body: 400
--   Label: 500
+Ví dụ:
+```jsx
+<div className="bg-white text-black dark:bg-[#1C252E] dark:text-white border border-[rgba(145,158,171,0.12)]">
+   Card nội dung
+</div>
+```
 
-Sizes: - H1: 28px - H2: 22px - H3: 18px - Body: 14--16px
+---
 
-------------------------------------------------------------------------
+## 4. Typography
+- **Heading (H1-H6):** Dùng font `Barlow` (đã config tự động trong index.css). Cần nhấn mạnh hãy dùng class `font-bold tracking-tight`.
+- **Body Text:** Font mặc định là `Inter`. Dùng `text-base` hoặc `text-lg` cho đoạn văn.
 
-## 4. Layout & Spacing
+## 5. Shadow & Glassmorphism
 
--   4px spacing system
--   Common: 8 / 12 / 16 / 24 / 32
--   Max width: 1280px
--   Padding: 24px
-
-### Card
-
--   background: #fff
--   border: 1px solid #E5E7EB
--   border-radius: 12px
-
-Hover: - border-color: #CBD5F5
-
-------------------------------------------------------------------------
-
-## 5. Components
-
-### Buttons
-
-Primary: - bg-primary text-white - hover:bg-primary-hover - rounded-lg -
-px-4 py-2 - font-medium
-
-Secondary: - bg-white border border-gray-300 - hover:bg-gray-50
-
-### Input
-
--   border: 1px solid #D1D5DB
--   border-radius: 8px
--   padding: 10px 12px
-
-Focus: - border-color: #3B5BFF
-
-### Table
-
--   row height: 44px
--   hover: #F9FAFB
--   header: text-xs uppercase text-gray-500
-
-------------------------------------------------------------------------
-
-## 6. Effects & Animations
-
--   Use only: transition 150ms ease
--   Remove: floating, spring, heavy blur
-
-------------------------------------------------------------------------
-
-## 7. Icons
-
-Use: - Heroicons - Lucide
-
-Avoid: - cartoon icons - emoji style - gradient icons
-
-Rule: Icon supports, not decorates
-
-------------------------------------------------------------------------
-
-## 8. UX Principles
-
--   Reduce cognitive load
--   Data-first UI
--   Clear hierarchy
--   Avoid Dribbble-style flashy UI
-
-------------------------------------------------------------------------
-
-## 9. Final Direction
-
-Inspired by: - Stripe - Linear - Notion - Vercel
-
-Avoid: - AI demo UI - flashy startup UI
+Với các bảng điều khiển hoặc Modal tạo bóng mờ cao cấp, thay vì viết CSS chay, hãy sử dụng tổ hợp classes:
+```jsx
+<div className="backdrop-blur-xl bg-white/70 dark:bg-black/50 border border-white/20 dark:border-white/10 rounded-2xl shadow-lg"> ... </div>
+```
+Hoặc dùng Class CSS đã tạo sẵn trong `index.css`:
+`<div className="card glass"></div>`
