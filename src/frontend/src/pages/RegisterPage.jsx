@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '@shared/hooks'
 import { RegisterForm, useRegister } from '@features/auth'
+import { AuthLayout } from '@shared/components/layout/AuthLayout'
 
 export default function RegisterPage() {
-  useDocumentTitle('Đăng ký')
+  useDocumentTitle('Đăng ký - Recruitment Platform')
 
   const { mutateAsync: registerAsync } = useRegister()
 
@@ -17,15 +18,9 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="page--auth-container">
-      <div className="page--auth-content">
-        <RegisterForm onSubmit={handleRegisterSubmit} />
-        <div className="auth-footer-links">
-          <p>
-            Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
-          </p>
-        </div>
-      </div>
-    </div>
+    <AuthLayout heading="Tạo tài khoản mới" subheading="Bắt đầu hành trình phát triển sự nghiệp của bạn ngay hôm nay.">
+      <RegisterForm onSubmit={handleRegisterSubmit} />
+    </AuthLayout>
   )
 }
+
