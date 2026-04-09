@@ -1,14 +1,15 @@
 import { apiClient, API } from '@shared/services'
+import { normalizeUserMedia, resolveAssetUrl } from '@shared/utils'
 
 export const profileService = {
   getProfile: async () => {
     const response = await apiClient.get(API.USERS.PROFILE)
-    return response.data.data
+    return normalizeUserMedia(response.data.data)
   },
 
   updateProfile: async (data) => {
     const response = await apiClient.put(API.USERS.PROFILE, data)
-    return response.data.data
+    return normalizeUserMedia(response.data.data)
   },
 
   changePassword: async (data) => {
@@ -25,6 +26,9 @@ export const profileService = {
         'Content-Type': 'multipart/form-data',
       },
     })
-    return response.data.data
+    return {
+      ...response.data.data,
+      avatar: resolveAssetUrl(response.data.data?.avatar),
+    }
   },
 }

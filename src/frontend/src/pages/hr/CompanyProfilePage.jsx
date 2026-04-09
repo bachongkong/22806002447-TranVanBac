@@ -1,10 +1,11 @@
-import { useGetMyCompany } from '@features/companies/hooks/useCompany'
 import {
   CompanyLogoUpload,
   CompanyProfileForm,
   CompanyStaffManager,
 } from '@features/companies/components'
+import { useGetMyCompany } from '@features/companies/hooks/useCompany'
 import { LoadingSpinner } from '@shared/components'
+
 import './CompanyProfilePage.css'
 
 export default function CompanyProfilePage() {
@@ -15,6 +16,17 @@ export default function CompanyProfilePage() {
       <div className="page-loading-wrapper">
         <LoadingSpinner />
         <p>Đang tải thông tin công ty...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="empty-company-state">
+        <div className="empty-company-card">
+          <h2>Không tải được thông tin công ty</h2>
+          <p>{error.response?.data?.message || 'Đã có lỗi xảy ra khi tải hồ sơ doanh nghiệp.'}</p>
+        </div>
       </div>
     )
   }
@@ -42,7 +54,10 @@ export default function CompanyProfilePage() {
         <div className="empty-company-state">
           <div className="empty-company-card">
             <h2>Chào mừng bạn!</h2>
-            <p>Tài khoản của bạn chưa được liên kết với hồ sơ công ty nào. Vui lòng tạo hồ sơ doanh nghiệp để bắt đầu quá trình tuyển dụng.</p>
+            <p>
+              Tài khoản của bạn chưa được liên kết với hồ sơ công ty nào.
+              Vui lòng tạo hồ sơ doanh nghiệp để bắt đầu quá trình tuyển dụng.
+            </p>
             <CompanyProfileForm company={null} />
           </div>
         </div>

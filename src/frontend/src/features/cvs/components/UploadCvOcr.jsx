@@ -1,5 +1,4 @@
 import { useState, useDeferredValue, useRef } from 'react'
-import { FiUploadCloud, FiFileText, FiCheck, FiSave } from 'react-icons/fi'
 import { useParseOcrCv, useUploadCv, useCreateOnlineCv } from '../hooks/useCv'
 import { LoadingSpinner } from '@shared/components'
 import './UploadCvOcr.css'
@@ -97,7 +96,7 @@ export default function UploadCvOcr() {
             </div>
           ) : (
             <div className="idle-state">
-              <FiUploadCloud className="upload-icon" />
+              
               <p><strong>Bấm vào đây</strong> để chọn file PDF/Word</p>
               <span>Giới hạn 5MB</span>
             </div>
@@ -109,7 +108,7 @@ export default function UploadCvOcr() {
       {selectedFile && !parseOcr.isPending && (
         <div className="review-section fade-in">
           <div className="review-header">
-            <h4><FiFileText /> Review Text bóc tách</h4>
+            <h4> Review Text bóc tách</h4>
             <div className="cv-title-input">
               <label>Tên CV (Dùng gọi nhớ):</label>
               <input 
@@ -151,7 +150,7 @@ export default function UploadCvOcr() {
               onClick={handleSaveAsOnline}
               disabled={createOnlineCv.isPending}
             >
-              <FiSave /> Convert thành CV Trực Tuyến
+               Convert thành CV Trực Tuyến
             </button>
           </div>
         </div>

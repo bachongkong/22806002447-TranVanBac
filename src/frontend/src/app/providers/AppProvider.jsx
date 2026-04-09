@@ -24,9 +24,17 @@ export default function AppProvider({ children }) {
             toastOptions={{
               duration: 3000,
               style: {
-                background: '#1a1a2e',
-                color: '#e0e0e0',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: '#ffffff',
+                color: '#191c1e',
+                border: '1px solid #e0e3e5',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                fontSize: '0.875rem',
+              },
+              success: {
+                iconTheme: { primary: '#16a34a', secondary: '#fff' },
+              },
+              error: {
+                iconTheme: { primary: '#dc2626', secondary: '#fff' },
               },
             }}
           />

@@ -27,10 +27,10 @@ const hashToken = (token) => {
 const authService = {
   /**
    * Đăng ký tài khoản mới + gửi email xác thực
-   * @param {{ email, password, fullName, role }} body
+   * @param {{ email, password, fullName, role, companyName?, phone?, roleTitle?, companySize?, industry?, companyLocation? }} body
    * @returns {{ user, accessToken, refreshToken }}
    */
-  register: async ({ email, password, fullName, role }) => {
+  register: async ({ email, password, fullName, role, companyName, phone, roleTitle, companySize, industry, companyLocation }) => {
     // Kiểm tra email đã tồn tại chưa
     const existing = await User.findOne({ email })
     if (existing) {
@@ -41,15 +41,36 @@ const authService = {
     const { raw: verificationToken, hashed: hashedToken } = createVerificationToken()
     const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h
 
+    // Build profile data
+    const profile = { fullName }
+    if (role === 'hr') {
+      if (phone) profile.phone = phone
+      if (roleTitle) profile.roleTitle = roleTitle
+    }
+
     // Tạo user — password sẽ được hash tự động bởi pre-save hook
     const user = await User.create({
       email,
       passwordHash: password,
       role,
-      profile: { fullName },
+      profile,
       emailVerificationToken: hashedToken,
       emailVerificationExpires: verificationExpires,
     })
+
+    // Nếu là HR → tạo Company và liên kết
+    if (role === 'hr' && companyName) {
+      const Company = (await import('../../models/Company.js')).default
+      const company = await Company.create({
+        name: companyName,
+        companySize: companySize || '',
+        industry: industry || '',
+        location: companyLocation || '',
+        createdBy: user._id,
+        hrMembers: [user._id],
+      })
+      user.companyId = company._id
+    }
 
     // Generate tokens
     const payload = { userId: user._id, role: user.role, email: user.email }
@@ -62,6 +83,12 @@ const authService = {
 
     // Gửi email xác thực (async, không block response)
     const verificationUrl = `${env.CLIENT_URL}/verify-email?token=${verificationToken}`
+
+    // Log verification URL in dev mode for testing
+    if (env.NODE_ENV !== 'production') {
+      console.log('[DEV] Verification URL:', verificationUrl)
+    }
+
     sendVerificationEmail({
       email: user.email,
       fullName,
@@ -79,7 +106,10 @@ const authService = {
       profile: {
         fullName: user.profile.fullName,
         avatar: user.profile.avatar,
+        phone: user.profile.phone,
+        roleTitle: user.profile.roleTitle,
       },
+      companyId: user.companyId,
       createdAt: user.createdAt,
     }
 

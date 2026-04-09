@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import DataDropzone from '../../features/admin/components/DataDropzone';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { FiDownload } from 'react-icons/fi';
 
 const SystemSettingsPage = () => {
   const [isExporting, setIsExporting] = useState(false);
@@ -88,7 +87,7 @@ const SystemSettingsPage = () => {
               className="btn btn--primary" 
               style={{ display: 'flex', gap: '8px', alignItems: 'center', minWidth: '160px', justifyContent: 'center' }}
             >
-              <FiDownload size={18} />
+              
               {isExporting ? 'Đang Ép Luồng...' : 'Export File CSV'}
             </button>
           </div>

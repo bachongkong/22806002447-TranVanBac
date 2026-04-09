@@ -2,19 +2,11 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
+  background: var(--color-bg);
   padding: 24px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
   margin-bottom: 24px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.company-logo-upload-container:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 
 .logo-wrapper {
@@ -23,9 +15,9 @@
   height: 120px;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border: 1px solid var(--color-border);
   cursor: pointer;
-  background-color: #f9fafb;
+  background-color: var(--color-surface);
 }
 
 .logo-image {
@@ -66,36 +58,36 @@
 
 .logo-info h3 {
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
   margin: 0 0 8px 0;
-  color: #111827;
+  color: var(--color-text);
 }
 
 .status-badge {
   display: inline-block;
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-md);
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
 .status-badge.pending {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--color-warning-light);
+  color: var(--color-warning);
 }
 
 .status-badge.approved {
-  background-color: #d1fae5;
-  color: #065f46;
+  background-color: var(--color-success-light);
+  color: var(--color-success);
 }
 
 .status-badge.rejected {
-  background-color: #fee2e2;
-  color: #991b1b;
+  background-color: var(--color-error-light);
+  color: var(--color-error);
 }
 
 .status-badge.locked {
-  background-color: #e5e7eb;
-  color: #374151;
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
 }

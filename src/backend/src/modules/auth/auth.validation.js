@@ -41,6 +41,42 @@ export const registerSchema = {
       .messages({
         'any.only': 'Role chỉ được là candidate hoặc hr',
       }),
+
+    // HR-specific fields — bắt buộc khi role = 'hr'
+    companyName: Joi.when('role', {
+      is: 'hr',
+      then: Joi.string().min(2).max(200).trim().required()
+        .messages({
+          'string.min': 'Tên công ty tối thiểu 2 ký tự',
+          'any.required': 'Tên công ty là bắt buộc',
+        }),
+      otherwise: Joi.string().allow('').optional(),
+    }),
+
+    phone: Joi.when('role', {
+      is: 'hr',
+      then: Joi.string().min(9).max(15).trim().required()
+        .messages({
+          'string.min': 'Số điện thoại không hợp lệ',
+          'any.required': 'Số điện thoại là bắt buộc',
+        }),
+      otherwise: Joi.string().allow('').optional(),
+    }),
+
+    roleTitle: Joi.when('role', {
+      is: 'hr',
+      then: Joi.string().min(2).max(100).trim().required()
+        .messages({
+          'string.min': 'Chức vụ tối thiểu 2 ký tự',
+          'any.required': 'Chức vụ là bắt buộc',
+        }),
+      otherwise: Joi.string().allow('').optional(),
+    }),
+
+    // Optional HR fields
+    companySize: Joi.string().allow('').optional(),
+    industry: Joi.string().allow('').optional(),
+    companyLocation: Joi.string().allow('').optional(),
   }),
 }
 

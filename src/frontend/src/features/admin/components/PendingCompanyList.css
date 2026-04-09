@@ -1,7 +1,7 @@
 .pending-company-list {
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   padding: 24px;
 }
 
@@ -88,7 +88,7 @@
   color: #4b5563;
   padding: 2px 8px;
   background-color: #f3f4f6;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   display: inline-block;
   width: fit-content;
 }

@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { HiOutlineChartBarSquare, HiOutlineBriefcase, HiOutlineUserGroup, HiOutlineBuildingOffice2, HiOutlineCalendarDays, HiOutlineBell, HiOutlineChatBubbleLeftRight, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
+
 import { NotificationBell } from '@shared/components'
 import useAuthStore from '@app/store/authStore'
 import useUIStore from '@app/store/uiStore'
@@ -8,13 +8,12 @@ import { ChatBadge, ChatWindow } from '@features/chat'
 import './DashboardLayout.css'
 
 const hrMenu = [
-  { to: '/hr/dashboard', icon: HiOutlineChartBarSquare, label: 'Dashboard' },
-  { to: '/hr/jobs', icon: HiOutlineBriefcase, label: 'Tin tuyển dụng' },
-  { to: '/hr/applications', icon: HiOutlineUserGroup, label: 'Ứng viên' },
-  { to: '/hr/interviews', icon: HiOutlineCalendarDays, label: 'Lịch phỏng vấn' },
-  { to: '/hr/company', icon: HiOutlineBuildingOffice2, label: 'Công ty' },
-  { to: '/hr/notifications', icon: HiOutlineBell, label: 'Thông báo' },
-  { to: '/hr/messages', icon: HiOutlineChatBubbleLeftRight, label: 'Tin nhắn' },
+  { to: '/hr/dashboard', label: 'Dashboard' },
+  { to: '/hr/jobs', label: 'Tin tuyển dụng' },
+  { to: '/hr/candidates', label: 'Quản lý ứng viên' },
+  { to: '/hr/search-cv', label: 'Tìm kiếm CV' },
+  { to: '/hr/company', label: 'Công ty' },
+  { to: '/hr/profile', label: 'Hồ sơ' },
 ]
 
 /**
@@ -35,7 +34,7 @@ export default function HRLayout() {
       <aside className="dashboard-sidebar dashboard-sidebar--hr">
         <div className="sidebar-header">
           <a href="/" className="sidebar-logo">
-            <span className="logo-icon">💼</span>
+
             {sidebarOpen && <span className="logo-text">SmartHire</span>}
           </a>
           <button className="sidebar-toggle" onClick={toggleSidebar}>
@@ -44,9 +43,9 @@ export default function HRLayout() {
         </div>
 
         <nav className="sidebar-nav">
-          {hrMenu.map(({ to, icon: Icon, label }) => (
+          {hrMenu.map(({ to, label }) => (
             <NavLink key={to} to={to} className="sidebar-link">
-              <Icon className="sidebar-link__icon" />
+              <span className="sidebar-link__icon" style={{ fontWeight: '600', fontSize: '1.2rem' }}>{label.charAt(0)}</span>
               {sidebarOpen && <span>{label}</span>}
             </NavLink>
           ))}
@@ -65,7 +64,7 @@ export default function HRLayout() {
             )}
           </div>
           <button className="sidebar-logout" onClick={handleLogout} title="Đăng xuất">
-            <HiOutlineArrowRightOnRectangle />
+            <span style={{ fontWeight: '600', fontSize: '1.2rem', marginRight: sidebarOpen ? '12px' : '0' }}>Đ</span>
             {sidebarOpen && <span>Đăng xuất</span>}
           </button>
         </div>

@@ -1,15 +1,12 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
+
 import cvService from '../services/cvService'
 
 export const CV_KEYS = {
   all: ['cvs'],
   lists: () => [...CV_KEYS.all, 'list'],
 }
-
-// ------------------------------------
-// Queries
-// ------------------------------------
 
 export const useGetMyCvs = () => {
   return useQuery({
@@ -21,10 +18,6 @@ export const useGetMyCvs = () => {
   })
 }
 
-// ------------------------------------
-// Mutations
-// ------------------------------------
-
 export const useParseOcrCv = () => {
   return useMutation({
     mutationFn: (file) => {
@@ -32,11 +25,11 @@ export const useParseOcrCv = () => {
       formData.append('file', file)
       return cvService.parseOcrPreview(formData)
     },
-    onSuccess: (response) => {
-      toast.success('Bóc tách thông tin từ file thành công')
+    onSuccess: () => {
+      toast.success('BÃ³c tÃ¡ch thÃ´ng tin tá»« file thÃ nh cÃ´ng')
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi trích xuất hoặc định dạng file không hỗ trợ.')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi trÃ­ch xuáº¥t hoáº·c Ä‘á»‹nh dáº¡ng file khÃ´ng há»— trá»£.')
     },
   })
 }
@@ -51,12 +44,12 @@ export const useUploadCv = () => {
       if (title) formData.append('title', title)
       return cvService.uploadCv(formData)
     },
-    onSuccess: (response) => {
-      toast.success('Lưu file CV thành công')
+    onSuccess: () => {
+      toast.success('LÆ°u file CV thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: CV_KEYS.lists() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi khi lưu file')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i khi lÆ°u file')
     },
   })
 }
@@ -67,11 +60,11 @@ export const useCreateOnlineCv = () => {
   return useMutation({
     mutationFn: (data) => cvService.createOnlineCv(data),
     onSuccess: () => {
-      toast.success('Tạo CV Online thành công')
+      toast.success('Táº¡o CV Online thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: CV_KEYS.lists() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Tạo CV thất bại.')
+      toast.error(error.response?.data?.message || 'Táº¡o CV tháº¥t báº¡i.')
     },
   })
 }
@@ -82,11 +75,11 @@ export const useUpdateOnlineCv = () => {
   return useMutation({
     mutationFn: ({ id, data }) => cvService.updateOnlineCv(id, data),
     onSuccess: () => {
-      toast.success('Cập nhật CV thành công')
+      toast.success('Cáº­p nháº­t CV thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: CV_KEYS.lists() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Cập nhật thất bại.')
+      toast.error(error.response?.data?.message || 'Cáº­p nháº­t tháº¥t báº¡i.')
     },
   })
 }
@@ -97,11 +90,11 @@ export const useSetDefaultCv = () => {
   return useMutation({
     mutationFn: (id) => cvService.setDefault(id),
     onSuccess: () => {
-      toast.success('Thay đổi CV mặc định thành công')
+      toast.success('Thay Ä‘á»•i CV máº·c Ä‘á»‹nh thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: CV_KEYS.lists() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi set default.')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi set default.')
     },
   })
 }
@@ -112,11 +105,11 @@ export const useDeleteCv = () => {
   return useMutation({
     mutationFn: (id) => cvService.deleteCv(id),
     onSuccess: () => {
-      toast.success('Đã xóa CV')
+      toast.success('ÄÃ£ xÃ³a CV')
       queryClient.invalidateQueries({ queryKey: CV_KEYS.lists() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Xóa CV thất bại.')
+      toast.error(error.response?.data?.message || 'XÃ³a CV tháº¥t báº¡i.')
     },
   })
 }

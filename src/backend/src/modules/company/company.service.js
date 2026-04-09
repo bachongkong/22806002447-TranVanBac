@@ -79,8 +79,8 @@ const companyService = {
     }
 
     const company = await Company.findById(user.companyId)
-      .populate('hrMembers', 'email profile.fullName')
-      .populate('createdBy', 'email profile.fullName')
+      .populate('hrMembers', 'email profile.fullName profile.avatar profile.phone')
+      .populate('createdBy', 'email profile.fullName profile.avatar')
 
     if (!company) {
       throw ApiError.notFound('Không tìm thấy công ty')
@@ -96,8 +96,8 @@ const companyService = {
    */
   getCompanyById: async (companyId) => {
     const company = await Company.findById(companyId)
-      .populate('hrMembers', 'email profile.fullName')
-      .populate('createdBy', 'email profile.fullName')
+      .populate('hrMembers', 'email profile.fullName profile.avatar profile.phone')
+      .populate('createdBy', 'email profile.fullName profile.avatar')
 
     if (!company) {
       throw ApiError.notFound('Không tìm thấy công ty')

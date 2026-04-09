@@ -1,5 +1,21 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { normalizeUserMedia } from '@shared/utils'
+
+function normalizeUserPatch(userData = {}) {
+  const { fullName, avatar, profile, ...rest } = userData
+
+  const profilePatch = {
+    ...(profile || {}),
+    ...(fullName !== undefined ? { fullName } : {}),
+    ...(avatar !== undefined ? { avatar } : {}),
+  }
+
+  return {
+    ...rest,
+    ...(Object.keys(profilePatch).length > 0 ? { profile: profilePatch } : {}),
+  }
+}
 
 const useAuthStore = create(
   persist(
@@ -12,15 +28,24 @@ const useAuthStore = create(
       // Actions
       setCredentials: ({ user, accessToken }) => {
         set({
-          user,
+          user: normalizeUserMedia(user),
           accessToken,
           isAuthenticated: true,
         })
       },
 
       updateUser: (userData) => {
+        const incomingUser = normalizeUserPatch(userData)
+
         set((state) => ({
-          user: { ...state.user, ...userData },
+          user: normalizeUserMedia({
+            ...(state.user || {}),
+            ...incomingUser,
+            profile: {
+              ...(state.user?.profile || {}),
+              ...(incomingUser.profile || {}),
+            },
+          }),
         }))
       },
 

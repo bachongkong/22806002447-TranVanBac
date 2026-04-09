@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { HiOutlinePlus, HiOutlinePencilSquare, HiOutlineTrash, HiOutlineBriefcase, HiOutlineUserGroup } from 'react-icons/hi2'
 
 import { useDocumentTitle } from '@shared/hooks'
 import { LoadingSpinner } from '@shared/components'
@@ -105,7 +104,7 @@ export default function MyJobsPage() {
           className="btn btn--primary"
           onClick={() => navigate('/hr/jobs/create')}
         >
-          <HiOutlinePlus /> Tạo tin mới
+           Tạo tin mới
         </button>
       </div>
 
@@ -125,7 +124,7 @@ export default function MyJobsPage() {
       {/* Content */}
       {jobs.length === 0 ? (
         <div className="jobs-empty-state">
-          <HiOutlineBriefcase className="jobs-empty-state__icon" />
+          
           <h2 className="jobs-empty-state__title">
             {activeTab ? `Không có tin nào ở trạng thái "${getStatusLabel(activeTab)}"` : 'Chưa có tin tuyển dụng nào'}
           </h2>
@@ -137,7 +136,7 @@ export default function MyJobsPage() {
               className="btn btn--primary"
               onClick={() => navigate('/hr/jobs/create')}
             >
-              <HiOutlinePlus /> Tạo tin tuyển dụng
+               Tạo tin tuyển dụng
             </button>
           )}
         </div>
@@ -179,7 +178,7 @@ export default function MyJobsPage() {
                           className="action-btn"
                           title="Xem ứng viên"
                         >
-                          <HiOutlineUserGroup className="action-btn__icon" />
+                          
                         </Link>
                       )}
 
@@ -190,7 +189,7 @@ export default function MyJobsPage() {
                           onClick={() => navigate(`/hr/jobs/${job._id}/edit`)}
                           title="Sửa"
                         >
-                          <HiOutlinePencilSquare className="action-btn__icon" />
+                          
                         </button>
                       )}
 
@@ -201,7 +200,7 @@ export default function MyJobsPage() {
                           onClick={() => handleDelete(job)}
                           title="Xóa"
                         >
-                          <HiOutlineTrash className="action-btn__icon" />
+                          
                         </button>
                       )}
 

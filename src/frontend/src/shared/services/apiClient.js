@@ -6,6 +6,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || '/api'
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   timeout: 15000,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -23,11 +24,21 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
+// Auth endpoints that should NOT trigger auto-refresh on 401
+const AUTH_ENDPOINTS = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password']
+
 // Response interceptor — handle 401 & refresh token
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
+    const requestUrl = originalRequest?.url || ''
+
+    // Skip auto-refresh for auth endpoints — let errors propagate to mutation handlers
+    const isAuthEndpoint = AUTH_ENDPOINTS.some((ep) => requestUrl.includes(ep))
+    if (isAuthEndpoint) {
+      return Promise.reject(error)
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
@@ -37,7 +48,7 @@ apiClient.interceptors.response.use(
           withCredentials: true,
         })
 
-        const newAccessToken = data.data.accessToken
+        const newAccessToken = data.accessToken
 
         useAuthStore.getState().setCredentials({
           user: useAuthStore.getState().user,

@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { FiFilter, FiX, FiChevronDown, FiChevronUp } from 'react-icons/fi'
 import { EMPLOYMENT_TYPES, EXPERIENCE_LEVELS } from '@shared/constants'
 import './JobFilterPanel.css'
 
@@ -26,17 +25,17 @@ export default function JobFilterPanel({ filters, onChange }) {
           className="job-filter-panel__toggle"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <FiFilter />
+          
           <span>Bộ lọc</span>
           {activeCount > 0 && (
             <span className="job-filter-panel__count">{activeCount}</span>
           )}
-          {isExpanded ? <FiChevronUp /> : <FiChevronDown />}
+          {isExpanded ? '-' : '+'}
         </button>
 
         {activeCount > 0 && (
           <button className="job-filter-panel__reset" onClick={handleReset}>
-            <FiX size={14} />
+            
             Xóa bộ lọc
           </button>
         )}

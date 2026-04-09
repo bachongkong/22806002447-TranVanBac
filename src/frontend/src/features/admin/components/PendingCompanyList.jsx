@@ -1,12 +1,16 @@
 import { useState } from 'react'
-import {
-  usePendingCompanies,
-  useApproveCompany,
-  useRejectCompany,
-  useLockCompany,
-} from '../hooks/useAdmin'
+import { FiCheckCircle, FiLock, FiXCircle } from 'react-icons/fi'
+
 import { LoadingSpinner } from '@shared/components'
-import { FiCheckCircle, FiXCircle, FiLock } from 'react-icons/fi'
+import { resolveAssetUrl } from '@shared/utils'
+
+import {
+  useApproveCompany,
+  useLockCompany,
+  usePendingCompanies,
+  useRejectCompany,
+} from '../hooks/useAdmin'
+
 import './PendingCompanyList.css'
 
 export default function PendingCompanyList() {
@@ -22,7 +26,7 @@ export default function PendingCompanyList() {
     return (
       <div className="pending-list-loading">
         <LoadingSpinner />
-        <p>Đang tải danh sách công ty...</p>
+        <p>Äang táº£i danh sÃ¡ch cÃ´ng ty...</p>
       </div>
     )
   }
@@ -30,28 +34,28 @@ export default function PendingCompanyList() {
   if (isError) {
     return (
       <div className="pending-list-error">
-        <p>Có lỗi xảy ra khi tải danh sách. Vui lòng thử lại sau.</p>
+        <p>CÃ³ lá»—i xáº£y ra khi táº£i danh sÃ¡ch. Vui lÃ²ng thá»­ láº¡i sau.</p>
       </div>
     )
   }
 
   const companies = data?.data || []
-  const totalPages = data?.pagination?.totalPages || 1
+  const totalPages = data?.meta?.totalPages || 1
 
   const handleApprove = (id) => {
-    if (window.confirm('Bạn có chắc chắn muốn duyệt công ty này?')) {
+    if (window.confirm('Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n duyá»‡t cÃ´ng ty nÃ y?')) {
       approveCompany.mutate(id)
     }
   }
 
   const handleReject = (id) => {
-    if (window.confirm('Bạn có chắc chắn muốn từ chối công ty này?')) {
+    if (window.confirm('Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n tá»« chá»‘i cÃ´ng ty nÃ y?')) {
       rejectCompany.mutate(id)
     }
   }
 
   const handleLock = (id) => {
-    if (window.confirm('Bạn có chắc chắn muốn khóa công ty này vì vi phạm?')) {
+    if (window.confirm('Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n khÃ³a cÃ´ng ty nÃ y vÃ¬ vi pháº¡m?')) {
       lockCompany.mutate(id)
     }
   }
@@ -60,8 +64,8 @@ export default function PendingCompanyList() {
     <div className="pending-company-list">
       {companies.length === 0 ? (
         <div className="empty-state">
-          <h3>Không có dữ liệu</h3>
-          <p>Hiện không có công ty nào đang chờ duyệt.</p>
+          <h3>KhÃ´ng cÃ³ dá»¯ liá»‡u</h3>
+          <p>Hiá»‡n khÃ´ng cÃ³ cÃ´ng ty nÃ o Ä‘ang chá» duyá»‡t.</p>
         </div>
       ) : (
         <>
@@ -69,11 +73,11 @@ export default function PendingCompanyList() {
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Công ty</th>
-                  <th>Website / Ngành nghề</th>
-                  <th>Ngày tạo</th>
-                  <th>Người kích hoạt</th>
-                  <th>Hành động</th>
+                  <th>CÃ´ng ty</th>
+                  <th>Website / NgÃ nh nghá»</th>
+                  <th>NgÃ y táº¡o</th>
+                  <th>NgÆ°á»i kÃ­ch hoáº¡t</th>
+                  <th>HÃ nh Ä‘á»™ng</th>
                 </tr>
               </thead>
               <tbody>
@@ -82,22 +86,35 @@ export default function PendingCompanyList() {
                     <td>
                       <div className="company-info-cell">
                         <img
-                          src={company.logo ? import.meta.env.VITE_API_URL?.replace('/api/v1', '') + company.logo : 'https://via.placeholder.com/40?text=Logo'}
+                          src={resolveAssetUrl(company.logo) || 'https://via.placeholder.com/40?text=Logo'}
                           alt={company.name}
                           className="table-logo"
                         />
                         <div className="company-text">
                           <span className="company-name">{company.name}</span>
-                          <span className="company-location">{company.location || 'Chưa cập nhật địa chỉ'}</span>
+                          <span className="company-location">
+                            {company.location || 'ChÆ°a cáº­p nháº­t Ä‘á»‹a chá»‰'}
+                          </span>
                         </div>
                       </div>
                     </td>
                     <td>
                       <div className="company-details">
-                        <a href={company.website} target="_blank" rel="noreferrer" className="company-website">
-                          {company.website || 'Không có website'}
-                        </a>
-                        <span className="company-industry">{company.industry || 'Không có ngành nghề'}</span>
+                        {company.website ? (
+                          <a
+                            href={company.website}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="company-website"
+                          >
+                            {company.website}
+                          </a>
+                        ) : (
+                          <span className="company-website">KhÃ´ng cÃ³ website</span>
+                        )}
+                        <span className="company-industry">
+                          {company.industry || 'KhÃ´ng cÃ³ ngÃ nh nghá»'}
+                        </span>
                       </div>
                     </td>
                     <td>{new Date(company.createdAt).toLocaleDateString('vi-VN')}</td>
@@ -107,26 +124,26 @@ export default function PendingCompanyList() {
                         <button
                           className="btn-action approve"
                           onClick={() => handleApprove(company._id)}
-                          title="Duyệt"
+                          title="Duyá»‡t"
                           disabled={approveCompany.isPending}
                         >
-                          <FiCheckCircle /> Duyệt
+                          <FiCheckCircle /> Duyá»‡t
                         </button>
                         <button
                           className="btn-action reject"
                           onClick={() => handleReject(company._id)}
-                          title="Từ chối"
+                          title="Tá»« chá»‘i"
                           disabled={rejectCompany.isPending}
                         >
-                          <FiXCircle /> Từ chối
+                          <FiXCircle /> Tá»« chá»‘i
                         </button>
                         <button
                           className="btn-action lock"
                           onClick={() => handleLock(company._id)}
-                          title="Khóa"
+                          title="KhÃ³a"
                           disabled={lockCompany.isPending}
                         >
-                          <FiLock /> Khóa
+                          <FiLock /> KhÃ³a
                         </button>
                       </div>
                     </td>
@@ -140,17 +157,17 @@ export default function PendingCompanyList() {
             <div className="pagination">
               <button
                 className="page-btn"
-                onClick={() => setPage(p => Math.max(1, p - 1))}
+                onClick={() => setPage((currentPage) => Math.max(1, currentPage - 1))}
                 disabled={page === 1}
               >
-                Trước
+                TrÆ°á»›c
               </button>
               <span className="page-info">
                 Trang {page} / {totalPages}
               </span>
               <button
                 className="page-btn"
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                onClick={() => setPage((currentPage) => Math.min(totalPages, currentPage + 1))}
                 disabled={page === totalPages}
               >
                 Sau

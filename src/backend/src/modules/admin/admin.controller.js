@@ -15,6 +15,7 @@ import { writeAuditLog } from '../../utils/auditLogger.js'
 const getUsers = async (req, res) => {
   const { page, limit, role, status, keyword, sort } = req.query
   const query = {}
+
   if (role) query.role = role
   if (status) query.status = status
   if (keyword) {
@@ -23,15 +24,14 @@ const getUsers = async (req, res) => {
       { 'profile.fullName': { $regex: keyword, $options: 'i' } },
     ]
   }
+
   const skip = (page - 1) * limit
   const [users, total] = await Promise.all([
     User.find(query).select('-passwordHash -__v').sort(sort).skip(skip).limit(limit).lean(),
     User.countDocuments(query),
   ])
-  ApiResponse.success(res, {
-    data: users,
-    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
-  })
+
+  ApiResponse.paginated(res, { data: users, page, limit, total })
 }
 
 const toggleBlockUser = async (req, res) => {
@@ -39,11 +39,11 @@ const toggleBlockUser = async (req, res) => {
   const { reason = '' } = req.body
 
   if (String(req.user._id || req.user.id) === id) {
-    throw new ApiError(400, 'Bạn không thể tự khóa tài khoản của chính mình')
+    throw new ApiError(400, 'Báº¡n khÃ´ng thá»ƒ tá»± khÃ³a tÃ i khoáº£n cá»§a chÃ­nh mÃ¬nh')
   }
 
   const user = await User.findById(id)
-  if (!user) throw new ApiError(404, 'Không tìm thấy người dùng')
+  if (!user) throw new ApiError(404, 'KhÃ´ng tÃ¬m tháº¥y ngÆ°á»i dÃ¹ng')
 
   const prevStatus = user.status
   user.status = user.status === USER_STATUS.ACTIVE ? USER_STATUS.BLOCKED : USER_STATUS.ACTIVE
@@ -58,8 +58,14 @@ const toggleBlockUser = async (req, res) => {
   })
 
   ApiResponse.success(res, {
-    message: `Đã ${user.status === USER_STATUS.BLOCKED ? 'khóa' : 'mở khóa'} tài khoản thành công`,
-    user: { id: user._id, email: user.email, status: user.status },
+    message: `ÄÃ£ ${user.status === USER_STATUS.BLOCKED ? 'khÃ³a' : 'má»Ÿ khÃ³a'} tÃ i khoáº£n thÃ nh cÃ´ng`,
+    data: {
+      user: {
+        id: user._id,
+        email: user.email,
+        status: user.status,
+      },
+    },
   })
 }
 
@@ -72,16 +78,19 @@ const getJobsPending = async (req, res) => {
     .populate('companyId', 'name')
     .populate('createdByHR', 'email profile.fullName')
     .lean()
+
   ApiResponse.success(res, { data: jobs })
 }
 
 const approveJob = async (req, res) => {
   const { id } = req.params
   const job = await Job.findById(id)
-  if (!job) throw new ApiError(404, 'Không tìm thấy tin tuyển dụng')
+
+  if (!job) throw new ApiError(404, 'KhÃ´ng tÃ¬m tháº¥y tin tuyá»ƒn dá»¥ng')
   if (job.status !== JOB_STATUS.PENDING) {
-    throw new ApiError(400, 'Tin tuyển dụng không ở trạng thái chờ duyệt')
+    throw new ApiError(400, 'Tin tuyá»ƒn dá»¥ng khÃ´ng á»Ÿ tráº¡ng thÃ¡i chá» duyá»‡t')
   }
+
   job.status = JOB_STATUS.PUBLISHED
   await job.save()
 
@@ -93,14 +102,23 @@ const approveJob = async (req, res) => {
     details: { title: job.title },
   })
 
-  ApiResponse.success(res, { message: 'Đã duyệt tin tuyển dụng thành công', job: { id: job._id, status: job.status } })
+  ApiResponse.success(res, {
+    message: 'ÄÃ£ duyá»‡t tin tuyá»ƒn dá»¥ng thÃ nh cÃ´ng',
+    data: {
+      job: {
+        id: job._id,
+        status: job.status,
+      },
+    },
+  })
 }
 
 const rejectJob = async (req, res) => {
   const { id } = req.params
   const { reason = '' } = req.body
   const job = await Job.findById(id)
-  if (!job) throw new ApiError(404, 'Không tìm thấy tin tuyển dụng')
+
+  if (!job) throw new ApiError(404, 'KhÃ´ng tÃ¬m tháº¥y tin tuyá»ƒn dá»¥ng')
 
   job.status = JOB_STATUS.REJECTED
   await job.save()
@@ -113,7 +131,15 @@ const rejectJob = async (req, res) => {
     details: { title: job.title, reason },
   })
 
-  ApiResponse.success(res, { message: 'Đã từ chối tin tuyển dụng', job: { id: job._id, status: job.status } })
+  ApiResponse.success(res, {
+    message: 'ÄÃ£ tá»« chá»‘i tin tuyá»ƒn dá»¥ng',
+    data: {
+      job: {
+        id: job._id,
+        status: job.status,
+      },
+    },
+  })
 }
 
 // ============================================
@@ -123,6 +149,7 @@ const rejectJob = async (req, res) => {
 const getAuditLogs = async (req, res) => {
   const { page, limit, action, userId, startDate, endDate, sort } = req.query
   const query = {}
+
   if (action) query.action = action
   if (userId) query.userId = userId
   if (startDate || endDate) {
@@ -130,15 +157,19 @@ const getAuditLogs = async (req, res) => {
     if (startDate) query.createdAt.$gte = new Date(startDate)
     if (endDate) query.createdAt.$lte = new Date(endDate)
   }
+
   const skip = (page - 1) * limit
   const [logs, total] = await Promise.all([
-    AuditLog.find(query).populate('userId', 'email profile.fullName role').sort(sort).skip(skip).limit(limit).lean(),
+    AuditLog.find(query)
+      .populate('userId', 'email profile.fullName role')
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean(),
     AuditLog.countDocuments(query),
   ])
-  ApiResponse.success(res, {
-    data: logs,
-    pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
-  })
+
+  ApiResponse.paginated(res, { data: logs, page, limit, total })
 }
 
 // ============================================
@@ -146,12 +177,13 @@ const getAuditLogs = async (req, res) => {
 // ============================================
 
 /**
- * Parse CSV buffer bằng Node.js Readable Stream + csv-parser
- * Tránh load toàn bộ file vào RAM (chống Leak RAM cho file lớn)
+ * Parse CSV buffer báº±ng Node.js Readable Stream + csv-parser
+ * TrÃ¡nh load toÃ n bá»™ file vÃ o RAM (chá»‘ng Leak RAM cho file lá»›n)
  */
 const parseCsvStream = (buffer) => {
   return new Promise((resolve, reject) => {
     const rows = []
+
     Readable.from(buffer)
       .pipe(csvParser({ trim: true }))
       .on('data', (row) => rows.push(row))
@@ -161,28 +193,29 @@ const parseCsvStream = (buffer) => {
 }
 
 const importMasterData = async (req, res) => {
-  if (!req.file) throw new ApiError(400, 'Vui lòng upload file CSV')
+  if (!req.file) throw new ApiError(400, 'Vui lÃ²ng upload file CSV')
 
   const rows = await parseCsvStream(req.file.buffer)
-  if (rows.length === 0) throw new ApiError(400, 'File CSV trống hoặc không chứa data hợp lệ')
+  if (rows.length === 0) throw new ApiError(400, 'File CSV trá»‘ng hoáº·c khÃ´ng chá»©a data há»£p lá»‡')
 
-  // Dùng bulkWrite với upsert để bỏ qua duplicate và cập nhật nếu đã tồn tại
   const ops = rows
-    .filter(r => r.type && r.value && r.label)
-    .map(r => ({
+    .filter((row) => row.type && row.value && row.label)
+    .map((row) => ({
       updateOne: {
-        filter: { type: r.type.trim(), value: r.value.trim() },
+        filter: { type: row.type.trim(), value: row.value.trim() },
         update: {
           $set: {
-            label: r.label.trim(),
-            isActive: r.isActive !== 'false' && r.isActive !== '0',
+            label: row.label.trim(),
+            isActive: row.isActive !== 'false' && row.isActive !== '0',
           },
         },
         upsert: true,
       },
     }))
 
-  if (ops.length === 0) throw new ApiError(400, 'Không có dòng hợp lệ (cần cột: type, value, label)')
+  if (ops.length === 0) {
+    throw new ApiError(400, 'KhÃ´ng cÃ³ dÃ²ng há»£p lá»‡ (cáº§n cá»™t: type, value, label)')
+  }
 
   const result = await MasterData.bulkWrite(ops, { ordered: false })
 
@@ -199,12 +232,14 @@ const importMasterData = async (req, res) => {
   })
 
   ApiResponse.success(res, {
-    message: 'Import Master Data thành công',
-    stats: {
-      totalRows: rows.length,
-      validRows: ops.length,
-      upserted: result.upsertedCount,
-      modified: result.modifiedCount,
+    message: 'Import Master Data thÃ nh cÃ´ng',
+    data: {
+      stats: {
+        totalRows: rows.length,
+        validRows: ops.length,
+        upserted: result.upsertedCount,
+        modified: result.modifiedCount,
+      },
     },
   })
 }
@@ -216,7 +251,6 @@ const importMasterData = async (req, res) => {
 const getPendingCompanies = async (req, res) => {
   const { page, limit } = req.query
   const skip = (page - 1) * limit
-
   const filter = { status: COMPANY_STATUS.PENDING }
 
   const [companies, total] = await Promise.all([
@@ -237,15 +271,12 @@ const getPendingCompanies = async (req, res) => {
   })
 }
 
-/**
- * Helper: cập nhật trạng thái company
- */
 const updateCompanyStatus = async (req, res, newStatus, successMessage) => {
   const { id } = req.params
-
   const company = await Company.findById(id)
+
   if (!company) {
-    throw ApiError.notFound('Không tìm thấy công ty')
+    throw ApiError.notFound('KhÃ´ng tÃ¬m tháº¥y cÃ´ng ty')
   }
 
   company.status = newStatus
@@ -262,15 +293,15 @@ const updateCompanyStatus = async (req, res, newStatus, successMessage) => {
 }
 
 const approveCompany = async (req, res) => {
-  await updateCompanyStatus(req, res, COMPANY_STATUS.APPROVED, 'Đã duyệt công ty thành công')
+  await updateCompanyStatus(req, res, COMPANY_STATUS.APPROVED, 'ÄÃ£ duyá»‡t cÃ´ng ty thÃ nh cÃ´ng')
 }
 
 const rejectCompany = async (req, res) => {
-  await updateCompanyStatus(req, res, COMPANY_STATUS.REJECTED, 'Đã từ chối công ty')
+  await updateCompanyStatus(req, res, COMPANY_STATUS.REJECTED, 'ÄÃ£ tá»« chá»‘i cÃ´ng ty')
 }
 
 const lockCompany = async (req, res) => {
-  await updateCompanyStatus(req, res, COMPANY_STATUS.LOCKED, 'Đã khóa công ty')
+  await updateCompanyStatus(req, res, COMPANY_STATUS.LOCKED, 'ÄÃ£ khÃ³a cÃ´ng ty')
 }
 
 const getDashboardStats = async (req, res) => {
@@ -295,36 +326,40 @@ const getDashboardStats = async (req, res) => {
         .select('title employmentType createdAt')
         .sort({ createdAt: -1 })
         .limit(5)
-        .lean()
-    ])
-  ]);
+        .lean(),
+    ]),
+  ])
 
-  const formatStats = (aggrs, mapKeyFn) => aggrs.reduce((acc, curr) => {
-    acc[mapKeyFn(curr._id)] = curr.count;
-    return acc;
-  }, {});
+  const formatStats = (aggregates, mapKeyFn) => {
+    return aggregates.reduce((accumulator, current) => {
+      accumulator[mapKeyFn(current._id)] = current.count
+      return accumulator
+    }, {})
+  }
 
-  const usersFormatted = formatStats(userStats, id => `${id.role}_${id.status}`);
-  const jobsFormatted = formatStats(jobStats, id => id);
-  const compFormatted = formatStats(companyStats, id => id);
+  const usersFormatted = formatStats(userStats, (id) => `${id.role}_${id.status}`)
+  const jobsFormatted = formatStats(jobStats, (id) => id)
+  const companiesFormatted = formatStats(companyStats, (id) => id)
 
   ApiResponse.success(res, {
-    overview: {
-      users: usersFormatted,
-      jobs: jobsFormatted,
-      companies: compFormatted,
+    data: {
+      overview: {
+        users: usersFormatted,
+        jobs: jobsFormatted,
+        companies: companiesFormatted,
+      },
+      recentPending: {
+        companies: recentEntities[0],
+        jobs: recentEntities[1],
+      },
     },
-    recentPending: {
-      companies: recentEntities[0],
-      jobs: recentEntities[1]
-    }
-  });
-};
+  })
+}
 
 const exportUsers = async (req, res) => {
   const { role, status, keyword, sort } = req.query
-
   const query = {}
+
   if (role) query.role = role
   if (status) query.status = status
   if (keyword) {
@@ -372,8 +407,8 @@ const exportUsers = async (req, res) => {
     }
   })
 
-  cursor.on('error', err => {
-    console.error('Cursor export error:', err)
+  cursor.on('error', (error) => {
+    console.error('Cursor export error:', error)
     if (!res.headersSent) res.status(500).end('Internal Server Error')
   })
 

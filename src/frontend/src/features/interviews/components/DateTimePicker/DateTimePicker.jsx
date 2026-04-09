@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback } from 'react'
 import dayjs from 'dayjs'
-import { FiCalendar, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import './DateTimePicker.css'
 
 const WEEKDAYS = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
@@ -139,7 +138,7 @@ export default function DateTimePicker({
         className="datetime-picker__trigger"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <FiCalendar className="datetime-picker__trigger-icon" />
+        
         <span className={`datetime-picker__trigger-text ${!displayText ? 'datetime-picker__trigger-text--placeholder' : ''}`}>
           {displayText || 'Nhấn để chọn ngày giờ...'}
         </span>
@@ -158,13 +157,13 @@ export default function DateTimePicker({
                 {/* Month nav */}
                 <div className="dtp-calendar__nav">
                   <button type="button" className="dtp-calendar__nav-btn" onClick={prevMonth}>
-                    <FiChevronLeft />
+                    
                   </button>
                   <span className="dtp-calendar__month-year">
                     {viewDate.format('MMMM YYYY')}
                   </span>
                   <button type="button" className="dtp-calendar__nav-btn" onClick={nextMonth}>
-                    <FiChevronRight />
+                    
                   </button>
                 </div>
 

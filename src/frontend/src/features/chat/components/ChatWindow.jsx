@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { IoMdSend, IoMdArrowBack, IoMdClose } from 'react-icons/io'
+
 import useChatStore from '@app/store/chatStore'
 import ConversationList from './ConversationList'
 import MessageList from './MessageList'
@@ -24,7 +24,7 @@ function MessageInput({ conversationId }) {
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <button type="submit"><IoMdSend /></button>
+      <button type="submit"></button>
     </form>
   )
 }
@@ -43,14 +43,14 @@ export default function ChatWindow() {
       <div className="chat-header">
         <div className="chat-header-actions" style={{ display: 'flex', alignItems: 'center' }}>
           {activeConversationId && (
-            <span onClick={handleBack}><IoMdArrowBack /></span>
+            <span onClick={handleBack}></span>
           )}
           <span style={{ marginLeft: activeConversationId ? '8px' : '0' }}>
             {activeConversationId ? 'Đang chat' : 'Tin nhắn'}
           </span>
         </div>
         <div className="chat-header-actions">
-          <span onClick={closeChat}><IoMdClose /></span>
+          <span onClick={closeChat}></span>
         </div>
       </div>
 

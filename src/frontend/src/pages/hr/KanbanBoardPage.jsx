@@ -13,10 +13,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { useDroppable } from '@dnd-kit/core'
-import {
-  FiArrowLeft, FiInbox, FiEye, FiStar, FiCalendar,
-  FiTarget, FiCheckCircle, FiXCircle, FiUsers,
-} from 'react-icons/fi'
 
 import { useDocumentTitle } from '@shared/hooks'
 import { APPLICATION_STATUS } from '@shared/constants'
@@ -197,10 +193,10 @@ export default function KanbanBoardPage() {
     return (
       <div className="kanban-page">
         <Link to="/hr/jobs" className="kanban-page__back">
-          <FiArrowLeft /> Quay lại
+           Quay lại
         </Link>
         <div className="kanban-page__error">
-          <FiUsers style={{ fontSize: '2.5rem', opacity: 0.3 }} />
+          
           <h2 className="kanban-page__error-title">Không thể tải dữ liệu</h2>
           <p className="kanban-page__error-text">
             {error?.response?.data?.message || 'Đã có lỗi xảy ra'}
@@ -218,7 +214,7 @@ export default function KanbanBoardPage() {
       <div className="kanban-page__header">
         <div>
           <Link to="/hr/jobs" className="kanban-page__back">
-            <FiArrowLeft /> Quay lại tin tuyển dụng
+             Quay lại tin tuyển dụng
           </Link>
           <h1 className="kanban-page__title">
             {data?.meta?.jobTitle || 'Kanban Board'}
@@ -232,7 +228,7 @@ export default function KanbanBoardPage() {
       {/* Stats */}
       <div className="kanban-stats">
         <div className="kanban-stat">
-          <FiUsers />
+          
           Tổng: <span className="kanban-stat__count">{totalApps}</span>
         </div>
         {KANBAN_COLUMNS.map((col) => {

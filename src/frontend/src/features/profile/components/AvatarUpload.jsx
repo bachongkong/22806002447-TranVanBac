@@ -1,5 +1,4 @@
 import { useRef, useCallback, memo } from 'react'
-import { FiCamera } from 'react-icons/fi'
 
 function AvatarUpload({ currentAvatar, onUpload, isUploading }) {
   const fileInputRef = useRef(null)
@@ -29,11 +28,11 @@ function AvatarUpload({ currentAvatar, onUpload, isUploading }) {
           <img src={currentAvatar} alt="Profile Avatar" className="avatar-image" />
         ) : (
           <div className="avatar-placeholder">
-            <FiCamera size={32} />
+            
           </div>
         )}
         <div className="avatar-overlay">
-          <FiCamera size={24} />
+          
           <span>Đổi ảnh</span>
         </div>
       </div>

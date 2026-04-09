@@ -1,19 +1,15 @@
-import { lazy, Suspense, useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { lazy, Suspense } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { FiCalendar, FiVideo, FiMapPin, FiX } from 'react-icons/fi'
-import { INTERVIEW_TYPES } from '@shared/constants'
+import { FiCalendar, FiMapPin, FiVideo, FiX } from 'react-icons/fi'
+
 import { useScheduleInterview } from '../../hooks/useInterviews'
+
 import './ScheduleInterviewModal.css'
 
-// 🔥 CODE SPLITTING: DateTimePicker is lazy loaded
-// This chunk only downloads when the modal opens
-const DateTimePicker = lazy(() =>
-  import('../DateTimePicker/DateTimePicker')
-)
+const DateTimePicker = lazy(() => import('../DateTimePicker/DateTimePicker'))
 
-// DateTimePicker loading fallback
 function DateTimePickerFallback() {
   return (
     <div className="im-dtp-loading">
@@ -23,9 +19,6 @@ function DateTimePickerFallback() {
   )
 }
 
-// ============================================
-// Validation Schema
-// ============================================
 const scheduleSchema = z.object({
   scheduledAt: z.string().min(1, 'Vui lòng chọn ngày giờ phỏng vấn'),
   type: z.enum(['online', 'offline'], {
@@ -49,15 +42,6 @@ const scheduleSchema = z.object({
   { message: 'Vui lòng nhập địa điểm phỏng vấn', path: ['location'] }
 )
 
-/**
- * ScheduleInterviewModal — Modal lên lịch phỏng vấn cho HR
- * 🔥 Uses React.lazy() to code-split DateTimePicker
- *
- * @param {Object} props
- * @param {Object} props.application - application data
- * @param {Function} props.onClose - close handler
- * @param {string} props.jobId - job ID for query invalidation
- */
 export default function ScheduleInterviewModal({ application, onClose, jobId }) {
   const candidate = application.candidateId || {}
   const fullName = candidate.profile?.fullName || candidate.email || 'Ứng viên'
@@ -70,7 +54,6 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
     register,
     handleSubmit,
     control,
-    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(scheduleSchema),
@@ -84,32 +67,34 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
     },
   })
 
-  const interviewType = watch('type')
+  const interviewType = useWatch({
+    control,
+    name: 'type',
+  })
 
-  const onSubmit = (data) => {
-    const payload = {
-      applicationId: application._id,
-      scheduledAt: data.scheduledAt,
-      type: data.type,
-      meetingLink: data.type === 'online' ? data.meetingLink : '',
-      location: data.type === 'offline' ? data.location : '',
-      notes: data.notes || '',
-      roundNumber: data.roundNumber,
-    }
-
-    scheduleInterview.mutate(payload, {
-      onSuccess: () => onClose(),
-    })
+  const handleFormSubmit = (data) => {
+    scheduleInterview.mutate(
+      {
+        applicationId: application._id,
+        scheduledAt: data.scheduledAt,
+        type: data.type,
+        meetingLink: data.type === 'online' ? data.meetingLink : '',
+        location: data.type === 'offline' ? data.location : '',
+        notes: data.notes || '',
+        roundNumber: data.roundNumber,
+      },
+      {
+        onSuccess: () => onClose(),
+      }
+    )
   }
 
-  // Min date: tomorrow
   const minDate = new Date()
   minDate.setDate(minDate.getDate() + 1)
 
   return (
     <div className="interview-modal-overlay" onClick={onClose}>
-      <div className="interview-modal" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
+      <div className="interview-modal" onClick={(event) => event.stopPropagation()}>
         <div className="interview-modal__header">
           <h2 className="interview-modal__title">
             <FiCalendar className="interview-modal__title-icon" />
@@ -120,7 +105,6 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
           </button>
         </div>
 
-        {/* Candidate Info */}
         <div className="interview-modal__candidate">
           <div className="interview-modal__candidate-avatar">{initial}</div>
           <div>
@@ -129,10 +113,8 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
           </div>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <div className="interview-modal__body">
-            {/* DateTimePicker — CODE SPLIT */}
             <Controller
               name="scheduledAt"
               control={control}
@@ -150,7 +132,6 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
               )}
             />
 
-            {/* Interview Type */}
             <div className="im-form__group">
               <label className="im-form__label im-form__label--required">Hình thức</label>
               <Controller
@@ -180,7 +161,6 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
               {errors.type && <span className="im-form__error">{errors.type.message}</span>}
             </div>
 
-            {/* Conditional: Meeting Link or Location */}
             {interviewType === 'online' ? (
               <div className="im-form__group">
                 <label className="im-form__label im-form__label--required" htmlFor="im-meeting-link">
@@ -215,7 +195,6 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
               </div>
             )}
 
-            {/* Round Number */}
             <div className="im-form__group">
               <label className="im-form__label" htmlFor="im-round">
                 Vòng phỏng vấn
@@ -227,7 +206,6 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
               </select>
             </div>
 
-            {/* Notes */}
             <div className="im-form__group">
               <label className="im-form__label" htmlFor="im-notes">
                 Ghi chú
@@ -243,7 +221,6 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
             </div>
           </div>
 
-          {/* Footer */}
           <div className="interview-modal__footer">
             <button
               type="button"
@@ -258,7 +235,7 @@ export default function ScheduleInterviewModal({ application, onClose, jobId }) 
               className="btn btn--primary"
               disabled={scheduleInterview.isPending}
             >
-              {scheduleInterview.isPending ? 'Đang lên lịch...' : '📅 Xác nhận lên lịch'}
+              {scheduleInterview.isPending ? 'Đang lên lịch...' : '🗓️ Xác nhận lên lịch'}
             </button>
           </div>
         </form>

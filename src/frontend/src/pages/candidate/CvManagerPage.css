@@ -76,7 +76,7 @@
   text-align: center;
   background-color: #f8fafc;
   border: 1px dashed #cbd5e1;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   color: #64748b;
 }
 

@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { FiUploadCloud, FiFileText } from 'react-icons/fi';
+
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import './DataDropzone.css';
@@ -56,7 +55,7 @@ const DataDropzone = ({ endpoint, label, acceptedTypes, onUploadSuccess }) => {
         {
           file ? (
             <div className="file-selected">
-              <FiFileText size={40} className="icon-blue" />
+              
               <p className="file-name">{file.name}</p>
               <p className="file-size">{(file.size / 1024).toFixed(2)} KB</p>
             </div>

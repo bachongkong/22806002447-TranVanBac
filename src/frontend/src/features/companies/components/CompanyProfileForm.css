@@ -1,19 +1,19 @@
 .company-form-container {
-  background: white;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  background: var(--color-bg);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
   margin-bottom: 24px;
 }
 
 .form-title {
   font-size: 20px;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--color-text);
   margin-top: 0;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .company-form {
@@ -37,22 +37,22 @@
 .form-group label {
   font-size: 14px;
   font-weight: 500;
-  color: #4b5563;
+  color: var(--color-text-muted);
 }
 
 .required {
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 .company-form input,
 .company-form select,
 .company-form textarea {
   padding: 12px 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 15px;
-  color: #1f2937;
-  background-color: #f9fafb;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--color-text);
+  background-color: var(--color-surface);
   transition: all 0.2s ease;
   font-family: inherit;
 }
@@ -61,19 +61,18 @@
 .company-form select:focus,
 .company-form textarea:focus {
   outline: none;
-  border-color: #3b82f6;
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-primary);
+  background-color: var(--color-bg);
 }
 
 .input-error {
-  border-color: #ef4444 !important;
+  border-color: var(--color-error) !important;
   background-color: #fef2f2 !important;
 }
 
 .error-message {
   font-size: 13px;
-  color: #ef4444;
+  color: var(--color-error);
   margin-top: 2px;
 }
 
@@ -82,32 +81,7 @@
   justify-content: flex-end;
   margin-top: 16px;
   padding-top: 24px;
-  border-top: 1px solid #f3f4f6;
-}
-
-.btn-primary {
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #1d4ed8;
-}
-
-.btn-primary:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.btn-primary:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+  border-top: 1px solid var(--color-border);
 }
 
 @media (max-width: 768px) {

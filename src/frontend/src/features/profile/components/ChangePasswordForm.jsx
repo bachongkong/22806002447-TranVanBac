@@ -82,7 +82,7 @@ function ChangePasswordForm({ onSubmit, isPending }) {
         <div className="form-actions">
           <button 
             type="submit" 
-            className="btn btn-warning" 
+            className="btn btn--outline" 
             disabled={!isDirty || isPending}
           >
             {isPending ? 'Đang đổi mật khẩu...' : 'Đổi mật khẩu'}

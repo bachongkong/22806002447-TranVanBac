@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { HiOutlineLockClosed } from 'react-icons/hi2'
 
 import { useDocumentTitle } from '@shared/hooks'
 import { LoadingSpinner } from '@shared/components'
@@ -47,7 +46,7 @@ export default function EditJobPage() {
     return (
       <div className="page fade-in">
         <div className="job-readonly-warning">
-          <HiOutlineLockClosed className="job-readonly-warning__icon" />
+          
           <h2 className="job-readonly-warning__title">Không thể chỉnh sửa</h2>
           <p className="job-readonly-warning__message">
             Tin tuyển dụng &ldquo;{job.title}&rdquo; đang ở trạng thái <strong>{getStatusLabel(job.status)}</strong>.

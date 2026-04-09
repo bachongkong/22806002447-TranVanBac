@@ -1,4 +1,3 @@
-import { HiOutlineBriefcase, HiOutlineAcademicCap, HiOutlineMapPin, HiOutlineBanknotes, HiOutlineCalendarDays } from 'react-icons/hi2'
 import { EMPLOYMENT_TYPES, EXPERIENCE_LEVELS } from '@shared/constants'
 import { formatSalary, formatDate } from '@shared/utils'
 
@@ -26,31 +25,31 @@ export default function JobFormStep3({ getValues }) {
         <div className="job-preview__meta">
           {employmentLabel && (
             <span className="job-preview__chip">
-              <HiOutlineBriefcase className="job-preview__chip-icon" />
+              
               {employmentLabel}
             </span>
           )}
           {experienceLabel && (
             <span className="job-preview__chip">
-              <HiOutlineAcademicCap className="job-preview__chip-icon" />
+              
               {experienceLabel}
             </span>
           )}
           {data.location && (
             <span className="job-preview__chip">
-              <HiOutlineMapPin className="job-preview__chip-icon" />
+              
               {data.location}
             </span>
           )}
           {(data.salaryRange?.min || data.salaryRange?.max) && (
             <span className="job-preview__chip">
-              <HiOutlineBanknotes className="job-preview__chip-icon" />
+              
               {formatSalary(data.salaryRange.min, data.salaryRange.max)}
             </span>
           )}
           {data.expiresAt && (
             <span className="job-preview__chip">
-              <HiOutlineCalendarDays className="job-preview__chip-icon" />
+              
               Hạn: {formatDate(data.expiresAt)}
             </span>
           )}

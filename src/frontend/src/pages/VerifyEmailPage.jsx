@@ -11,8 +11,10 @@ export default function VerifyEmailPage() {
   const token = searchParams.get('token')
 
   return (
-    <div className="page page--auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <VerifyEmailStatus token={token} />
+    <div className="page--auth-container">
+      <div className="page--auth-content">
+        <VerifyEmailStatus token={token} />
+      </div>
     </div>
   )
 }

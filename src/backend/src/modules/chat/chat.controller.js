@@ -30,7 +30,7 @@ const chatController = {
 
     ApiResponse.success(res, {
       data: messages,
-      pagination: {
+      meta: {
         hasNextPage,
         nextCursor,
         limit: parsedLimit,

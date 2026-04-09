@@ -1,7 +1,4 @@
-import { memo } from 'react'
-import { useSortable } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
-import { FiFileText, FiClock, FiMail, FiCalendar } from 'react-icons/fi'
+
 import { timeAgo } from '@shared/utils'
 import { APPLICATION_STATUS } from '@shared/constants'
 import './ApplicationCard.css'
@@ -67,7 +64,7 @@ function ApplicationCard({ application, isOverlay = false, onScheduleInterview }
           <h4 className="app-card__name">{fullName}</h4>
           {candidate.email && (
             <p className="app-card__email">
-              <FiMail /> {candidate.email}
+               {candidate.email}
             </p>
           )}
         </div>
@@ -94,12 +91,12 @@ function ApplicationCard({ application, isOverlay = false, onScheduleInterview }
             title="Lên lịch phỏng vấn"
             type="button"
           >
-            <FiCalendar />
+            
             <span>Lên lịch PV</span>
           </button>
         )}
         <span className="app-card__time">
-          <FiClock /> {timeAgo(application.appliedAt)}
+           {timeAgo(application.appliedAt)}
         </span>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { HiOutlineChartBarSquare, HiOutlineUsers, HiOutlineBuildingOffice2, HiOutlineBriefcase, HiOutlineTag, HiOutlineShieldCheck, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
+
 import { NotificationBell } from '@shared/components'
 import useAuthStore from '@app/store/authStore'
 import useUIStore from '@app/store/uiStore'
@@ -7,12 +7,9 @@ import { useLogout } from '@features/auth'
 import './DashboardLayout.css'
 
 const adminMenu = [
-  { to: '/admin/dashboard', icon: HiOutlineChartBarSquare, label: 'Dashboard' },
-  { to: '/admin/users', icon: HiOutlineUsers, label: 'Quản lý User' },
-  { to: '/admin/companies', icon: HiOutlineBuildingOffice2, label: 'Duyệt Company' },
-  { to: '/admin/jobs', icon: HiOutlineBriefcase, label: 'Duyệt Job' },
-  { to: '/admin/taxonomy', icon: HiOutlineTag, label: 'Danh mục' },
-  { to: '/admin/audit-logs', icon: HiOutlineShieldCheck, label: 'Audit Log' },
+  { to: '/admin/dashboard', label: 'Dashboard' },
+  { to: '/admin/companies', label: 'Duyệt Company' },
+  { to: '/admin/settings', label: 'Cài đặt hệ thống' },
 ]
 
 /**
@@ -33,7 +30,7 @@ export default function AdminLayout() {
       <aside className="dashboard-sidebar dashboard-sidebar--admin">
         <div className="sidebar-header">
           <a href="/" className="sidebar-logo">
-            <span className="logo-icon">🛡️</span>
+
             {sidebarOpen && <span className="logo-text">Admin Panel</span>}
           </a>
           <button className="sidebar-toggle" onClick={toggleSidebar}>
@@ -42,9 +39,9 @@ export default function AdminLayout() {
         </div>
 
         <nav className="sidebar-nav">
-          {adminMenu.map(({ to, icon: Icon, label }) => (
+          {adminMenu.map(({ to, label }) => (
             <NavLink key={to} to={to} className="sidebar-link">
-              <Icon className="sidebar-link__icon" />
+              <span className="sidebar-link__icon" style={{ fontWeight: '600', fontSize: '1.2rem' }}>{label.charAt(0)}</span>
               {sidebarOpen && <span>{label}</span>}
             </NavLink>
           ))}
@@ -63,7 +60,7 @@ export default function AdminLayout() {
             )}
           </div>
           <button className="sidebar-logout" onClick={handleLogout} title="Đăng xuất">
-            <HiOutlineArrowRightOnRectangle />
+            <span style={{ fontWeight: '600', fontSize: '1.2rem', marginRight: sidebarOpen ? '12px' : '0' }}>Đ</span>
             {sidebarOpen && <span>Đăng xuất</span>}
           </button>
         </div>

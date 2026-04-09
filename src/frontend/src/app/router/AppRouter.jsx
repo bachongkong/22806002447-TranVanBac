@@ -11,6 +11,7 @@ const RegisterPage = lazy(() => import('@pages/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('@pages/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('@pages/ResetPasswordPage'))
 const VerifyEmailPage = lazy(() => import('@pages/VerifyEmailPage'))
+const VerifyEmailPendingPage = lazy(() => import('@pages/VerifyEmailPendingPage'))
 const JobListPage = lazy(() => import('@pages/JobListPage'))
 const JobDetailPage = lazy(() => import('@pages/JobDetailPage'))
 
@@ -44,6 +45,7 @@ export default function AppRouter() {
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/verify-email-pending" element={<VerifyEmailPendingPage />} />
           <Route path="/jobs" element={<JobListPage />} />
           <Route path="/jobs/:id" element={<JobDetailPage />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
@@ -59,6 +61,8 @@ export default function AppRouter() {
         >
           <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
           <Route path="/candidate/cv" element={<CvManagerPage />} />
+          <Route path="/candidate/jobs" element={<JobListPage />} />
+          <Route path="/candidate/jobs/:id" element={<JobDetailPage />} />
           <Route path="/candidate/profile" element={<MyProfilePage />} />
           {/* Thêm candidate routes ở đây */}
         </Route>
@@ -72,6 +76,7 @@ export default function AppRouter() {
           }
         >
           <Route path="/hr/dashboard" element={<HRDashboard />} />
+          <Route path="/hr/profile" element={<MyProfilePage />} />
           <Route path="/hr/company" element={<CompanyProfilePage />} />
           <Route path="/hr/jobs" element={<MyJobsPage />} />
           <Route path="/hr/jobs/create" element={<CreateJobPage />} />

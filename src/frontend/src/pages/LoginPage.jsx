@@ -17,14 +17,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="page page--auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <LoginForm onSubmit={handleLoginSubmit} />
-      <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-        <Link to="/forgot-password">Quên mật khẩu?</Link>
-      </p>
-      <p style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-        Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
-      </p>
+    <div className="page--auth-container">
+      <div className="page--auth-content">
+        <LoginForm onSubmit={handleLoginSubmit} />
+        <div className="auth-footer-links">
+          <p>
+            <Link to="/forgot-password">Quên mật khẩu?</Link>
+          </p>
+          <p>
+            Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
+          </p>
+        </div>
+      </div>
     </div>
   )
 }

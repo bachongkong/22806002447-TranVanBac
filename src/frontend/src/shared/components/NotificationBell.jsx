@@ -1,5 +1,4 @@
 import useNotificationStore from '@app/store/notificationStore'
-import { HiOutlineBell } from 'react-icons/hi2'
 import './NotificationBell.css'
 
 /**
@@ -20,7 +19,7 @@ export default function NotificationBell({ onClick }) {
       title="Thông báo"
       aria-label={`Thông báo${unreadCount > 0 ? ` — ${unreadCount} chưa đọc` : ''}`}
     >
-      <HiOutlineBell className="notification-bell__icon" />
+      
       {unreadCount > 0 && (
         <span className="notification-bell__badge">
           {unreadCount > 99 ? '99+' : unreadCount}

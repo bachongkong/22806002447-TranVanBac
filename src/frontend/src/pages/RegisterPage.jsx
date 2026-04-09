@@ -1,21 +1,31 @@
 import { Link } from 'react-router-dom'
 import { useDocumentTitle } from '@shared/hooks'
-import { RegisterForm } from '@features/auth'
+import { RegisterForm, useRegister } from '@features/auth'
 
 export default function RegisterPage() {
   useDocumentTitle('Đăng ký')
 
-  const handleRegisterSubmit = (data) => {
-    console.log('Register Submit Data:', data)
-    // TODO: Connect to backend auth api
+  const { mutateAsync: registerAsync } = useRegister()
+
+  const handleRegisterSubmit = async (data) => {
+    try {
+      await registerAsync(data)
+    } catch (error) {
+      // Error is already handled by toast in the hook
+      console.error('Register failed:', error)
+    }
   }
 
   return (
-    <div className="page page--auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <RegisterForm onSubmit={handleRegisterSubmit} />
-      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-        Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
-      </p>
+    <div className="page--auth-container">
+      <div className="page--auth-content">
+        <RegisterForm onSubmit={handleRegisterSubmit} />
+        <div className="auth-footer-links">
+          <p>
+            Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
