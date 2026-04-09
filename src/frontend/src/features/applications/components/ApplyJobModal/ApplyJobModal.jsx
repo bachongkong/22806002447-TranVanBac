@@ -92,14 +92,14 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
         <div className="apply-modal__header">
           <h2 className="apply-modal__title">
             <FiSend className="apply-modal__title-icon" />
-            á»¨ng tuyá»ƒn
+            Ứng tuyển
           </h2>
           <button
             type="button"
             className="apply-modal__close"
             onClick={onClose}
             disabled={applyMutation.isPending}
-            aria-label="ÄÃ³ng"
+            aria-label="Đóng"
           >
             <FiX />
           </button>
@@ -108,7 +108,7 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
         <div className="apply-modal__body">
           <div className="apply-modal__section">
             <p style={{ fontSize: '0.82rem', color: 'var(--color-text-dim)' }}>
-              Vá»‹ trÃ­ á»©ng tuyá»ƒn
+              Vị trí ứng tuyển
             </p>
             <p
               style={{
@@ -125,7 +125,7 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
           <div className="apply-modal__section">
             <label className="apply-modal__label">
               <FiFileText className="apply-modal__label-icon" />
-              Chá»n CV Ä‘á»ƒ ná»™p <span style={{ color: 'var(--color-danger, #ef4444)' }}>*</span>
+              Chọn CV để nộp <span style={{ color: 'var(--color-danger, #ef4444)' }}>*</span>
             </label>
 
             {cvLoading ? (
@@ -138,14 +138,14 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
               <div className="apply-modal__empty">
                 <FiFileText className="apply-modal__empty-icon" />
                 <p className="apply-modal__empty-text">
-                  Báº¡n chÆ°a cÃ³ CV nÃ o. HÃ£y táº¡o hoáº·c upload CV trÆ°á»›c khi á»©ng tuyá»ƒn.
+                  Bạn chưa có CV nào. Hãy tạo hoặc upload CV trước khi ứng tuyển.
                 </p>
                 <Link
                   to="/candidate/cv"
                   className="apply-modal__empty-link"
                   onClick={onClose}
                 >
-                  <FiPlus /> Quáº£n lÃ½ CV
+                  <FiPlus /> Quản lý CV
                 </Link>
               </div>
             ) : (
@@ -168,14 +168,14 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
                     />
                     <div className="apply-modal__cv-info">
                       <div className="apply-modal__cv-name">
-                        {cv.title || cv.fileName || 'CV khÃ´ng tiÃªu Ä‘á»'}
+                        {cv.title || cv.fileName || 'CV không tiêu đề'}
                       </div>
                       <div className="apply-modal__cv-meta">
                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.2rem' }}>
                           {getSourceIcon(cv.source)}
                           {cv.source === 'upload' ? 'Upload' : 'Builder'}
                         </span>
-                        <span>Â·</span>
+                        <span>·</span>
                         <span>
                           {cv.createdAt
                             ? new Date(cv.createdAt).toLocaleDateString('vi-VN')
@@ -185,7 +185,7 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
                     </div>
                     {cv.isDefault && (
                       <span className="apply-modal__cv-badge">
-                        <FiStar /> Máº·c Ä‘á»‹nh
+                        <FiStar /> Mặc định
                       </span>
                     )}
                   </label>
@@ -197,11 +197,11 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
           <div className="apply-modal__section">
             <label className="apply-modal__label">
               <FiEdit3 className="apply-modal__label-icon" />
-              ThÆ° giá»›i thiá»‡u (tÃ¹y chá»n)
+              Thư giới thiệu (tùy chọn)
             </label>
             <textarea
               className="apply-modal__textarea"
-              placeholder="Viáº¿t vÃ i dÃ²ng giá»›i thiá»‡u báº£n thÃ¢n, lÃ½ do báº¡n phÃ¹ há»£p vá»›i vá»‹ trÃ­ nÃ y..."
+              placeholder="Viết vài dòng giới thiệu bản thân, lý do bạn phù hợp với vị trí này..."
               value={coverLetter}
               onChange={(event) => setCoverLetter(event.target.value.slice(0, maxCoverLetter))}
               maxLength={maxCoverLetter}
@@ -226,7 +226,7 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
             onClick={onClose}
             disabled={applyMutation.isPending}
           >
-            Há»§y
+            Hủy
           </button>
           <button
             type="button"
@@ -237,12 +237,12 @@ export default function ApplyJobModal({ isOpen, onClose, jobId, jobTitle }) {
             {applyMutation.isPending ? (
               <>
                 <span className="apply-modal__spinner" />
-                Äang ná»™p...
+                Đang nộp...
               </>
             ) : (
               <>
                 <FiSend />
-                Ná»™p Ä‘Æ¡n á»©ng tuyá»ƒn
+                Nộp đơn ứng tuyển
               </>
             )}
           </button>
