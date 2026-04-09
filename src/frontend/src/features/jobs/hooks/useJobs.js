@@ -114,11 +114,69 @@ export function useToggleFavoriteJob() {
 
   return useMutation({
     mutationFn: (id) => jobService.toggleFavorite(id),
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['favorites'] })
+    onMutate: async (id) => {
+      // Hủy các query đang fetch để tránh ghi đè dữ liệu cache
+      await queryClient.cancelQueries({ queryKey: ['favorites'] })
+      await queryClient.cancelQueries({ queryKey: ['job', id] })
+      await queryClient.cancelQueries({ queryKey: ['jobs'] })
+
+      // Lưu trữ trạng thái cũ dể rollback nếu có lỗi
+      const previousJob = queryClient.getQueryData(['job', id])
+
+      // 1. Optimistic Update cho trang Chi tiết Job
+      if (previousJob) {
+        queryClient.setQueryData(['job', id], {
+          ...previousJob,
+          isSaved: !previousJob.isSaved,
+        })
+      }
+
+      // 2. Optimistic Update cho các list jobs (nếu đang ở trang danh sách)
+      queryClient.setQueriesData({ queryKey: ['jobs'] }, (oldData) => {
+        if (!oldData) return oldData
+        
+        // Dành cho list jobs bình thường
+        if (oldData.data && Array.isArray(oldData.data)) {
+          return {
+            ...oldData,
+            data: oldData.data.map((job) =>
+              job._id === id ? { ...job, isSaved: !job.isSaved } : job
+            ),
+          }
+        }
+        
+        // Dành cho list jobs dạng Infinite Scroll (nếu có)
+        if (oldData.pages) {
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              data: page.data?.map((job) =>
+                job._id === id ? { ...job, isSaved: !job.isSaved } : job
+              ),
+            })),
+          }
+        }
+        return oldData
+      })
+
+      return { previousJob }
     },
-    onError: (error) => {
+    onError: (error, id, context) => {
+      // Rollback data nếu call API thất bại
+      if (context?.previousJob) {
+        queryClient.setQueryData(['job', id], context.previousJob)
+      }
+      // Reload lại danh sách cho đồng bộ
+      queryClient.invalidateQueries({ queryKey: ['jobs'] })
+      queryClient.invalidateQueries({ queryKey: ['favorites'] })
       toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi lưu tin tuyển dụng')
+    },
+    onSettled: (data, error, id) => {
+      // Sau khi request hoàn tất (thành công hay thất bại), trigger refetch để đảm bảo data chuẩn xác 100%
+      queryClient.invalidateQueries({ queryKey: ['favorites'] })
+      queryClient.invalidateQueries({ queryKey: ['job', id] })
+      queryClient.invalidateQueries({ queryKey: ['jobs'] })
     },
   })
 }
