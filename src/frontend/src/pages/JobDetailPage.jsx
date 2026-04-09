@@ -1,10 +1,5 @@
 import { useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import {
-  FiArrowLeft, FiMapPin, FiBriefcase, FiClock, FiDollarSign,
-  FiShare2, FiBookmark, FiSend, FiUsers, FiCalendar,
-  FiFileText, FiCheckCircle, FiGift,
-} from 'react-icons/fi'
 
 import { useDocumentTitle } from '@shared/hooks'
 import { useJob } from '@features/jobs/hooks/useJobs'
@@ -102,10 +97,10 @@ export default function JobDetailPage() {
     return (
       <div className="job-detail">
         <Link to="/jobs" className="job-detail__back">
-          <FiArrowLeft /> Quay lại danh sách
+           Quay lại danh sách
         </Link>
         <div className="job-detail__error">
-          <FiBriefcase className="job-detail__error-icon" />
+          
           <h2 className="job-detail__error-title">Không tìm thấy việc làm</h2>
           <p className="job-detail__error-text">
             {error?.response?.data?.message || 'Tin tuyển dụng không tồn tại hoặc đã bị xóa.'}
@@ -125,7 +120,7 @@ export default function JobDetailPage() {
     <div className="job-detail">
       {/* Back */}
       <Link to="/jobs" className="job-detail__back">
-        <FiArrowLeft /> Quay lại danh sách
+         Quay lại danh sách
       </Link>
 
       <div className="job-detail__layout">
@@ -148,25 +143,25 @@ export default function JobDetailPage() {
                 <div className="job-detail__meta">
                   {job.employmentType && (
                     <span className="job-detail__chip">
-                      <FiBriefcase className="job-detail__chip-icon" />
+                      
                       {job.employmentType}
                     </span>
                   )}
                   {job.experienceLevel && (
                     <span className="job-detail__chip">
-                      <FiClock className="job-detail__chip-icon" />
+                      
                       {job.experienceLevel}
                     </span>
                   )}
                   {job.location && (
                     <span className="job-detail__chip">
-                      <FiMapPin className="job-detail__chip-icon" />
+                      
                       {job.location}
                     </span>
                   )}
                   {job.expiresAt && (
                     <span className="job-detail__chip">
-                      <FiCalendar className="job-detail__chip-icon" />
+                      
                       Hạn: {new Date(job.expiresAt).toLocaleDateString('vi-VN')}
                     </span>
                   )}
@@ -186,7 +181,7 @@ export default function JobDetailPage() {
           {job.skills?.length > 0 && (
             <div className="job-detail__section">
               <h2 className="job-detail__section-title">
-                <FiCheckCircle className="job-detail__section-icon" />
+                
                 Kỹ năng yêu cầu
               </h2>
               <div className="job-detail__skills">
@@ -200,7 +195,7 @@ export default function JobDetailPage() {
           {/* Description */}
           <div className="job-detail__section">
             <h2 className="job-detail__section-title">
-              <FiFileText className="job-detail__section-icon" />
+              
               Mô tả công việc
             </h2>
             <div className={`job-detail__text ${!job.description ? 'job-detail__text--empty' : ''}`}>
@@ -212,7 +207,7 @@ export default function JobDetailPage() {
           {job.requirements && (
             <div className="job-detail__section">
               <h2 className="job-detail__section-title">
-                <FiCheckCircle className="job-detail__section-icon" />
+                
                 Yêu cầu ứng viên
               </h2>
               <div className="job-detail__text">{job.requirements}</div>
@@ -223,7 +218,7 @@ export default function JobDetailPage() {
           {job.benefits && (
             <div className="job-detail__section">
               <h2 className="job-detail__section-title">
-                <FiGift className="job-detail__section-icon" />
+                
                 Phúc lợi & Chế độ
               </h2>
               <div className="job-detail__text">{job.benefits}</div>
@@ -236,7 +231,7 @@ export default function JobDetailPage() {
           {/* CTA Card */}
           <div className="job-detail__cta-card">
             <div className="job-detail__salary-display">
-              <FiDollarSign style={{ verticalAlign: 'middle' }} />
+              
               {' '}{formatSalary(job.salaryRange?.min, job.salaryRange?.max)}
             </div>
             <p className="job-detail__salary-label">Mức lương</p>
@@ -245,16 +240,16 @@ export default function JobDetailPage() {
               className="job-detail__apply-btn"
               onClick={handleApply}
             >
-              <FiSend />
+              
               Ứng tuyển ngay
             </button>
 
             <div className="job-detail__action-row">
               <button className="job-detail__action-btn" onClick={handleShare}>
-                <FiShare2 /> Chia sẻ
+                 Chia sẻ
               </button>
               <button className="job-detail__action-btn" onClick={handleBookmark}>
-                <FiBookmark /> Lưu tin
+                 Lưu tin
               </button>
             </div>
           </div>
@@ -280,13 +275,13 @@ export default function JobDetailPage() {
             <div className="job-detail__company-info">
               {company.location && (
                 <div className="job-detail__company-info-item">
-                  <FiMapPin className="job-detail__company-info-icon" />
+                  
                   {company.location}
                 </div>
               )}
               {company.companySize && (
                 <div className="job-detail__company-info-item">
-                  <FiUsers className="job-detail__company-info-icon" />
+                  
                   {company.companySize} nhân viên
                 </div>
               )}

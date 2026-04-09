@@ -40,6 +40,63 @@ export function useLogin() {
   })
 }
 
+export function useRegister() {
+  const navigate = useNavigate()
+  const { setCredentials } = useAuthStore()
+
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await authService.register(data)
+      return response.data
+    },
+    onSuccess: (body) => {
+      const { user, accessToken } = body.data
+      
+      setCredentials({ user, accessToken })
+      toast.success('Đăng ký thành công! Vui lòng kiểm tra email để xác thực.')
+      
+      // Redirect to email verification pending page
+      navigate('/verify-email-pending')
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Đăng ký thất bại!')
+    }
+  })
+}
+
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await authService.forgotPassword(data)
+      return response.data
+    },
+    onSuccess: (body) => {
+      toast.success(body.message || 'Vui lòng kiểm tra email để đặt lại mật khẩu.')
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra!')
+    }
+  })
+}
+
+export function useResetPassword() {
+  const navigate = useNavigate()
+
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await authService.resetPassword(data)
+      return response.data
+    },
+    onSuccess: (body) => {
+      toast.success(body.message || 'Đặt lại mật khẩu thành công!')
+      navigate('/login')
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra!')
+    }
+  })
+}
+
 export function useLogout() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()

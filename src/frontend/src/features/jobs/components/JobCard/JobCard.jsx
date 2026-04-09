@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FiMapPin, FiBriefcase, FiClock, FiDollarSign, FiHeart } from 'react-icons/fi'
-import { FaHeart } from 'react-icons/fa'
 import { formatSalary, timeAgo } from '@shared/utils'
 import { useAuthStore } from '@app/store'
 import { useToggleFavoriteJob } from '@features/jobs'
@@ -59,16 +57,16 @@ export default function JobCard({ job, style }) {
 
           <div className="job-card__meta">
             <span className="job-card__meta-item">
-              <FiMapPin size={14} />
+              
               {job.location || 'Chưa cập nhật'}
             </span>
             <span className="job-card__meta-item">
-              <FiBriefcase size={14} />
+              
               {job.employmentType || 'Full-time'}
             </span>
             {job.experienceLevel && (
               <span className="job-card__meta-item">
-                <FiClock size={14} />
+                
                 {job.experienceLevel}
               </span>
             )}
@@ -93,7 +91,7 @@ export default function JobCard({ job, style }) {
 
         <div className="job-card__aside">
           <div className="job-card__salary">
-            <FiDollarSign size={14} />
+            
             {formatSalary(job.salaryRange?.min, job.salaryRange?.max)}
           </div>
           <div className="job-card__bottom-right">
@@ -104,7 +102,7 @@ export default function JobCard({ job, style }) {
                 onClick={handleSave}
                 title={isSavedLocal ? "Bỏ lưu tin này" : "Lưu tin này"}
               >
-                {isSavedLocal ? <FaHeart size={18} /> : <FiHeart size={18} />}
+                {isSavedLocal ? 'Đã lưu' : 'Lưu'}
               </button>
             )}
           </div>

@@ -8,13 +8,17 @@ export default function ForgotPasswordPage() {
   useDocumentTitle('Quên mật khẩu')
 
   return (
-    <div className="page page--auth" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <ForgotPasswordForm />
-      <p style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-        Nhớ mật khẩu rồi? <Link to="/login">Đăng nhập</Link>
-        {' · '}
-        <Link to="/register">Đăng ký</Link>
-      </p>
+    <div className="page--auth-container">
+      <div className="page--auth-content">
+        <ForgotPasswordForm />
+        <div className="auth-footer-links">
+          <p>
+            Nhớ mật khẩu rồi? <Link to="/login">Đăng nhập</Link>
+            {' · '}
+            <Link to="/register">Đăng ký</Link>
+          </p>
+        </div>
+      </div>
     </div>
   )
 }

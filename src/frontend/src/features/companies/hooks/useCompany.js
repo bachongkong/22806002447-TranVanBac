@@ -1,8 +1,8 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
+
 import companyService from '../services/companyService'
 
-// Query Keys
 export const COMPANY_KEYS = {
   all: ['companies'],
   lists: () => [...COMPANY_KEYS.all, 'list'],
@@ -13,10 +13,6 @@ export const COMPANY_KEYS = {
   members: (id) => [...COMPANY_KEYS.detail(id), 'members'],
 }
 
-// ------------------------------------
-// Queries
-// ------------------------------------
-
 export const useGetMyCompany = () => {
   return useQuery({
     queryKey: COMPANY_KEYS.myCompany(),
@@ -25,20 +21,16 @@ export const useGetMyCompany = () => {
         const response = await companyService.getMyCompany()
         return response.data?.data
       } catch (error) {
-        // Return null instead of throwing if user doesn't have a company yet
         if (error.response?.status === 404) {
           return null
         }
+
         throw error
       }
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   })
 }
-
-// ------------------------------------
-// Mutations
-// ------------------------------------
 
 export const useCreateCompany = () => {
   const queryClient = useQueryClient()
@@ -46,11 +38,11 @@ export const useCreateCompany = () => {
   return useMutation({
     mutationFn: (data) => companyService.create(data),
     onSuccess: (response) => {
-      toast.success(response.data?.message || 'Tạo công ty thành công')
+      toast.success(response.data?.message || 'Táº¡o cÃ´ng ty thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: COMPANY_KEYS.myCompany() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tạo công ty')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi táº¡o cÃ´ng ty')
     },
   })
 }
@@ -61,11 +53,11 @@ export const useUpdateCompany = () => {
   return useMutation({
     mutationFn: ({ id, data }) => companyService.update(id, data),
     onSuccess: (response) => {
-      toast.success(response.data?.message || 'Cập nhật thành công')
+      toast.success(response.data?.message || 'Cáº­p nháº­t thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: COMPANY_KEYS.myCompany() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi cáº­p nháº­t')
     },
   })
 }
@@ -80,11 +72,11 @@ export const useUploadCompanyLogo = () => {
       return companyService.uploadLogo(id, formData)
     },
     onSuccess: (response) => {
-      toast.success(response.data?.message || 'Tải logo lên thành công')
+      toast.success(response.data?.message || 'Táº£i logo lÃªn thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: COMPANY_KEYS.myCompany() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tải logo')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi táº£i logo')
     },
   })
 }
@@ -94,13 +86,12 @@ export const useAddHrMember = () => {
 
   return useMutation({
     mutationFn: ({ id, email }) => companyService.addMember(id, { email }),
-    onSuccess: (response, variables) => {
-      toast.success(response.data?.message || 'Thêm thành viên thành công')
+    onSuccess: (response) => {
+      toast.success(response.data?.message || 'ThÃªm thÃ nh viÃªn thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: COMPANY_KEYS.myCompany() })
-      // If we use separate getMembers, invalidate those too, but myCompany returns populated hrMembers
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi thêm thành viên')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi thÃªm thÃ nh viÃªn')
     },
   })
 }
@@ -111,11 +102,11 @@ export const useRemoveHrMember = () => {
   return useMutation({
     mutationFn: ({ id, memberId }) => companyService.removeMember(id, memberId),
     onSuccess: (response) => {
-      toast.success(response.data?.message || 'Xóa thành viên thành công')
+      toast.success(response.data?.message || 'XÃ³a thÃ nh viÃªn thÃ nh cÃ´ng')
       queryClient.invalidateQueries({ queryKey: COMPANY_KEYS.myCompany() })
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi xóa thành viên')
+      toast.error(error.response?.data?.message || 'CÃ³ lá»—i xáº£y ra khi xÃ³a thÃ nh viÃªn')
     },
   })
 }

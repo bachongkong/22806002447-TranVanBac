@@ -1,6 +1,5 @@
 import { useRef, useEffect, useCallback, useState } from 'react'
 import JobCard from '../JobCard/JobCard'
-import { FiBriefcase } from 'react-icons/fi'
 import './JobVirtualizedList.css'
 
 const ITEM_HEIGHT = 155 // px per job card (including gap)
@@ -68,7 +67,7 @@ export default function JobVirtualizedList({
   if (!jobs.length) {
     return (
       <div className="job-vlist__empty">
-        <FiBriefcase size={48} />
+        
         <h3>Không tìm thấy việc làm</h3>
         <p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
       </div>

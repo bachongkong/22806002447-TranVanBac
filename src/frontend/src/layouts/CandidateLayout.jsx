@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { HiOutlineBriefcase, HiOutlineDocumentText, HiOutlineHeart, HiOutlineBell, HiOutlineChatBubbleLeftRight, HiOutlineUser, HiOutlineArrowRightOnRectangle } from 'react-icons/hi2'
+
 import { NotificationBell } from '@shared/components'
 import useAuthStore from '@app/store/authStore'
 import useUIStore from '@app/store/uiStore'
@@ -8,13 +8,12 @@ import { ChatBadge, ChatWindow } from '@features/chat'
 import './DashboardLayout.css'
 
 const candidateMenu = [
-  { to: '/candidate/dashboard', icon: HiOutlineBriefcase, label: 'Dashboard' },
-  { to: '/candidate/my-applications', icon: HiOutlineDocumentText, label: 'Đơn ứng tuyển' },
-  { to: '/candidate/saved-jobs', icon: HiOutlineHeart, label: 'Việc đã lưu' },
-  { to: '/candidate/my-cvs', icon: HiOutlineDocumentText, label: 'CV của tôi' },
-  { to: '/candidate/profile', icon: HiOutlineUser, label: 'Hồ sơ' },
-  { to: '/candidate/notifications', icon: HiOutlineBell, label: 'Thông báo' },
-  { to: '/candidate/messages', icon: HiOutlineChatBubbleLeftRight, label: 'Tin nhắn' },
+  { to: '/candidate/dashboard', label: 'Dashboard' },
+  { to: '/candidate/jobs', label: 'Tìm việc làm' },
+  { to: '/candidate/applied-jobs', label: 'Việc làm đã ứng tuyển' },
+  { to: '/candidate/saved-jobs', label: 'Việc làm đã lưu' },
+  { to: '/candidate/cv', label: 'CV của tôi' },
+  { to: '/candidate/profile', label: 'Hồ sơ' },
 ]
 
 /**
@@ -35,7 +34,7 @@ export default function CandidateLayout() {
       <aside className="dashboard-sidebar">
         <div className="sidebar-header">
           <a href="/" className="sidebar-logo">
-            <span className="logo-icon">💼</span>
+
             {sidebarOpen && <span className="logo-text">SmartHire</span>}
           </a>
           <button className="sidebar-toggle" onClick={toggleSidebar}>
@@ -44,9 +43,9 @@ export default function CandidateLayout() {
         </div>
 
         <nav className="sidebar-nav">
-          {candidateMenu.map(({ to, icon: Icon, label }) => (
+          {candidateMenu.map(({ to, label }) => (
             <NavLink key={to} to={to} className="sidebar-link">
-              <Icon className="sidebar-link__icon" />
+              <span className="sidebar-link__icon" style={{ fontWeight: '600', fontSize: '1.2rem' }}>{label.charAt(0)}</span>
               {sidebarOpen && <span>{label}</span>}
             </NavLink>
           ))}
@@ -65,7 +64,7 @@ export default function CandidateLayout() {
             )}
           </div>
           <button className="sidebar-logout" onClick={handleLogout} title="Đăng xuất">
-            <HiOutlineArrowRightOnRectangle />
+            <span style={{ fontWeight: '600', fontSize: '1.2rem', marginRight: sidebarOpen ? '12px' : '0' }}>Đ</span>
             {sidebarOpen && <span>Đăng xuất</span>}
           </button>
         </div>

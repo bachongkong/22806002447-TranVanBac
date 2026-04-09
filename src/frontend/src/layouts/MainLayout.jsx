@@ -29,7 +29,6 @@ export default function MainLayout() {
       <header className="main-header">
         <div className="main-header__container">
           <Link to="/" className="main-header__logo">
-            <span className="logo-icon">💼</span>
             <span className="logo-text">SmartHire</span>
           </Link>
           <nav className="main-header__nav">
@@ -37,9 +36,9 @@ export default function MainLayout() {
             {isAuthenticated ? (
               <>
                 <Link to={getDashboardLink()}>Dashboard</Link>
-                <button 
-                  onClick={handleLogout} 
-                  className="btn btn--outline" 
+                <button
+                  onClick={handleLogout}
+                  className="btn btn--outline"
                   disabled={isLoggingOut}
                 >
                   {isLoggingOut ? 'Đang xử lý...' : 'Đăng xuất'}

@@ -156,7 +156,7 @@ export default function CompanyProfileForm({ company }) {
         <div className="form-actions">
           <button 
             type="submit" 
-            className="btn-primary" 
+            className="btn btn--primary" 
             disabled={isSubmitting || isLoading}
           >
             {isLoading ? 'Đang lưu...' : (company ? 'Lưu thay đổi' : 'Tạo mới hồ sơ')}

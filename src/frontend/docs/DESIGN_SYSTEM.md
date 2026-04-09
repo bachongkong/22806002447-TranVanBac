@@ -1,114 +1,123 @@
-# SmartHire Design System
+# SMARTHIRE DESIGN SYSTEM (REFACTORED - PRO VERSION)
 
-Tài liệu Thiết kế Hệ thống (Design System) của nền tảng tuyển dụng SmartHire. Hệ thống này định nghĩa toàn bộ ngôn ngữ thị giác, thành phần UI, và các nguyên tắc thiết kế được áp dụng trên toàn bộ Frontend (dành cho các roles: Candidate, HR, và Admin).
+## 1. Design Philosophy
 
----
+Clean -- Structured -- Data-first -- Trustworthy
 
-## 1. Triết lý Thiết kế (Design Philosophy)
+-   Remove: Memphis, heavy glass, floating, spring animations
+-   Focus: clarity, usability, enterprise SaaS feel
 
-SmartHire kết hợp hai xu hướng thiết kế mạnh mẽ đem lại một giao diện hiện đại (Modern), tin cậy (Trustworthy), nhưng không kém phần mềm mại và thu hút:
+------------------------------------------------------------------------
 
-*   **Flat Design (Thiết kế phẳng):** Áp dụng cho cấu trúc bố cục gốc, không gian trống (whitespace), typography sắc nét và hệ thống lưới rõ ràng. Giúp giao diện dễ đọc, hiệu suất tải nhanh và trực quan với hệ thống dữ liệu lớn của HR/Admin.
-*   **Glassmorphism (Hiệu ứng kính mờ):** Làm mềm thiết kế với các mảng nổi (Floating panels), Navbar/Header xuyên thấu có độ blur cao. Đem lại hiệu ứng chiều sâu (Depth), cảm giác "Premium SaaS" mà không làm rối thông tin.
+## 2. Color System (Light Mode Only)
 
----
+### Background
 
-## 2. Nền tảng (Foundations)
+-   background: #FFFFFF
+-   surface: #F8FAFC
+-   surface-elevated: #FFFFFF
+-   border: #E5E7EB
+-   hover: #F1F5F9
 
-### 2.1. Màu sắc (Color Palette)
+### Brand
 
-Hệ thống màu sắc được mở rộng cấu hình tại `tailwind.config` dựa vào bộ Material You Tonal Palettes, tối ưu cho tỷ lệ tương phản WCAG.
+-   primary: #3B5BFF
+-   hover: #2F4AE0
+-   active: #2539B8
 
-#### Primary (Màu chính)
-Màu nhận diện thương hiệu, biểu trưng cho sự chuyên nghiệp và sức mạnh công nghệ.
-*   **Primary:** `#143de7` — Dùng cho nút chính (Primary buttons), links quan trọng.
-*   **Primary Container:** `#3b5bff` — Nền phụ trợ mảng màu xanh.
-*   **Primary Gradient:** `linear-gradient(135deg, #3B5BFF 0%, #8B5CF6 100%)` — Gradient nhận diện cho Header text và các Background khối đặc biệt.
+### Semantic
 
-#### Secondary & Tertiary (Màu phụ & Nhấn)
-*   **Secondary:** `#6b38d4` (Tím) — Đại diện cho cụm tính năng HR (Groups, Interview).
-*   **Tertiary:** `#725000` (Vàng Đồng) — Đại diện cho cụm tính năng Admin (Analytics, Stats).
+-   success: #16A34A
+-   warning: #D97706
+-   error: #DC2626
 
-#### Background & Surfaces (Bề mặt & Nền)
-*   **Background (Nền website):** `#f7f9fb` — Xám trắng thanh lịch, tránh chói mắt hơn pure white (`#ffffff`).
-*   **Surface:** Cấu trúc tầng bậc: 
-    *   `surface-container-lowest`: `#ffffff` (Card tĩnh, Input)
-    *   `surface-container-low`: `#f2f4f6` (Bản điều khiển, Sidebar)
-    *   `surface-container-high`: `#e6e8ea` (Divider, Border nhẹ)
-*   **Text / Typography:** 
-    *   `on-surface`: `#191c1e` (Dark Grey cho tiêu đề, nội dung chính)
-    *   `on-surface-variant`: `#444656` (Màu cho đoạn văn bản phụ, ghi chú)
+Principle: Color is for meaning, not decoration
 
-### 2.2. Nghệ thuật Typography
+------------------------------------------------------------------------
 
-Sử dụng Google Fonts kết hợp giữa tính hiện đại mang hơi hướng cá tính và tính dễ đọc của văn bản làm việc.
+## 3. Typography
 
-*   **Font Headline (Tiêu đề):** `Plus Jakarta Sans`
-    *   *Usage:* Tiêu đề trang (H1, H2, H3), logo text, highlight số liệu.
-    *   *Weights:* ExtraBold (800), Bold (700). Tăng tính Impact cực cao.
-    *   *Tracking (Letter-spacing):* Thường đi kèm `tracking-tight`.
-*   **Font Body & Label (Văn bản):** `Inter`
-    *   *Usage:* Đoạn văn, thẻ UI, input form, dữ liệu bảng thống kê.
-    *   *Weights:* Regular (400), Medium (500), SemiBold (600).
+Font: Inter (only)
 
----
+-   Heading: 600
+-   Subheading: 500
+-   Body: 400
+-   Label: 500
 
-## 3. Kiến trúc Shapes & Effects
+Sizes: - H1: 28px - H2: 22px - H3: 18px - Body: 14--16px
 
-### 3.1. Hình khối (Border Radius)
-Sử dụng các góc bo tròn lớn mang đậm tính "Friendly, Modern SaaS" thay vì thiết kế góc cạnh cổ điển.
-*   **Mặc định (Cards/Modals):** `1rem` (16px) — Tailwind `rounded-2xl` / `rounded-lg` tuýp project.
-*   **Buttons:** Hình viên thuốc (Pill shape) — Tailwind `rounded-full` (`9999px`).
+------------------------------------------------------------------------
 
-### 3.2. Hiệu ứng Kính (Glassmorphism Utilities)
-Class CSS tùy chỉnh để áp dụng phong cách Glass. Thường dùng trên Fixed Headers, Floating Cards và Notifications.
+## 4. Layout & Spacing
 
-```css
-.liquid-glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3); /* Viền mỏng làm nổi kính */
-}
-```
+-   4px spacing system
+-   Common: 8 / 12 / 16 / 24 / 32
+-   Max width: 1280px
+-   Padding: 24px
 
-### 3.3. Các Hiệu ứng & Chuyển động (Animations/Transitions)
+### Card
 
-Những cử chỉ siêu nhỏ (Micro-interactions) làm giao diện trở nên sống động.
+-   background: #fff
+-   border: 1px solid #E5E7EB
+-   border-radius: 12px
 
-*   **Spring Hover (`.spring-hover`):** 
-    Hiệu ứng nhún đàn hồi táo bạo khi người dùng hover qua Card hay Button.
-    *CSS:* `transition: all 300ms cubic-bezier(0.34, 1.56, 0.64, 1); hover:scale(1.05)`
-*   **Trôi nổi (`.floating`):**
-    Hiệu ứng nhấp nhô tuần hoàn dành riêng cho hình khối decor, badge thông báo nổi.
-    *Keyframes:* Lên xuống 15px trong khoảng chu kỳ 6s (`ease-in-out`).
+Hover: - border-color: #CBD5F5
 
----
+------------------------------------------------------------------------
 
-## 4. Components chính (Core Components)
+## 5. Components
 
-### 4.1. Buttons
-*   **Primary Button:** `bg-primary text-white rounded-full font-bold px-10 py-4 spring-hover shadow-xl shadow-primary/20`.
-*   **Outline Button:** Trắng xuyên thấu hoặc trong suốt với `border-[1.5px] border-outline-variant bg-transparent hover:bg-primary-fixed/20`.
+### Buttons
 
-### 4.2. Layout Container & Dashboard
-*   **Header cố định:** Được phủ `liquid-glass` (`bg-white/70 backdrop-blur-xl`) nhằm giữ cấu trúc Flat bên dưới trượt qua thấy bóng mờ.
-*   **Dashboard Panels:** Chứa dữ liệu (Workspace) giữ background bệt `bg-surface-container-lowest` (`#ffffff`) để dễ hiển thị Data Grid / Chart phẳng, kết hợp với các Icon lớn hình thù hữu cơ làm yếu tố phá cách.
-*   **Thẻ Job/Hồ sơ (Card):** Border mỏng siêu tinh tế `border border-primary/5` (Flat), tích hợp `spring-hover` kèm hiệu ứng `hover:shadow-lg` nhằm làm nổi layer.
+Primary: - bg-primary text-white - hover:bg-primary-hover - rounded-lg -
+px-4 py-2 - font-medium
 
-### 4.3. Đồ họa phụ trợ (Decorators)
-*   **Memphis Patterns (`.memphis-pattern`):** Nền họa tiết chấm bi tròn màu sắc chủ đạo kết nối các section, xóa mờ ranh giới của Flat design cứng nhắc bằng nghệ thuật Neo-Memphis hiện đại.
-*   **Gradient Orbs:** Các khối vòng sáng ẩn dưỡi text/hình (`w-48 h-48 bg-primary-fixed opacity-30 rounded-lg blur-3xl`) tạo môi trường Glowy nhẹ.
+Secondary: - bg-white border border-gray-300 - hover:bg-gray-50
 
----
+### Input
 
-## 5. Nguyên tắc Thực thi (Best Practices)
+-   border: 1px solid #D1D5DB
+-   border-radius: 8px
+-   padding: 10px 12px
 
-1.  **Dùng hệ thống biến CSS/Tailwind Config:** KHÔNG hardcode màu HEX vào HTML hay file `.css` cục bộ. Luôn gọi màu như `bg-surface`, `text-on-surface`, `text-primary`.
-2.  **Đừng lạm dụng Glassmorphism:** Tính năng này "nặng" về mặt layout và render của GPU trình duyệt. Chỉ dùng `.liquid-glass` cho Navbar, Floating Badges, Tooltips hoặc Modals cao cấp. Không dùng làm nền cho Component dày đặc văn bản.
-3.  **Flat Text First:** Typography trên nền màu cần độ tương phản cực tốt. Dùng `text-on-surface-variant` cho caption/sub-title để giảm chói mắt.
-4.  **Tương tác "Đàn hồi":** Dùng `.spring-hover` trên UI tĩnh nhưng cần hạn chế tối đa trên các UI mang tính list/từng dòng để tránh gây lóa mắt/ giật màn hình (e.g. tránh xài spring trên các List Row nội dung chi chít của bảng biểu Admin).
+Focus: - border-color: #3B5BFF
 
---- 
+### Table
 
-*Tài liệu được sinh ra phục vụ mục đích Development quy chuẩn đồng nhất. Các Dev tham chiếu các class `tailwind` trực tiếp tại đây.*
+-   row height: 44px
+-   hover: #F9FAFB
+-   header: text-xs uppercase text-gray-500
+
+------------------------------------------------------------------------
+
+## 6. Effects & Animations
+
+-   Use only: transition 150ms ease
+-   Remove: floating, spring, heavy blur
+
+------------------------------------------------------------------------
+
+## 7. Icons
+
+Use: - Heroicons - Lucide
+
+Avoid: - cartoon icons - emoji style - gradient icons
+
+Rule: Icon supports, not decorates
+
+------------------------------------------------------------------------
+
+## 8. UX Principles
+
+-   Reduce cognitive load
+-   Data-first UI
+-   Clear hierarchy
+-   Avoid Dribbble-style flashy UI
+
+------------------------------------------------------------------------
+
+## 9. Final Direction
+
+Inspired by: - Stripe - Linear - Notion - Vercel
+
+Avoid: - AI demo UI - flashy startup UI

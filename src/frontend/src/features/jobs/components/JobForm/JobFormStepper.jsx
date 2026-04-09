@@ -1,4 +1,3 @@
-import { HiOutlineCheck } from 'react-icons/hi2'
 import './JobForm.css'
 
 const STEPS = [
@@ -49,7 +48,7 @@ export default function JobFormStepper({ currentStep, onStepClick, completedStep
               aria-label={`Bước ${step.number}: ${step.label}`}
             >
               {status === 'completed' ? (
-                <HiOutlineCheck className="job-stepper__check" />
+                '✓'
               ) : (
                 step.number
               )}

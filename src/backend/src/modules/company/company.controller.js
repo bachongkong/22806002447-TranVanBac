@@ -1,4 +1,4 @@
-import { ApiResponse } from '../../common/index.js'
+import { ApiError, ApiResponse } from '../../common/index.js'
 import companyService from './company.service.js'
 
 // ============================================
@@ -10,7 +10,7 @@ const companyController = {
     const company = await companyService.createCompany(req.user.userId, req.body)
 
     ApiResponse.created(res, {
-      message: 'Tạo công ty thành công. Đang chờ Admin duyệt.',
+      message: 'Táº¡o cÃ´ng ty thÃ nh cÃ´ng. Äang chá» Admin duyá»‡t.',
       data: company,
     })
   },
@@ -19,7 +19,7 @@ const companyController = {
     const company = await companyService.getMyCompany(req.user.userId)
 
     ApiResponse.success(res, {
-      message: 'Lấy thông tin công ty thành công',
+      message: 'Láº¥y thÃ´ng tin cÃ´ng ty thÃ nh cÃ´ng',
       data: company,
     })
   },
@@ -28,7 +28,7 @@ const companyController = {
     const company = await companyService.getCompanyById(req.params.id)
 
     ApiResponse.success(res, {
-      message: 'Lấy thông tin công ty thành công',
+      message: 'Láº¥y thÃ´ng tin cÃ´ng ty thÃ nh cÃ´ng',
       data: company,
     })
   },
@@ -52,17 +52,14 @@ const companyController = {
     )
 
     ApiResponse.success(res, {
-      message: 'Cập nhật thông tin công ty thành công',
+      message: 'Cáº­p nháº­t thÃ´ng tin cÃ´ng ty thÃ nh cÃ´ng',
       data: company,
     })
   },
 
   uploadLogo: async (req, res) => {
     if (!req.file) {
-      return ApiResponse.success(res, {
-        statusCode: 400,
-        message: 'Vui lòng chọn file ảnh để upload',
-      })
+      throw ApiError.badRequest('Vui lÃ²ng chá»n file áº£nh Ä‘á»ƒ upload')
     }
 
     const company = await companyService.uploadLogo(
@@ -73,12 +70,12 @@ const companyController = {
     )
 
     ApiResponse.success(res, {
-      message: 'Cập nhật logo thành công',
+      message: 'Cáº­p nháº­t logo thÃ nh cÃ´ng',
       data: company,
     })
   },
 
-  // ── HR Member Management ──
+  // â”€â”€ HR Member Management â”€â”€
 
   listHrMembers: async (req, res) => {
     const result = await companyService.listHrMembers(
@@ -87,7 +84,7 @@ const companyController = {
     )
 
     ApiResponse.success(res, {
-      message: 'Lấy danh sách thành viên thành công',
+      message: 'Láº¥y danh sÃ¡ch thÃ nh viÃªn thÃ nh cÃ´ng',
       data: result,
     })
   },
@@ -100,7 +97,7 @@ const companyController = {
     )
 
     ApiResponse.success(res, {
-      message: 'Thêm thành viên thành công',
+      message: 'ThÃªm thÃ nh viÃªn thÃ nh cÃ´ng',
       data: company,
     })
   },
@@ -113,7 +110,7 @@ const companyController = {
     )
 
     ApiResponse.success(res, {
-      message: 'Xóa thành viên thành công',
+      message: 'XÃ³a thÃ nh viÃªn thÃ nh cÃ´ng',
       data: company,
     })
   },

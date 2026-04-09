@@ -1,47 +1,69 @@
-import sharp from 'sharp'
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
+import sharp from 'sharp'
 import User from '../../models/User.js'
-import Company from '../../models/Company.js'
 import { ApiError } from '../../common/index.js'
+import { uploadImageBufferToCloudinary } from '../../utils/index.js'
 
-/**
- * Upload and resize user avatar
- * @param {string} userId
- * @param {Buffer} fileBuffer
- * @returns {Promise<string>} public URL of the avatar
- */
+const AVATAR_UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'avatars')
+const AVATAR_CLOUDINARY_FOLDER = 'recruitment-platform/avatars'
+
+async function findUserProfileById(userId) {
+  const user = await User.findById(userId)
+    .populate('companyId')
+    .select('-passwordHash -refreshToken -emailVerificationToken -emailVerificationExpires')
+
+  if (!user) {
+    throw ApiError.notFound('User not found')
+  }
+
+  return user
+}
+
+async function processAvatarImage(fileBuffer) {
+  try {
+    return await sharp(fileBuffer)
+      .resize(150, 150, { fit: 'cover' })
+      .toFormat('webp')
+      .webp({ quality: 80 })
+      .toBuffer()
+  } catch {
+    throw ApiError.internal('Failed to process and save image')
+  }
+}
+
+function saveAvatarToLocalStorage(userId, processedBuffer) {
+  if (!fs.existsSync(AVATAR_UPLOAD_DIR)) {
+    fs.mkdirSync(AVATAR_UPLOAD_DIR, { recursive: true })
+  }
+
+  const filename = `avatar-${userId}-${Date.now()}.webp`
+  const filePath = path.join(AVATAR_UPLOAD_DIR, filename)
+  fs.writeFileSync(filePath, processedBuffer)
+
+  return `/public/uploads/avatars/${filename}`
+}
+
 const uploadAvatar = async (userId, fileBuffer) => {
   if (!fileBuffer) {
     throw ApiError.badRequest('Please upload an image file')
   }
 
-  // Ensure public directory exists
-  const uploadDir = path.join(process.cwd(), 'public/uploads/avatars')
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true })
-  }
+  const processedBuffer = await processAvatarImage(fileBuffer)
+  const publicId = `avatar-${userId}-${Date.now()}`
 
-  const filename = `avatar-${userId}-${Date.now()}.webp`
-  const filepath = path.join(uploadDir, filename)
+  const cloudinaryUrl = await uploadImageBufferToCloudinary({
+    buffer: processedBuffer,
+    folder: AVATAR_CLOUDINARY_FOLDER,
+    publicId,
+    filename: `${publicId}.webp`,
+  })
 
-  try {
-    // Resize to 150x150, crop to cover, save as webp
-    await sharp(fileBuffer)
-      .resize(150, 150, { fit: 'cover' })
-      .toFormat('webp')
-      .webp({ quality: 80 })
-      .toFile(filepath)
-  } catch (err) {
-    throw ApiError.internal('Failed to process and save image')
-  }
+  const avatarUrl = cloudinaryUrl || saveAvatarToLocalStorage(userId, processedBuffer)
 
-  const publicUrl = `/public/uploads/avatars/${filename}`
-
-  // Update user profile in DB
   const updatedUser = await User.findByIdAndUpdate(
     userId,
-    { $set: { 'profile.avatar': publicUrl } },
+    { $set: { 'profile.avatar': avatarUrl } },
     { new: true }
   )
 
@@ -49,41 +71,38 @@ const uploadAvatar = async (userId, fileBuffer) => {
     throw ApiError.notFound('User not found')
   }
 
-  return publicUrl
+  return avatarUrl
 }
 
 const userService = {
   getProfile: async (userId) => {
-    const user = await User.findById(userId)
-      .populate('companyId')
-      .select('-passwordHash -refreshToken -emailVerificationToken -emailVerificationExpires')
-      
-    if (!user) throw ApiError.notFound('User not found')
-    return user
+    return findUserProfileById(userId)
   },
 
   updateProfile: async (userId, updateData) => {
-    const user = await User.findById(userId).select('-passwordHash -refreshToken -emailVerificationToken -emailVerificationExpires')
-    if (!user) throw ApiError.notFound('User not found')
+    const user = await findUserProfileById(userId)
 
-    // Update the profile subdocument
     Object.assign(user.profile, updateData)
-    
     await user.save()
-    return user
+
+    return findUserProfileById(userId)
   },
 
   changePassword: async (userId, oldPassword, newPassword) => {
-    // Need to explicitly select passwordHash
     const user = await User.findById(userId).select('+passwordHash')
-    if (!user) throw ApiError.notFound('User not found')
+
+    if (!user) {
+      throw ApiError.notFound('User not found')
+    }
 
     const isMatch = await user.comparePassword(oldPassword)
-    if (!isMatch) throw ApiError.badRequest('Incorrect old password')
+    if (!isMatch) {
+      throw ApiError.badRequest('Incorrect old password')
+    }
 
-    user.passwordHash = newPassword 
+    user.passwordHash = newPassword
     await user.save()
-    
+
     return { success: true }
   },
 

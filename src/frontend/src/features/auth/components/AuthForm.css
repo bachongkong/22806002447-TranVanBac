@@ -1,25 +1,45 @@
+/* ============================================
+   Authentication UI — Flat Enterprise Design
+   ============================================ */
+
+.page--auth-container {
+  min-height: calc(100vh - 80px); /* minus header */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface); /* #F8FAFC */
+  padding: 3rem 1rem;
+}
+
+.page--auth-content {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Flat Auth Form */
 .auth-form {
-  background: var(--color-surface);
+  background: var(--color-bg); /* #FFFFFF */
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 2rem;
-  max-width: 480px;
-  width: 100%;
-  margin: 0 auto;
+  padding: 2.5rem 2.5rem;
 }
 
 .auth-form h2 {
-  font-size: 1.5rem;
+  font-family: var(--font-family);
   font-weight: 600;
+  font-size: 1.75rem;
   margin-bottom: 0.5rem;
   text-align: center;
+  color: var(--color-text);
 }
 
 .auth-form p.auth-form__subtitle {
   color: var(--color-text-muted);
   text-align: center;
   margin-bottom: 2rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .auth-form__group {
@@ -35,16 +55,17 @@
   color: var(--color-text);
 }
 
+/* Flat Inputs */
 .auth-form__input {
   width: 100%;
-  padding: 0.65rem 1rem;
-  background: var(--color-surface-2);
-  border: 1px solid var(--color-border);
+  padding: 0.625rem 0.875rem; /* ~10px 14px */
+  background: var(--color-bg);
+  border: 1px solid #D1D5DB;
   border-radius: var(--radius-md);
   color: var(--color-text);
   font-family: var(--font-family);
-  font-size: 1rem;
-  transition: border-color 0.2s;
+  font-size: 0.875rem;
+  transition: border-color 150ms ease;
 }
 
 .auth-form__input:focus {
@@ -52,14 +73,22 @@
   border-color: var(--color-primary);
 }
 
+.auth-form__input::placeholder {
+  color: var(--color-text-dim);
+}
+
 .auth-form__input--error {
-  border-color: var(--color-danger);
+  border-color: var(--color-error);
+}
+.auth-form__input--error:focus {
+  border-color: var(--color-error);
 }
 
 .auth-form__error {
-  color: var(--color-danger);
-  font-size: 0.8rem;
-  margin-top: 0.4rem;
+  color: var(--color-error);
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-top: 0.25rem;
 }
 
 .auth-form__options {
@@ -72,23 +101,118 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   cursor: pointer;
+  color: var(--color-text);
+  font-weight: 400;
 }
 
 .auth-form__radio-label input[type="radio"] {
   cursor: pointer;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
 }
 
+/* Divider */
+.auth-form__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 1.5rem 0;
+}
+
+/* Section title cho HR fields */
+.auth-form__section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Row layout cho 2 fields cạnh nhau */
+.auth-form__row {
+  display: flex;
+  gap: 1rem;
+}
+
+.auth-form__group--half {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Select dropdown */
+.auth-form__select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23747688' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.auth-form__select option {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Submit Button */
 .auth-form__submit {
   width: 100%;
   justify-content: center;
-  margin-top: 1rem;
-  padding: 0.75rem;
-  font-size: 1rem;
+  margin-top: 1.5rem;
+  padding: 0.625rem;
+  font-size: 0.875rem;
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.auth-form__submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
 }
 
 .auth-form__submit:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Footer Links */
+.auth-footer-links {
+  margin-top: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-footer-links p {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.auth-footer-links a {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-footer-links a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive mobile */
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-form__row {
+    flex-direction: column;
+    gap: 0;
+  }
 }

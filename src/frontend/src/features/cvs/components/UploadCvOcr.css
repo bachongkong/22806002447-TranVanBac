@@ -1,8 +1,8 @@
 .upload-ocr-container {
   background: white;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   padding: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-md);
 }
 
 .section-title {
@@ -20,7 +20,7 @@
 
 .upload-dropzone {
   border: 2px dashed #d1d5db;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   padding: 48px 24px;
   text-align: center;
   cursor: pointer;

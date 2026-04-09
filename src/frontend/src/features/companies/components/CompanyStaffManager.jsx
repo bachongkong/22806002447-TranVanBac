@@ -1,8 +1,4 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { hrMemberSchema } from '../schemas/company.schema'
-import { useAddHrMember, useRemoveHrMember } from '../hooks/useCompany'
-import { FiTrash2, FiUserPlus } from 'react-icons/fi'
+
 import './CompanyStaffManager.css'
 
 export default function CompanyStaffManager({ company }) {
@@ -55,10 +51,10 @@ export default function CompanyStaffManager({ company }) {
           />
           <button 
             type="submit" 
-            className="btn-secondary" 
+            className="btn btn--outline" 
             disabled={isSubmitting || addMember.isPending}
           >
-            {addMember.isPending ? 'Đang thêm...' : <><FiUserPlus /> Thêm</>}
+            {addMember.isPending ? 'Đang thêm...' : <> Thêm</>}
           </button>
         </div>
         {errors.email && <span className="error-message">{errors.email.message}</span>}

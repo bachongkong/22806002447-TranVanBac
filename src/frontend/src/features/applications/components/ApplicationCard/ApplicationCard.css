@@ -28,7 +28,7 @@
 }
 
 .app-card--overlay {
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-md);
   border-color: var(--color-primary);
   transform: rotate(2deg) scale(1.02);
   cursor: grabbing;
@@ -63,7 +63,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  background-color: var(--color-primary);
   color: #fff;
   font-size: 0.85rem;
   font-weight: 700;

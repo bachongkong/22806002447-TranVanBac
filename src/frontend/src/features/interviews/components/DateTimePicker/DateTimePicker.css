@@ -67,7 +67,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-md);
   padding: 1.25rem;
   animation: dtpSlideIn 0.2s ease;
   margin-top: 0.5rem;

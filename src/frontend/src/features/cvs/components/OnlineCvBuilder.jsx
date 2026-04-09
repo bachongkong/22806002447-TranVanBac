@@ -1,6 +1,5 @@
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FiPlus, FiTrash2, FiSave } from 'react-icons/fi'
 import { cvSchema } from '../schemas/cv.schema'
 import { useCreateOnlineCv } from '../hooks/useCv'
 import './OnlineCvBuilder.css'
@@ -107,7 +106,7 @@ export default function OnlineCvBuilder() {
             {expFields.map((field, index) => (
                <div key={field.id} className="dynamic-block">
                  <button type="button" className="btn-remove-block" onClick={() => removeExp(index)}>
-                   <FiTrash2 />
+                   
                  </button>
                  
                  <div className="block-grid-2">
@@ -147,7 +146,7 @@ export default function OnlineCvBuilder() {
               className="btn-add-block" 
               onClick={() => addExp({ company: '', position: '', from: '', to: '', description: '' })}
             >
-              <FiPlus /> Thêm kinh nghiệm
+               Thêm kinh nghiệm
             </button>
           </div>
         </div>
@@ -159,7 +158,7 @@ export default function OnlineCvBuilder() {
             {eduFields.map((field, index) => (
                <div key={field.id} className="dynamic-block">
                  <button type="button" className="btn-remove-block" onClick={() => removeEdu(index)}>
-                   <FiTrash2 />
+                   
                  </button>
                  
                  <div className="form-group">
@@ -200,7 +199,7 @@ export default function OnlineCvBuilder() {
               className="btn-add-block" 
               onClick={() => addEdu({ school: '', field: '', degree: '', from: '', to: '' })}
             >
-              <FiPlus /> Thêm học vấn
+               Thêm học vấn
             </button>
           </div>
         </div>
@@ -212,7 +211,7 @@ export default function OnlineCvBuilder() {
             {projFields.map((field, index) => (
                <div key={field.id} className="dynamic-block">
                  <button type="button" className="btn-remove-block" onClick={() => removeProj(index)}>
-                   <FiTrash2 />
+                   
                  </button>
                  
                  <div className="block-grid-2">
@@ -239,7 +238,7 @@ export default function OnlineCvBuilder() {
               className="btn-add-block" 
               onClick={() => addProj({ name: '', description: '', url: '' })}
             >
-              <FiPlus /> Thêm dự án
+               Thêm dự án
             </button>
           </div>
         </div>
@@ -250,7 +249,7 @@ export default function OnlineCvBuilder() {
             className="btn-submit"
             disabled={createOnlineCv.isPending}
           >
-            <FiSave /> {createOnlineCv.isPending ? 'Đang lưu...' : 'Lưu CV Online'}
+             {createOnlineCv.isPending ? 'Đang lưu...' : 'Lưu CV Online'}
           </button>
         </div>
       </form>

@@ -73,7 +73,7 @@ function BasicInfoForm({ initialData, onSubmit, isPending }) {
         <div className="form-actions">
           <button 
             type="submit" 
-            className="btn btn-primary" 
+            className="btn btn--primary" 
             disabled={!isDirty || isPending}
           >
             {isPending ? 'Đang lưu...' : 'Lưu thông tin'}
