@@ -209,15 +209,20 @@ const authService = {
       throw ApiError.unauthorized('Email hoặc mật khẩu không đúng')
     }
 
+    // Xác thực mật khẩu TRƯỚC để tránh lỗi bảo mật user enumeration
+    const isPasswordCorrect = await user.comparePassword(password)
+    if (!isPasswordCorrect) {
+      throw ApiError.unauthorized('Email hoặc mật khẩu không đúng')
+    }
+
     // Kiểm tra tài khoản bị khóa
     if (user.status === USER_STATUS.BLOCKED) {
       throw ApiError.forbidden('Tài khoản đã bị khóa. Vui lòng liên hệ hỗ trợ.')
     }
 
-    // Xác thực mật khẩu
-    const isPasswordCorrect = await user.comparePassword(password)
-    if (!isPasswordCorrect) {
-      throw ApiError.unauthorized('Email hoặc mật khẩu không đúng')
+    // Kiểm tra email đã được xác thực chưa
+    if (!user.isEmailVerified) {
+      throw ApiError.forbidden('Email chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản của bạn.')
     }
 
     // Tạo cặp token mới
