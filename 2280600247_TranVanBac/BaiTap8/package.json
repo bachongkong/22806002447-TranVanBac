@@ -1,0 +1,33 @@
+{
+  "name": "baitap8",
+  "version": "1.0.0",
+  "description": "MongoDB Performance Lab — Xử lý dữ liệu lớn",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "dev": "nodemon backend/src/server.js",
+    "start": "node backend/src/server.js",
+    "test": "jest --runInBand --detectOpenHandles",
+    "test:watch": "jest --watch",
+    "seed": "node backend/seed/seedScript.js",
+    "seed:10k": "node backend/seed/seedScript.js --count=10000 --batch=2500",
+    "seed:50k": "node backend/seed/seedScript.js --count=50000 --batch=2500",
+    "seed:reset": "node backend/seed/seedScript.js --reset"
+  },
+  "keywords": ["mongodb", "performance", "bulk-operations", "streaming"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^9.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.2.4",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "mongodb-memory-server": "^11.0.1",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
+  }
+}
