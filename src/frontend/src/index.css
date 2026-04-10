@@ -1,0 +1,246 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Source+Sans+3:wght@400;600;700&display=swap');
+@import "tailwindcss";
+
+/* Tailwind v4 class-based dark mode */
+@custom-variant dark (&:where(.dark *));
+
+/* ============================================
+   SMART HIRE DESIGN SYSTEM
+   Primary: Black (#1C252E) + White (#FFFFFF)
+   Accent: Green (#22c55e)
+   ============================================ */
+
+/* ============================================
+   LIGHT MODE (Default)
+   ============================================ */
+:root {
+  color-scheme: light;
+
+  /* Background - White */
+  --background: #FFFFFF;
+  --foreground: #1C252E;
+
+  /* Brand Colors - Black Primary */
+  --primary: #1C252E;
+  --primary-light: #454F5B;
+  --primary-dark: #000000;
+  --primary-lighter: #637381;
+  --primary-darker: #000000;
+  --primary-foreground: #FFFFFF;
+
+  /* Accent - Green */
+  --accent: #22c55e;
+  --accent-light: #86efac;
+  --accent-dark: #15803d;
+
+  /* Secondary - White */
+  --secondary: #FFFFFF;
+  --secondary-light: #F9FAFB;
+  --secondary-dark: #E5E7EB;
+  --secondary-foreground: #1C252E;
+
+  /* Status Colors */
+  --success: #22C55E;
+  --success-light: #4ADE80;
+  --warning: #FFAB00;
+  --warning-light: #FFD666;
+  --error: #FF5630;
+  --error-light: #FF6B4A;
+  --info: #00B8D9;
+  --info-light: #33C9E4;
+
+  /* Card & Surface */
+  --card: #FFFFFF;
+  --card-foreground: #1C252E;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+
+  /* Muted */
+  --muted: #F9FAFB;
+  --muted-foreground: #637381;
+  
+  /* Border & Input */
+  --border: #E5E7EB;
+  --input: #FFFFFF;
+  --ring: #22c55e;
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+.dark {
+  color-scheme: dark;
+
+  /* Background - Dark */
+  --background: #141A21;
+  --foreground: #FFFFFF;
+
+  /* Brand Colors - Black Primary */
+  --primary: #1C252E;
+  --primary-light: #454F5B;
+  --primary-dark: #000000;
+  --primary-lighter: #637381;
+  --primary-darker: #000000;
+  --primary-foreground: #FFFFFF;
+
+  /* Accent - Green */
+  --accent: #22c55e;
+  --accent-light: #86efac;
+  --accent-dark: #15803d;
+
+  /* Secondary - White */
+  --secondary: #FFFFFF;
+  --secondary-light: #F9FAFB;
+  --secondary-dark: #E5E7EB;
+  --secondary-foreground: #1C252E;
+
+  /* Status Colors */
+  --success: #22C55E;
+  --success-light: #4ADE80;
+  --warning: #FFAB00;
+  --warning-light: #FFD666;
+  --error: #FF5630;
+  --error-light: #FF6B4A;
+  --info: #00B8D9;
+  --info-light: #33C9E4;
+
+  /* Card & Surface */
+  --card: #1C252E;
+  --card-foreground: #FFFFFF;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(20, 26, 33, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+
+  /* Muted */
+  --muted: #1A1A1A;
+  --muted-foreground: #919EAB;
+  
+  /* Border & Input */
+  --border: #2D3748;
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #22c55e;
+
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+}
+
+@theme {
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Barlow', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+
+  --radius-sm: var(--radius-sm);
+  --radius: var(--radius);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-primary-lighter: var(--primary-lighter);
+  --color-primary-darker: var(--primary-darker);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-info: var(--info);
+  --color-info-light: var(--info-light);
+
+  --shadow-premium: var(--glass-shadow);
+  --shadow-glow: 0 0 20px rgba(118, 53, 220, 0.3), 0 0 60px rgba(118, 53, 220, 0.1);
+  --shadow-glow-yellow: 0 0 20px rgba(255, 171, 0, 0.3), 0 0 60px rgba(255, 171, 0, 0.1);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', var(--font-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Explicit dark mode for body */
+.dark body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Barlow', var(--font-heading);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* Utilities */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Custom Scrollbar */
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0);
+  border-radius: 9999px;
+  transition: background 0.3s ease;
+}
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(34, 197, 94, 0.4);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 197, 94, 0.7);
+}
+
+/* Glass Effect */
+.glass {
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.dark .glass {
+  background: rgba(20, 26, 33, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

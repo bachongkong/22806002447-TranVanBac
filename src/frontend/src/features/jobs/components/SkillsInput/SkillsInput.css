@@ -1,0 +1,110 @@
+/* ============================================
+   SkillsInput — Tag Input Component
+   ============================================ */
+
+.skills-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skills-input__field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.6rem 0.85rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: text;
+}
+
+.skills-input__field:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.skills-input__field--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.skills-input__input {
+  flex: 1;
+  min-width: 120px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 0.875rem;
+  font-family: var(--font-family);
+}
+
+.skills-input__input::placeholder {
+  color: var(--color-text-dim);
+}
+
+.skills-input__input:disabled {
+  cursor: not-allowed;
+}
+
+/* --- Skill Tags --- */
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--color-primary-light);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  animation: skillTagIn 0.2s ease;
+  white-space: nowrap;
+}
+
+.skill-tag__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-primary-light);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.65rem;
+  line-height: 1;
+  padding: 0;
+  transition: all 0.15s;
+}
+
+.skill-tag__remove:hover {
+  background: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+}
+
+/* --- Hint text --- */
+.skills-input__hint {
+  font-size: 0.75rem;
+  color: var(--color-text-dim);
+}
+
+.skills-input__hint--limit {
+  color: var(--color-warning);
+}
+
+/* --- Animation --- */
+@keyframes skillTagIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
