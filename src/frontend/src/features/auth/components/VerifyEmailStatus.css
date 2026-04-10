@@ -1,0 +1,113 @@
+/* ============================================
+   VerifyEmailStatus Styles
+   ============================================ */
+
+.verify-email {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.verify-email__icon {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.verify-email h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.verify-email__message {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Status modifiers --- */
+.verify-email--loading h2 {
+  color: var(--color-text);
+}
+
+.verify-email--success h2 {
+  color: var(--color-success);
+}
+
+.verify-email--error h2 {
+  color: var(--color-danger);
+}
+
+/* --- Resend section --- */
+.verify-email__resend {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.verify-email__resend p {
+  color: var(--color-text-dim);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.verify-email__resend-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.verify-email__resend-input {
+  flex: 1;
+  padding: 0.55rem 1rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+}
+
+.verify-email__resend-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* --- Action link --- */
+.verify-email__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--color-primary-light);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.verify-email__link:hover {
+  opacity: 0.8;
+}
+
+/* --- Spinner for this component --- */
+.verify-email__spinner {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: verify-spin 0.8s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes verify-spin {
+  to { transform: rotate(360deg); }
+}

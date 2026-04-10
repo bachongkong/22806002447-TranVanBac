@@ -1,0 +1,19 @@
+import useNotificationSocket from '@features/notifications/hooks/useNotificationSocket'
+import useChatSocket from '@features/chat/hooks/useChatSocket'
+
+/**
+ * SocketProvider
+ *
+ * Component cấp root để mount các hook lắng nghe socket nền (chạy ẩn).
+ * Hiện tại mount hook notification. Sau này có thể thêm chat socket.
+ * Không bọc Context gì cả, chỉ mount logic.
+ */
+export default function SocketProvider({ children }) {
+  // Lắng nghe kết nối socket cho notifications (auto connect/disconnect theo auth)
+  useNotificationSocket()
+
+  // Lắng nghe socket nền cho tính năng Chat
+  useChatSocket()
+
+  return <>{children}</>
+}
